@@ -1809,3 +1809,13 @@ button {
     }
 
 }
+
+.hotbar-count {
+    position: absolute;
+    right: 4px;
+    bottom: 2px;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px black;
+}
