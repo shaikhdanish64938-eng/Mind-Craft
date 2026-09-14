@@ -3815,29 +3815,38 @@ function startGame() {
     applyAppearanceToPlayer();
 
 
-    /* =====================================================
-       LOADING SCREEN
-       ===================================================== */
+/* =====================================================
+   LOADING SCREEN → HOME SCREEN
+   ===================================================== */
 
+if (loadingScreen) {
+    loadingScreen.style.display = "flex";
+}
+
+if (homeScreen) {
+    homeScreen.classList.add("hidden");
+    homeScreen.style.display = "none";
+}
+
+if (game) {
+    game.classList.add("hidden");
+    game.style.display = "none";
+}
+
+setTimeout(function () {
+
+    /* Hide Loading */
     if (loadingScreen) {
-
-        loadingScreen.style.display =
-            "flex";
+        loadingScreen.style.display = "none";
     }
 
+    /* Show Home */
+    if (homeScreen) {
+        homeScreen.classList.remove("hidden");
+        homeScreen.style.display = "flex";
+    }
 
-    setTimeout(
-        function () {
-
-            if (loadingScreen) {
-
-                loadingScreen.style.display =
-                    "none";
-            }
-
-        },
-        1500
-    );
+}, 1500);
 
 
     /* =====================================================
