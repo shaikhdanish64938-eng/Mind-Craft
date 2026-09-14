@@ -3060,26 +3060,32 @@ function startGame() {
         },
         1500
     );
-// ===============================
-// LOADING SCREEN → HOME SCREEN
-// ===============================
+/* =====================================================
+   LOADING -> HOME
+   ===================================================== */
 
+if (loadingScreen) {
+    loadingScreen.classList.remove("hidden");
+}
 
+if (homeScreen) {
+    homeScreen.classList.add("hidden");
+}
 
+if (game) {
+    game.classList.add("hidden");
+}
 
-setTimeout(() => {
+setTimeout(function () {
 
     if (loadingScreen) {
         loadingScreen.classList.add("hidden");
-        loadingScreen.style.display = "none";
     }
 
     if (homeScreen) {
         homeScreen.classList.remove("hidden");
-        homeScreen.style.display = "flex";
     }
 
-    console.log("Loading complete → Home Screen shown.");
-
 }, 1500);
+
 }
