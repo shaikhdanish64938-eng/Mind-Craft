@@ -809,7 +809,7 @@ function startGame() {
 
         setupControls();
 
-        setupInventory();
+        updateInventory();
 
         setupCrafting();
 
