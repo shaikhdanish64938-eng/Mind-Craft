@@ -1,79 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    >
-
-    <title>Block World Survival</title>
+    <title>Mind Craft - Block World Survival</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- ==========================================
+    <!-- =========================
          LOADING SCREEN
-    =========================================== -->
+    ========================== -->
 
-<div id="loadingScreen" class="loading-screen">
-    <div class="loader-content">
+    <div id="loadingScreen" class="loading-screen">
 
-        <div class="loader-"></div>
+        <div class="loader-content">
 
-        <h2>BLOCK WORLD</h2>
+            <div class="loader-circle"></div>
 
-        <p>Loading world...</p>
+            <h2>BLOCK WORLD</h2>
 
-        <div class="horizontal-loader">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+            <p>Loading world...</p>
+
+            <div class="horizontal-loader">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
         </div>
 
     </div>
-</div>
-    <!-- ==========================================
-         HOME PAGE
-    =========================================== -->
+
+
+    <!-- =========================
+         HOME SCREEN
+    ========================== -->
 
     <div id="homeScreen" class="home-screen hidden">
 
         <div class="home-top">
 
             <div>
-
-                <div class="brand-small">
-                    BLOCK WORLD SURVIVAL
-                </div>
+                <div class="brand-small">BLOCK WORLD SURVIVAL</div>
 
                 <h1>
                     MIND <span>CRAFT</span>
                 </h1>
-
             </div>
-
 
             <div class="profile-chip">
 
-                <div class="profile-avatar">
-                    👤
-                </div>
+                <div class="profile-avatar">👤</div>
 
                 <div>
-
                     <small>PLAYER</small>
-
-                    <strong id="homePlayerName">
-                        Player
-                    </strong>
-
+                    <strong id="homePlayerName">Player</strong>
                 </div>
 
             </div>
@@ -81,20 +69,15 @@
         </div>
 
 
-        <!-- ======================================
-             HOME CONTENT
-        ======================================= -->
-
         <div class="home-content">
+
+            <!-- HERO -->
 
             <div class="hero-card">
 
                 <div class="hero-glow"></div>
 
-                <div class="hero-block">
-                    ▣
-                </div>
-
+                <div class="hero-block">▣</div>
 
                 <div class="hero-copy">
 
@@ -115,8 +98,6 @@
                 </div>
 
 
-                <!-- PLAYER NAME -->
-
                 <input
                     id="playerNameInput"
                     class="player-name-input"
@@ -126,53 +107,31 @@
                     placeholder="Enter player name"
                 >
 
-
-                <!-- PLAY -->
-
                 <button
                     id="startGameBtn"
                     class="play-button"
                     type="button"
                 >
-
                     <span>▶</span>
-
                     PLAY
-
                 </button>
 
             </div>
 
 
-            <!-- ==================================
-                 HOME MENU
-            =================================== -->
+            <!-- MENU -->
 
             <div class="menu-grid">
 
+                <button class="menu-card"
+                        data-home-panel="kitPanel"
+                        type="button">
 
-                <!-- KIT -->
-
-                <button
-                    class="menu-card"
-                    data-home-panel="kitPanel"
-                    type="button"
-                >
-
-                    <div class="menu-icon">
-                        🎒
-                    </div>
+                    <div class="menu-icon">🎒</div>
 
                     <div>
-
-                        <strong>
-                            KIT
-                        </strong>
-
-                        <small>
-                            Choose your gear
-                        </small>
-
+                        <strong>KIT</strong>
+                        <small>Choose your gear</small>
                     </div>
 
                     <b>›</b>
@@ -180,28 +139,15 @@
                 </button>
 
 
-                <!-- CLOTHES -->
+                <button class="menu-card"
+                        data-home-panel="clothesPanel"
+                        type="button">
 
-                <button
-                    class="menu-card"
-                    data-home-panel="clothesPanel"
-                    type="button"
-                >
-
-                    <div class="menu-icon">
-                        👕
-                    </div>
+                    <div class="menu-icon">👕</div>
 
                     <div>
-
-                        <strong>
-                            CLOTHES
-                        </strong>
-
-                        <small>
-                            Customize player
-                        </small>
-
+                        <strong>CLOTHES</strong>
+                        <small>Customize player</small>
                     </div>
 
                     <b>›</b>
@@ -209,28 +155,15 @@
                 </button>
 
 
-                <!-- PROFILE -->
+                <button class="menu-card"
+                        data-home-panel="statsPanel"
+                        type="button">
 
-                <button
-                    class="menu-card"
-                    data-home-panel="statsPanel"
-                    type="button"
-                >
-
-                    <div class="menu-icon">
-                        🏆
-                    </div>
+                    <div class="menu-icon">🏆</div>
 
                     <div>
-
-                        <strong>
-                            PROFILE
-                        </strong>
-
-                        <small>
-                            Player information
-                        </small>
-
+                        <strong>PROFILE</strong>
+                        <small>Player information</small>
                     </div>
 
                     <b>›</b>
@@ -238,28 +171,15 @@
                 </button>
 
 
-                <!-- SETTINGS -->
+                <button class="menu-card"
+                        data-home-panel="settingsPanel"
+                        type="button">
 
-                <button
-                    class="menu-card"
-                    data-home-panel="settingsPanel"
-                    type="button"
-                >
-
-                    <div class="menu-icon">
-                        ⚙️
-                    </div>
+                    <div class="menu-icon">⚙️</div>
 
                     <div>
-
-                        <strong>
-                            SETTINGS
-                        </strong>
-
-                        <small>
-                            Game preferences
-                        </small>
-
+                        <strong>SETTINGS</strong>
+                        <small>Game preferences</small>
                     </div>
 
                     <b>›</b>
@@ -271,25 +191,17 @@
         </div>
 
 
-        <!-- ======================================
+        <!-- =========================
              KIT PANEL
-        ======================================= -->
+        ========================== -->
 
-        <div
-            id="kitPanel"
-            class="home-subpanel hidden"
-        >
+        <div id="kitPanel" class="home-subpanel hidden">
 
             <div class="subpanel-header">
 
-                <h2>
-                    🎒 CHOOSE YOUR KIT
-                </h2>
+                <h2>🎒 CHOOSE YOUR KIT</h2>
 
-                <button
-                    class="home-back"
-                    type="button"
-                >
+                <button class="home-back" type="button">
                     ✕
                 </button>
 
@@ -298,20 +210,13 @@
 
             <div class="kit-options">
 
+                <button class="kit-option selected"
+                        data-kit="starter"
+                        type="button">
 
-                <button
-                    class="kit-option selected"
-                    data-kit="starter"
-                    type="button"
-                >
+                    <div class="kit-icon">🪵</div>
 
-                    <div class="kit-icon">
-                        🪵
-                    </div>
-
-                    <strong>
-                        STARTER
-                    </strong>
+                    <strong>STARTER</strong>
 
                     <small>
                         Basic survival equipment
@@ -320,19 +225,13 @@
                 </button>
 
 
-                <button
-                    class="kit-option"
-                    data-kit="builder"
-                    type="button"
-                >
+                <button class="kit-option"
+                        data-kit="builder"
+                        type="button">
 
-                    <div class="kit-icon">
-                        ⛏️
-                    </div>
+                    <div class="kit-icon">⛏️</div>
 
-                    <strong>
-                        BUILDER
-                    </strong>
+                    <strong>BUILDER</strong>
 
                     <small>
                         Extra building materials
@@ -341,19 +240,13 @@
                 </button>
 
 
-                <button
-                    class="kit-option"
-                    data-kit="explorer"
-                    type="button"
-                >
+                <button class="kit-option"
+                        data-kit="explorer"
+                        type="button">
 
-                    <div class="kit-icon">
-                        🧭
-                    </div>
+                    <div class="kit-icon">🧭</div>
 
-                    <strong>
-                        EXPLORER
-                    </strong>
+                    <strong>EXPLORER</strong>
 
                     <small>
                         Useful exploration gear
@@ -365,117 +258,81 @@
 
 
             <div class="kit-selected">
-
                 Selected Kit:
-
-                <strong id="selectedKitName">
-                    STARTER
-                </strong>
-
+                <strong id="selectedKitName">STARTER</strong>
             </div>
 
 
-            <button
-                class="kit-equip"
-                type="button"
-            >
+            <button class="kit-equip" type="button">
                 EQUIP KIT
             </button>
 
         </div>
 
 
-        <!-- ======================================
+        <!-- =========================
              CLOTHES PANEL
-        ======================================= -->
+        ========================== -->
 
-        <div
-            id="clothesPanel"
-            class="home-subpanel hidden"
-        >
+        <div id="clothesPanel" class="home-subpanel hidden">
 
             <div class="subpanel-header">
 
-                <h2>
-                    👕 PLAYER CLOTHES
-                </h2>
+                <h2>👕 PLAYER CLOTHES</h2>
 
-                <button
-                    class="home-back"
-                    type="button"
-                >
+                <button class="home-back" type="button">
                     ✕
                 </button>
 
             </div>
 
 
-            <!-- CLOTHES PREVIEW -->
-
             <div class="clothes-preview">
 
-                <div
-                    id="previewHat"
-                    class="preview-part preview-hat"
-                >
+                <div id="previewHat"
+                     class="preview-part preview-hat">
                     🧢
                 </div>
 
-                <div
-                    id="previewShirt"
-                    class="preview-part preview-shirt"
-                >
+                <div id="previewShirt"
+                     class="preview-part preview-shirt">
                 </div>
 
-                <div
-                    id="previewPants"
-                    class="preview-part preview-pants"
-                >
+                <div id="previewPants"
+                     class="preview-part preview-pants">
                 </div>
 
-                <div
-                    id="previewShoes"
-                    class="preview-part preview-shoes"
-                >
+                <div id="previewShoes"
+                     class="preview-part preview-shoes">
                 </div>
 
             </div>
 
 
-            <!-- HEAD -->
-
             <div class="cloth-section">
 
-                <h3>
-                    HEAD
-                </h3>
+                <h3>HEAD</h3>
 
                 <div class="cloth-options">
 
-                    <button
-                        class="cloth-option selected"
-                        data-category="head"
-                        data-value="none"
-                        type="button"
-                    >
+                    <button class="cloth-option selected"
+                            data-category="head"
+                            data-value="none"
+                            type="button">
                         None
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="head"
-                        data-value="cap"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="head"
+                            data-value="cap"
+                            type="button">
                         🧢 Cap
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="head"
-                        data-value="helmet"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="head"
+                            data-value="helmet"
+                            type="button">
                         ⛑️ Helmet
                     </button>
 
@@ -484,40 +341,30 @@
             </div>
 
 
-            <!-- SHIRT -->
-
             <div class="cloth-section">
 
-                <h3>
-                    SHIRT
-                </h3>
+                <h3>SHIRT</h3>
 
                 <div class="cloth-options">
 
-                    <button
-                        class="cloth-option selected"
-                        data-category="shirt"
-                        data-value="green"
-                        type="button"
-                    >
+                    <button class="cloth-option selected"
+                            data-category="shirt"
+                            data-value="green"
+                            type="button">
                         🟢 Green
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="shirt"
-                        data-value="blue"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="shirt"
+                            data-value="blue"
+                            type="button">
                         🔵 Blue
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="shirt"
-                        data-value="red"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="shirt"
+                            data-value="red"
+                            type="button">
                         🔴 Red
                     </button>
 
@@ -526,40 +373,30 @@
             </div>
 
 
-            <!-- PANTS -->
-
             <div class="cloth-section">
 
-                <h3>
-                    PANTS
-                </h3>
+                <h3>PANTS</h3>
 
                 <div class="cloth-options">
 
-                    <button
-                        class="cloth-option selected"
-                        data-category="pants"
-                        data-value="blue"
-                        type="button"
-                    >
+                    <button class="cloth-option selected"
+                            data-category="pants"
+                            data-value="blue"
+                            type="button">
                         🔵 Blue
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="pants"
-                        data-value="black"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="pants"
+                            data-value="black"
+                            type="button">
                         ⚫ Black
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="pants"
-                        data-value="brown"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="pants"
+                            data-value="brown"
+                            type="button">
                         🟤 Brown
                     </button>
 
@@ -568,31 +405,23 @@
             </div>
 
 
-            <!-- SHOES -->
-
             <div class="cloth-section">
 
-                <h3>
-                    SHOES
-                </h3>
+                <h3>SHOES</h3>
 
                 <div class="cloth-options">
 
-                    <button
-                        class="cloth-option selected"
-                        data-category="shoes"
-                        data-value="white"
-                        type="button"
-                    >
+                    <button class="cloth-option selected"
+                            data-category="shoes"
+                            data-value="white"
+                            type="button">
                         ⚪ White
                     </button>
 
-                    <button
-                        class="cloth-option"
-                        data-category="shoes"
-                        data-value="black"
-                        type="button"
-                    >
+                    <button class="cloth-option"
+                            data-category="shoes"
+                            data-value="black"
+                            type="button">
                         ⚫ Black
                     </button>
 
@@ -603,25 +432,17 @@
         </div>
 
 
-        <!-- ======================================
+        <!-- =========================
              PROFILE PANEL
-        ======================================= -->
+        ========================== -->
 
-        <div
-            id="statsPanel"
-            class="home-subpanel hidden"
-        >
+        <div id="statsPanel" class="home-subpanel hidden">
 
             <div class="subpanel-header">
 
-                <h2>
-                    🏆 PROFILE
-                </h2>
+                <h2>🏆 PROFILE</h2>
 
-                <button
-                    class="home-back"
-                    type="button"
-                >
+                <button class="home-back" type="button">
                     ✕
                 </button>
 
@@ -636,9 +457,7 @@
 
                 <div class="profile-info">
 
-                    <span>
-                        PLAYER NAME
-                    </span>
+                    <span>PLAYER NAME</span>
 
                     <strong id="profileName">
                         Player
@@ -649,26 +468,18 @@
 
                 <div class="profile-stat">
 
-                    <span>
-                        GAME MODE
-                    </span>
+                    <span>GAME MODE</span>
 
-                    <strong>
-                        SURVIVAL
-                    </strong>
+                    <strong>SURVIVAL</strong>
 
                 </div>
 
 
                 <div class="profile-stat">
 
-                    <span>
-                        WORLD
-                    </span>
+                    <span>WORLD</span>
 
-                    <strong>
-                        BLOCK WORLD
-                    </strong>
+                    <strong>BLOCK WORLD</strong>
 
                 </div>
 
@@ -677,25 +488,17 @@
         </div>
 
 
-        <!-- ======================================
-             SETTINGS PANEL
-        ======================================= -->
+        <!-- =========================
+             SETTINGS
+        ========================== -->
 
-        <div
-            id="settingsPanel"
-            class="home-subpanel hidden"
-        >
+        <div id="settingsPanel" class="home-subpanel hidden">
 
             <div class="subpanel-header">
 
-                <h2>
-                    ⚙️ SETTINGS
-                </h2>
+                <h2>⚙️ SETTINGS</h2>
 
-                <button
-                    class="home-back"
-                    type="button"
-                >
+                <button class="home-back" type="button">
                     ✕
                 </button>
 
@@ -707,20 +510,11 @@
                 <div class="setting-row">
 
                     <div>
-
-                        <strong>
-                            Graphics
-                        </strong>
-
-                        <small>
-                            Standard game graphics
-                        </small>
-
+                        <strong>Graphics</strong>
+                        <small>Standard game graphics</small>
                     </div>
 
-                    <span>
-                        HIGH
-                    </span>
+                    <span>HIGH</span>
 
                 </div>
 
@@ -728,20 +522,11 @@
                 <div class="setting-row">
 
                     <div>
-
-                        <strong>
-                            Controls
-                        </strong>
-
-                        <small>
-                            Keyboard + Mobile
-                        </small>
-
+                        <strong>Controls</strong>
+                        <small>Keyboard + Mobile</small>
                     </div>
 
-                    <span>
-                        ON
-                    </span>
+                    <span>ON</span>
 
                 </div>
 
@@ -749,20 +534,11 @@
                 <div class="setting-row">
 
                     <div>
-
-                        <strong>
-                            Sound
-                        </strong>
-
-                        <small>
-                            Game sound effects
-                        </small>
-
+                        <strong>Sound</strong>
+                        <small>Game sound effects</small>
                     </div>
 
-                    <span>
-                        ON
-                    </span>
+                    <span>ON</span>
 
                 </div>
 
@@ -771,39 +547,19 @@
         </div>
 
 
-        <!-- HOME TOAST -->
-
-        <div
-            id="homeToast"
-            class="home-toast"
-        >
-        </div>
+        <div id="homeToast" class="home-toast"></div>
 
     </div>
 
 
-    <!-- ==========================================
+    <!-- =========================
          GAME
-    =========================================== -->
+    ========================== -->
 
-    <div
-        id="game"
-        class="hidden"
-    >
+    <div id="game" class="hidden">
 
+        <div id="crosshair">+</div>
 
-        <!-- ======================================
-             CROSSHAIR
-        ======================================= -->
-
-        <div id="crosshair">
-            +
-        </div>
-
-
-        <!-- ======================================
-             HUD
-        ======================================= -->
 
         <div id="hud">
 
@@ -811,302 +567,164 @@
                 BLOCK WORLD
             </div>
 
-
             <div class="player-hud">
-
-                <span id="playerNameHud">
-                    Player
-                </span>
-
+                <span id="playerNameHud">Player</span>
             </div>
 
-
-            <!-- HEALTH -->
 
             <div class="health-hud">
 
-                <span>
-                    ❤️
-                </span>
+                <span>❤️</span>
 
                 <div class="bar">
-
-                    <div
-                        id="health"
-                        class="bar-fill"
-                        style="width:100%"
-                    >
+                    <div id="health"
+                         class="bar-fill"
+                         style="width:100%">
                     </div>
-
                 </div>
 
             </div>
 
-
-            <!-- HUNGER -->
 
             <div class="hunger-hud">
 
-                <span>
-                    🍗
-                </span>
+                <span>🍗</span>
 
                 <div class="bar">
-
-                    <div
-                        id="hunger"
-                        class="bar-fill"
-                        style="width:100%"
-                    >
+                    <div id="hunger"
+                         class="bar-fill"
+                         style="width:100%">
                     </div>
-
                 </div>
 
             </div>
 
         </div>
 
-
-        <!-- ======================================
-             PC HELP
-        ======================================= -->
 
         <div id="pcHelp">
 
-            <div>
-                Arrow Keys = Move
-            </div>
-
-            <div>
-                Mouse = Look
-            </div>
-
-            <div>
-                Space = Jump
-            </div>
-
-            <div>
-                Left Click = Mine
-            </div>
-
-            <div>
-                Right Click = Place
-            </div>
-
-            <div>
-                E = Inventory
-            </div>
-
-            <div>
-                C = Craft
-            </div>
-
-            <div>
-                Shift = Sprint
-            </div>
+            <div>Arrow Keys / WASD = Move</div>
+            <div>Mouse = Look</div>
+            <div>Space = Jump</div>
+            <div>Left Click = Mine</div>
+            <div>Right Click = Place</div>
+            <div>E = Inventory</div>
+            <div>C = Craft</div>
+            <div>Shift = Sprint</div>
 
         </div>
 
 
-        <!-- ======================================
-             MESSAGE
-        ======================================= -->
-
-        <div id="message">
-        </div>
+        <div id="message"></div>
 
 
-        <!-- ======================================
-             INVENTORY PANEL
-        ======================================= -->
+        <!-- INVENTORY -->
 
-        <div
-            id="inventoryPanel"
-            class="inventory-panel hidden"
-        >
+        <div id="inventoryPanel"
+             class="inventory-panel hidden">
 
             <div class="panel-header">
 
-                <h2>
-                    INVENTORY
-                </h2>
+                <h2>INVENTORY</h2>
 
-                <button
-                    id="closeInventory"
-                    type="button"
-                >
+                <button id="closeInventory"
+                        type="button">
+                    ✕
+                </button>
+
+            </div>
+
+            <div id="inventoryItems"></div>
+
+        </div>
+
+
+        <!-- CRAFTING -->
+
+        <div id="craftingPanel"
+             class="crafting-panel hidden">
+
+            <div class="panel-header">
+
+                <h2>CRAFTING</h2>
+
+                <button id="closeCrafting"
+                        type="button">
                     ✕
                 </button>
 
             </div>
 
 
-            <div id="inventoryItems">
-            </div>
+            <div id="craftingItems"
+                 class="crafting-items">
 
-        </div>
+                <button class="craft-button"
+                        data-recipe="craftingTable"
+                        type="button">
 
-
-        <!-- ======================================
-             CRAFTING PANEL
-        ======================================= -->
-
-        <div
-            id="craftingPanel"
-            class="crafting-panel hidden"
-        >
-
-            <div class="panel-header">
-
-                <h2>
-                    CRAFTING
-                </h2>
-
-                <button
-                    id="closeCrafting"
-                    type="button"
-                >
-                    ✕
-                </button>
-
-            </div>
-
-
-            <div
-                id="craftingItems"
-                class="crafting-items"
-            >
-
-                <!-- Crafting Table -->
-
-                <button
-                    class="craft-button"
-                    data-recipe="craftingTable"
-                    type="button"
-                >
-
-                    <span>
-                        🪵
-                    </span>
+                    <span>🪵</span>
 
                     <div>
-
-                        <strong>
-                            Crafting Table
-                        </strong>
-
-                        <small>
-                            4 Planks
-                        </small>
-
+                        <strong>Crafting Table</strong>
+                        <small>4 Planks</small>
                     </div>
 
                 </button>
 
 
-                <!-- Planks -->
+                <button class="craft-button"
+                        data-recipe="planks"
+                        type="button">
 
-                <button
-                    class="craft-button"
-                    data-recipe="planks"
-                    type="button"
-                >
-
-                    <span>
-                        🪵
-                    </span>
+                    <span>🪵</span>
 
                     <div>
-
-                        <strong>
-                            Planks
-                        </strong>
-
-                        <small>
-                            1 Wood → 4 Planks
-                        </small>
-
+                        <strong>Planks</strong>
+                        <small>1 Wood → 4 Planks</small>
                     </div>
 
                 </button>
 
 
-                <!-- Sticks -->
+                <button class="craft-button"
+                        data-recipe="sticks"
+                        type="button">
 
-                <button
-                    class="craft-button"
-                    data-recipe="sticks"
-                    type="button"
-                >
-
-                    <span>
-                        🪄
-                    </span>
+                    <span>🪄</span>
 
                     <div>
-
-                        <strong>
-                            Sticks
-                        </strong>
-
-                        <small>
-                            2 Planks → 4 Sticks
-                        </small>
-
+                        <strong>Sticks</strong>
+                        <small>2 Planks → 4 Sticks</small>
                     </div>
 
                 </button>
 
 
-                <!-- Wooden Pickaxe -->
+                <button class="craft-button"
+                        data-recipe="woodenPickaxe"
+                        type="button">
 
-                <button
-                    class="craft-button"
-                    data-recipe="woodenPickaxe"
-                    type="button"
-                >
-
-                    <span>
-                        ⛏️
-                    </span>
+                    <span>⛏️</span>
 
                     <div>
-
-                        <strong>
-                            Wooden Pickaxe
-                        </strong>
-
-                        <small>
-                            3 Planks + 2 Sticks
-                        </small>
-
+                        <strong>Wooden Pickaxe</strong>
+                        <small>3 Planks + 2 Sticks</small>
                     </div>
 
                 </button>
 
 
-                <!-- Stone Pickaxe -->
+                <button class="craft-button"
+                        data-recipe="stonePickaxe"
+                        type="button">
 
-                <button
-                    class="craft-button"
-                    data-recipe="stonePickaxe"
-                    type="button"
-                >
-
-                    <span>
-                        ⛏️
-                    </span>
+                    <span>⛏️</span>
 
                     <div>
-
-                        <strong>
-                            Stone Pickaxe
-                        </strong>
-
-                        <small>
-                            3 Stone + 2 Sticks
-                        </small>
-
+                        <strong>Stone Pickaxe</strong>
+                        <small>3 Stone + 2 Sticks</small>
                     </div>
 
                 </button>
@@ -1116,169 +734,101 @@
         </div>
 
 
-        <!-- ======================================
-             HOTBAR
-        ======================================= -->
+        <!-- HOTBAR -->
 
         <div id="hotbar">
 
-            <div
-                class="hotbar-slot selected"
-                data-slot="1"
-            >
-                <span>1</span>
-                🌿
+            <div class="hotbar-slot selected" data-slot="1">
+                <span>1</span>🌿
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="2"
-            >
-                <span>2</span>
-                🟫
+            <div class="hotbar-slot" data-slot="2">
+                <span>2</span>🟫
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="3"
-            >
-                <span>3</span>
-                🪨
+            <div class="hotbar-slot" data-slot="3">
+                <span>3</span>🪨
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="4"
-            >
-                <span>4</span>
-                🪵
+            <div class="hotbar-slot" data-slot="4">
+                <span>4</span>🪵
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="5"
-            >
-                <span>5</span>
-                🍃
+            <div class="hotbar-slot" data-slot="5">
+                <span>5</span>🍃
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="6"
-            >
-                <span>6</span>
-                ⚫
+            <div class="hotbar-slot" data-slot="6">
+                <span>6</span>⚫
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="7"
-            >
-                <span>7</span>
-                🧱
+            <div class="hotbar-slot" data-slot="7">
+                <span>7</span>🧱
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="8"
-            >
-                <span>8</span>
-                ⛏️
+            <div class="hotbar-slot" data-slot="8">
+                <span>8</span>⛏️
             </div>
 
-            <div
-                class="hotbar-slot"
-                data-slot="9"
-            >
-                <span>9</span>
-                🛠️
+            <div class="hotbar-slot" data-slot="9">
+                <span>9</span>🛠️
             </div>
 
         </div>
 
 
-        <!-- ======================================
-             MOBILE CONTROLS
-        ======================================= -->
+        <!-- MOBILE -->
 
         <div id="mobileControls">
 
-
-            <!-- LEFT JOYSTICK -->
-
             <div id="joystick">
-
-                <div id="joystickKnob">
-                </div>
-
+                <div id="joystickKnob"></div>
             </div>
 
+            <div id="lookArea"></div>
 
-            <!-- MOBILE ACTION BUTTONS -->
 
-            <button
-                id="jumpBtn"
-                class="mobile-btn"
-                type="button"
-            >
+            <button id="jumpBtn"
+                    class="mobile-btn"
+                    type="button">
                 ↑
             </button>
 
-
-            <button
-                id="mineBtn"
-                class="mobile-btn"
-                type="button"
-            >
+            <button id="mineBtn"
+                    class="mobile-btn"
+                    type="button">
                 ⛏
             </button>
 
-
-            <button
-                id="placeBtn"
-                class="mobile-btn"
-                type="button"
-            >
+            <button id="placeBtn"
+                    class="mobile-btn"
+                    type="button">
                 ▣
             </button>
 
-
-            <button
-                id="inventoryBtn"
-                class="mobile-btn"
-                type="button"
-            >
+            <button id="inventoryBtn"
+                    class="mobile-btn"
+                    type="button">
                 🎒
             </button>
 
-
-            <button
-                id="craftingBtn"
-                class="mobile-btn"
-                type="button"
-            >
+            <button id="craftingBtn"
+                    class="mobile-btn"
+                    type="button">
                 🛠
             </button>
 
         </div>
 
 
-        <!-- ======================================
-             ROTATE SCREEN
-        ======================================= -->
+        <!-- ROTATE -->
 
-        <div
-            id="rotateScreen"
-            class="rotate-screen"
-        >
+        <div id="rotateScreen"
+             class="rotate-screen">
 
-            <div>
-                📱
-            </div>
+            <div>📱</div>
 
-            <h2>
-                ROTATE YOUR PHONE
-            </h2>
+            <h2>ROTATE YOUR PHONE</h2>
 
             <p>
                 Please use landscape mode
@@ -1290,12 +840,7 @@
     </div>
 
 
-    <!-- ==========================================
-         JAVASCRIPT
-    =========================================== -->
-
     <script src="script.js"></script>
 
 </body>
-
 </html>
