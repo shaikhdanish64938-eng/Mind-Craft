@@ -979,8 +979,142 @@ updateSurvivalUI();
     /* =====================================================
        WORLD GENERATION
        ===================================================== */
+   function generateWorld() {
 
-    function generateWorld() {
+    const renderDistance = 5;
+
+    for (let cx = -renderDistance; cx <= renderDistance; cx++) {
+
+        for (let cz = -renderDistance; cz <= renderDistance; cz++) {
+
+            generateChunk(cx, cz);
+
+        }
+
+    }
+
+}
+   const CHUNK_SIZE = 16;
+const generatedChunks = new Set();
+
+function generateChunk(chunkX, chunkZ) {
+
+    const chunkKey =
+        chunkX + "|" + chunkZ;
+
+    if (generatedChunks.has(chunkKey)) {
+        return;
+    }
+
+    generatedChunks.add(chunkKey);
+
+    const startX =
+        chunkX * CHUNK_SIZE;
+
+    const startZ =
+        chunkZ * CHUNK_SIZE;
+
+
+    for (
+        let x = startX;
+        x < startX + CHUNK_SIZE;
+        x++
+    ) {
+
+        for (
+            let z = startZ;
+            z < startZ + CHUNK_SIZE;
+            z++
+        ) {
+
+            let height =
+                1 +
+                Math.floor(
+                    Math.sin(x * 0.15) * 1.5 +
+                    Math.cos(z * 0.15) * 1.5
+                );
+
+            height =
+                Math.max(
+                    0,
+                    Math.min(4, height)
+                );
+
+
+            for (
+                let y = 0;
+                y <= height;
+                y++
+            ) {
+
+                let type = "stone";
+
+
+                if (y === height) {
+
+                    type = "grass";
+
+                }
+                else if (
+                    y >= height - 2
+                ) {
+
+                    type = "dirt";
+
+                }
+
+
+                /* COAL */
+
+                if (
+                    type === "stone" &&
+                    y <= 1 &&
+                    Math.random() < 0.08
+                ) {
+
+                    type = "coal";
+
+                }
+
+
+                createBlock(
+                    type,
+                    x,
+                    y,
+                    z
+                );
+
+            }
+
+
+            /* TREES */
+
+            const treeChance =
+                Math.random();
+
+
+            if (
+                treeChance < 0.045 &&
+                Math.abs(x) > 3 &&
+                Math.abs(z) > 3 &&
+                height >= 2
+            ) {
+
+                createTree(
+                    x,
+                    height + 1,
+                    z
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+   /* function generateWorld() {
 
         const half =
             Math.floor(worldSize / 2);
@@ -1122,7 +1256,7 @@ updateSurvivalUI();
         mesh.geometry.dispose();
         mesh.material.dispose();
 
-    }
+    }*/
 
 
     /* =====================================================
@@ -2975,6 +3109,43 @@ updateSurvivalUI();
 
     }
 
+function loadNearbyChunks() {
+
+    if (!player) return;
+
+    const chunkX =
+        Math.floor(
+            player.position.x / CHUNK_SIZE
+        );
+
+    const chunkZ =
+        Math.floor(
+            player.position.z / CHUNK_SIZE
+        );
+
+    const renderDistance = 2;
+
+
+    for (
+        let cx = chunkX - renderDistance;
+        cx <= chunkX + renderDistance;
+        cx++
+    ) {
+
+        for (
+            let cz = chunkZ - renderDistance;
+            cz <= chunkZ + renderDistance;
+            cz++
+        ) {
+
+            generateChunk(cx, cz);
+
+        }
+
+    }
+
+}
+
 
     /* =====================================================
        GAME LOOP
@@ -2998,6 +3169,7 @@ updateSurvivalUI();
 
 
         updatePlayer(delta);
+       loadNearbyChunks();
 
         updateSurvival(delta);
 
