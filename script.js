@@ -3011,4 +3011,4 @@ animate();
 
 console.log(
     "Mind Craft - Part 3 loaded successfully."
-);}
+);
