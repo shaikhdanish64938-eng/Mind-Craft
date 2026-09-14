@@ -806,8 +806,15 @@ function startGame() {
         /* =================================================
            CONTROLS
            ================================================= */
+       setupControls();
 
-        setupControls();
+updateInventory();
+
+updateHotbar();
+
+updateSurvivalUI();
+
+       /* setupControls();
 
         updateInventory();
 
@@ -815,7 +822,8 @@ function startGame() {
 
         setupMobileControls();
 
-        setupHotbar();
+        setupHotbar();*///
+      
 
 
         window.addEventListener(
