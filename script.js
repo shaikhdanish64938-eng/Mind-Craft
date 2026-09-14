@@ -3065,7 +3065,7 @@ function startGame() {
 // ===============================
 
 
-const homeScreen = document.getElementById("homeScreen");
+
 
 setTimeout(() => {
 
