@@ -36,7 +36,7 @@ function startGame() {
        BASIC ELEMENTS
        ===================================================== */
 
-    
+    const loadingScreen = document.getElementById("loadingScreen");
     const homeScreen = document.getElementById("homeScreen");
     const game = document.getElementById("game");
 
@@ -3064,7 +3064,7 @@ function startGame() {
 // LOADING SCREEN → HOME SCREEN
 // ===============================
 
-const loadingScreen = document.getElementById("loadingScreen");
+
 const homeScreen = document.getElementById("homeScreen");
 
 setTimeout(() => {
