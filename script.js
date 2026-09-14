@@ -2101,6 +2101,18 @@ console.log(
 // PART 3 WILL CONTINUE BELOW
 // =====================================================
 
+// Part 3 mein:
+// Mobile controls
+// Home screen
+// Player name
+// Kit
+// Clothes
+// Loading screen
+// Health / Hunger
+// Animation
+// Resize
+// Final startup
+// add hoga.
 // ===============================
 // PART 3 - MOBILE + PLAYER + HOME
 // ===============================
