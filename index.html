@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
 
     <title>Block World Survival</title>
 
@@ -12,258 +16,1278 @@
 
 <body>
 
-<div id="game">
+    <!-- ==========================================
+         LOADING SCREEN
+    =========================================== -->
 
-    <!-- Crosshair -->
-    <div id="crosshair">+</div>
+    <div id="loadingScreen" class="loading-screen">
 
-    <!-- Top HUD -->
-    <div id="hud">
+        <div class="loader-circle"></div>
 
-        <div id="gameTitle">
-            BLOCK WORLD
+        <h2>BLOCK WORLD</h2>
+
+        <p>Loading world...</p>
+
+    </div>
+
+
+    <!-- ==========================================
+         HOME PAGE
+    =========================================== -->
+
+    <div id="homeScreen" class="home-screen hidden">
+
+        <div class="home-top">
+
+            <div>
+
+                <div class="brand-small">
+                    BLOCK WORLD SURVIVAL
+                </div>
+
+                <h1>
+                    MIND <span>CRAFT</span>
+                </h1>
+
+            </div>
+
+
+            <div class="profile-chip">
+
+                <div class="profile-avatar">
+                    👤
+                </div>
+
+                <div>
+
+                    <small>PLAYER</small>
+
+                    <strong id="homePlayerName">
+                        Player
+                    </strong>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <div id="stats">
-            ❤️ <span id="health">100</span>
-            &nbsp;&nbsp;
-            🍗 <span id="hunger">100</span>
+
+        <!-- ======================================
+             HOME CONTENT
+        ======================================= -->
+
+        <div class="home-content">
+
+            <div class="hero-card">
+
+                <div class="hero-glow"></div>
+
+                <div class="hero-block">
+                    ▣
+                </div>
+
+
+                <div class="hero-copy">
+
+                    <div class="eyebrow">
+                        SURVIVAL ADVENTURE
+                    </div>
+
+                    <h2>
+                        BUILD. EXPLORE. SURVIVE.
+                    </h2>
+
+                    <p>
+                        Collect resources, craft items,
+                        customize your player and build
+                        your own world.
+                    </p>
+
+                </div>
+
+
+                <!-- PLAYER NAME -->
+
+                <input
+                    id="playerNameInput"
+                    class="player-name-input"
+                    type="text"
+                    maxlength="16"
+                    autocomplete="off"
+                    placeholder="Enter player name"
+                >
+
+
+                <!-- PLAY -->
+
+                <button
+                    id="startGameBtn"
+                    class="play-button"
+                    type="button"
+                >
+
+                    <span>▶</span>
+
+                    PLAY
+
+                </button>
+
+            </div>
+
+
+            <!-- ==================================
+                 HOME MENU
+            =================================== -->
+
+            <div class="menu-grid">
+
+
+                <!-- KIT -->
+
+                <button
+                    class="menu-card"
+                    data-home-panel="kitPanel"
+                    type="button"
+                >
+
+                    <div class="menu-icon">
+                        🎒
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            KIT
+                        </strong>
+
+                        <small>
+                            Choose your gear
+                        </small>
+
+                    </div>
+
+                    <b>›</b>
+
+                </button>
+
+
+                <!-- CLOTHES -->
+
+                <button
+                    class="menu-card"
+                    data-home-panel="clothesPanel"
+                    type="button"
+                >
+
+                    <div class="menu-icon">
+                        👕
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            CLOTHES
+                        </strong>
+
+                        <small>
+                            Customize player
+                        </small>
+
+                    </div>
+
+                    <b>›</b>
+
+                </button>
+
+
+                <!-- PROFILE -->
+
+                <button
+                    class="menu-card"
+                    data-home-panel="statsPanel"
+                    type="button"
+                >
+
+                    <div class="menu-icon">
+                        🏆
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            PROFILE
+                        </strong>
+
+                        <small>
+                            Player information
+                        </small>
+
+                    </div>
+
+                    <b>›</b>
+
+                </button>
+
+
+                <!-- SETTINGS -->
+
+                <button
+                    class="menu-card"
+                    data-home-panel="settingsPanel"
+                    type="button"
+                >
+
+                    <div class="menu-icon">
+                        ⚙️
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            SETTINGS
+                        </strong>
+
+                        <small>
+                            Game preferences
+                        </small>
+
+                    </div>
+
+                    <b>›</b>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             KIT PANEL
+        ======================================= -->
+
+        <div
+            id="kitPanel"
+            class="home-subpanel hidden"
+        >
+
+            <div class="subpanel-header">
+
+                <h2>
+                    🎒 CHOOSE YOUR KIT
+                </h2>
+
+                <button
+                    class="home-back"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div class="kit-options">
+
+
+                <button
+                    class="kit-option selected"
+                    data-kit="starter"
+                    type="button"
+                >
+
+                    <div class="kit-icon">
+                        🪵
+                    </div>
+
+                    <strong>
+                        STARTER
+                    </strong>
+
+                    <small>
+                        Basic survival equipment
+                    </small>
+
+                </button>
+
+
+                <button
+                    class="kit-option"
+                    data-kit="builder"
+                    type="button"
+                >
+
+                    <div class="kit-icon">
+                        ⛏️
+                    </div>
+
+                    <strong>
+                        BUILDER
+                    </strong>
+
+                    <small>
+                        Extra building materials
+                    </small>
+
+                </button>
+
+
+                <button
+                    class="kit-option"
+                    data-kit="explorer"
+                    type="button"
+                >
+
+                    <div class="kit-icon">
+                        🧭
+                    </div>
+
+                    <strong>
+                        EXPLORER
+                    </strong>
+
+                    <small>
+                        Useful exploration gear
+                    </small>
+
+                </button>
+
+            </div>
+
+
+            <div class="kit-selected">
+
+                Selected Kit:
+
+                <strong id="selectedKitName">
+                    STARTER
+                </strong>
+
+            </div>
+
+
+            <button
+                class="kit-equip"
+                type="button"
+            >
+                EQUIP KIT
+            </button>
+
+        </div>
+
+
+        <!-- ======================================
+             CLOTHES PANEL
+        ======================================= -->
+
+        <div
+            id="clothesPanel"
+            class="home-subpanel hidden"
+        >
+
+            <div class="subpanel-header">
+
+                <h2>
+                    👕 PLAYER CLOTHES
+                </h2>
+
+                <button
+                    class="home-back"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <!-- CLOTHES PREVIEW -->
+
+            <div class="clothes-preview">
+
+                <div
+                    id="previewHat"
+                    class="preview-part preview-hat"
+                >
+                    🧢
+                </div>
+
+                <div
+                    id="previewShirt"
+                    class="preview-part preview-shirt"
+                >
+                </div>
+
+                <div
+                    id="previewPants"
+                    class="preview-part preview-pants"
+                >
+                </div>
+
+                <div
+                    id="previewShoes"
+                    class="preview-part preview-shoes"
+                >
+                </div>
+
+            </div>
+
+
+            <!-- HEAD -->
+
+            <div class="cloth-section">
+
+                <h3>
+                    HEAD
+                </h3>
+
+                <div class="cloth-options">
+
+                    <button
+                        class="cloth-option selected"
+                        data-category="head"
+                        data-value="none"
+                        type="button"
+                    >
+                        None
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="head"
+                        data-value="cap"
+                        type="button"
+                    >
+                        🧢 Cap
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="head"
+                        data-value="helmet"
+                        type="button"
+                    >
+                        ⛑️ Helmet
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SHIRT -->
+
+            <div class="cloth-section">
+
+                <h3>
+                    SHIRT
+                </h3>
+
+                <div class="cloth-options">
+
+                    <button
+                        class="cloth-option selected"
+                        data-category="shirt"
+                        data-value="green"
+                        type="button"
+                    >
+                        🟢 Green
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="shirt"
+                        data-value="blue"
+                        type="button"
+                    >
+                        🔵 Blue
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="shirt"
+                        data-value="red"
+                        type="button"
+                    >
+                        🔴 Red
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PANTS -->
+
+            <div class="cloth-section">
+
+                <h3>
+                    PANTS
+                </h3>
+
+                <div class="cloth-options">
+
+                    <button
+                        class="cloth-option selected"
+                        data-category="pants"
+                        data-value="blue"
+                        type="button"
+                    >
+                        🔵 Blue
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="pants"
+                        data-value="black"
+                        type="button"
+                    >
+                        ⚫ Black
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="pants"
+                        data-value="brown"
+                        type="button"
+                    >
+                        🟤 Brown
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SHOES -->
+
+            <div class="cloth-section">
+
+                <h3>
+                    SHOES
+                </h3>
+
+                <div class="cloth-options">
+
+                    <button
+                        class="cloth-option selected"
+                        data-category="shoes"
+                        data-value="white"
+                        type="button"
+                    >
+                        ⚪ White
+                    </button>
+
+                    <button
+                        class="cloth-option"
+                        data-category="shoes"
+                        data-value="black"
+                        type="button"
+                    >
+                        ⚫ Black
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             PROFILE PANEL
+        ======================================= -->
+
+        <div
+            id="statsPanel"
+            class="home-subpanel hidden"
+        >
+
+            <div class="subpanel-header">
+
+                <h2>
+                    🏆 PROFILE
+                </h2>
+
+                <button
+                    class="home-back"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div class="profile-details">
+
+                <div class="big-profile-avatar">
+                    👤
+                </div>
+
+                <div class="profile-info">
+
+                    <span>
+                        PLAYER NAME
+                    </span>
+
+                    <strong id="profileName">
+                        Player
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>
+                        GAME MODE
+                    </span>
+
+                    <strong>
+                        SURVIVAL
+                    </strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>
+                        WORLD
+                    </span>
+
+                    <strong>
+                        BLOCK WORLD
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             SETTINGS PANEL
+        ======================================= -->
+
+        <div
+            id="settingsPanel"
+            class="home-subpanel hidden"
+        >
+
+            <div class="subpanel-header">
+
+                <h2>
+                    ⚙️ SETTINGS
+                </h2>
+
+                <button
+                    class="home-back"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div class="settings-list">
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <strong>
+                            Graphics
+                        </strong>
+
+                        <small>
+                            Standard game graphics
+                        </small>
+
+                    </div>
+
+                    <span>
+                        HIGH
+                    </span>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <strong>
+                            Controls
+                        </strong>
+
+                        <small>
+                            Keyboard + Mobile
+                        </small>
+
+                    </div>
+
+                    <span>
+                        ON
+                    </span>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+
+                        <strong>
+                            Sound
+                        </strong>
+
+                        <small>
+                            Game sound effects
+                        </small>
+
+                    </div>
+
+                    <span>
+                        ON
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HOME TOAST -->
+
+        <div
+            id="homeToast"
+            class="home-toast"
+        >
         </div>
 
     </div>
 
 
-    <!-- Messages -->
-    <div id="message"></div>
+    <!-- ==========================================
+         GAME
+    =========================================== -->
+
+    <div
+        id="game"
+        class="hidden"
+    >
 
 
-    <!-- PC Controls -->
-    <div id="pcHelp">
+        <!-- ======================================
+             CROSSHAIR
+        ======================================= -->
 
-        <b>BLOCK WORLD</b>
+        <div id="crosshair">
+            +
+        </div>
 
-        <br><br>
 
-        WASD = Move<br>
-        Mouse = Look<br>
-        Space = Jump<br>
-        Left Click = Mine<br>
-        Right Click = Place<br>
-        E = Inventory<br>
-        C = Crafting<br>
-        1-9 = Hotbar
+        <!-- ======================================
+             HUD
+        ======================================= -->
+
+        <div id="hud">
+
+            <div class="game-title">
+                BLOCK WORLD
+            </div>
+
+
+            <div class="player-hud">
+
+                <span id="playerNameHud">
+                    Player
+                </span>
+
+            </div>
+
+
+            <!-- HEALTH -->
+
+            <div class="health-hud">
+
+                <span>
+                    ❤️
+                </span>
+
+                <div class="bar">
+
+                    <div
+                        id="health"
+                        class="bar-fill"
+                        style="width:100%"
+                    >
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- HUNGER -->
+
+            <div class="hunger-hud">
+
+                <span>
+                    🍗
+                </span>
+
+                <div class="bar">
+
+                    <div
+                        id="hunger"
+                        class="bar-fill"
+                        style="width:100%"
+                    >
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             PC HELP
+        ======================================= -->
+
+        <div id="pcHelp">
+
+            <div>
+                Arrow Keys = Move
+            </div>
+
+            <div>
+                Mouse = Look
+            </div>
+
+            <div>
+                Space = Jump
+            </div>
+
+            <div>
+                Left Click = Mine
+            </div>
+
+            <div>
+                Right Click = Place
+            </div>
+
+            <div>
+                E = Inventory
+            </div>
+
+            <div>
+                C = Craft
+            </div>
+
+            <div>
+                Shift = Sprint
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             MESSAGE
+        ======================================= -->
+
+        <div id="message">
+        </div>
+
+
+        <!-- ======================================
+             INVENTORY PANEL
+        ======================================= -->
+
+        <div
+            id="inventoryPanel"
+            class="inventory-panel hidden"
+        >
+
+            <div class="panel-header">
+
+                <h2>
+                    INVENTORY
+                </h2>
+
+                <button
+                    id="closeInventory"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div id="inventoryItems">
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             CRAFTING PANEL
+        ======================================= -->
+
+        <div
+            id="craftingPanel"
+            class="crafting-panel hidden"
+        >
+
+            <div class="panel-header">
+
+                <h2>
+                    CRAFTING
+                </h2>
+
+                <button
+                    id="closeCrafting"
+                    type="button"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div
+                id="craftingItems"
+                class="crafting-items"
+            >
+
+                <!-- Crafting Table -->
+
+                <button
+                    class="craft-button"
+                    data-recipe="craftingTable"
+                    type="button"
+                >
+
+                    <span>
+                        🪵
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Crafting Table
+                        </strong>
+
+                        <small>
+                            4 Planks
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <!-- Planks -->
+
+                <button
+                    class="craft-button"
+                    data-recipe="planks"
+                    type="button"
+                >
+
+                    <span>
+                        🪵
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Planks
+                        </strong>
+
+                        <small>
+                            1 Wood → 4 Planks
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <!-- Sticks -->
+
+                <button
+                    class="craft-button"
+                    data-recipe="sticks"
+                    type="button"
+                >
+
+                    <span>
+                        🪄
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Sticks
+                        </strong>
+
+                        <small>
+                            2 Planks → 4 Sticks
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <!-- Wooden Pickaxe -->
+
+                <button
+                    class="craft-button"
+                    data-recipe="woodenPickaxe"
+                    type="button"
+                >
+
+                    <span>
+                        ⛏️
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Wooden Pickaxe
+                        </strong>
+
+                        <small>
+                            3 Planks + 2 Sticks
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <!-- Stone Pickaxe -->
+
+                <button
+                    class="craft-button"
+                    data-recipe="stonePickaxe"
+                    type="button"
+                >
+
+                    <span>
+                        ⛏️
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Stone Pickaxe
+                        </strong>
+
+                        <small>
+                            3 Stone + 2 Sticks
+                        </small>
+
+                    </div>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             HOTBAR
+        ======================================= -->
+
+        <div id="hotbar">
+
+            <div
+                class="hotbar-slot selected"
+                data-slot="1"
+            >
+                <span>1</span>
+                🌿
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="2"
+            >
+                <span>2</span>
+                🟫
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="3"
+            >
+                <span>3</span>
+                🪨
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="4"
+            >
+                <span>4</span>
+                🪵
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="5"
+            >
+                <span>5</span>
+                🍃
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="6"
+            >
+                <span>6</span>
+                ⚫
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="7"
+            >
+                <span>7</span>
+                🧱
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="8"
+            >
+                <span>8</span>
+                ⛏️
+            </div>
+
+            <div
+                class="hotbar-slot"
+                data-slot="9"
+            >
+                <span>9</span>
+                🛠️
+            </div>
+
+        </div>
+
+
+        <!-- ======================================
+             MOBILE CONTROLS
+        ======================================= -->
+
+        <div id="mobileControls">
+
+
+            <!-- LEFT JOYSTICK -->
+
+            <div id="joystick">
+
+                <div id="joystickKnob">
+                </div>
+
+            </div>
+
+
+            <!-- MOBILE ACTION BUTTONS -->
+
+            <button
+                id="jumpBtn"
+                class="mobile-btn"
+                type="button"
+            >
+                ↑
+            </button>
+
+
+            <button
+                id="mineBtn"
+                class="mobile-btn"
+                type="button"
+            >
+                ⛏
+            </button>
+
+
+            <button
+                id="placeBtn"
+                class="mobile-btn"
+                type="button"
+            >
+                ▣
+            </button>
+
+
+            <button
+                id="inventoryBtn"
+                class="mobile-btn"
+                type="button"
+            >
+                🎒
+            </button>
+
+
+            <button
+                id="craftingBtn"
+                class="mobile-btn"
+                type="button"
+            >
+                🛠
+            </button>
+
+        </div>
+
+
+        <!-- ======================================
+             ROTATE SCREEN
+        ======================================= -->
+
+        <div
+            id="rotateScreen"
+            class="rotate-screen"
+        >
+
+            <div>
+                📱
+            </div>
+
+            <h2>
+                ROTATE YOUR PHONE
+            </h2>
+
+            <p>
+                Please use landscape mode
+                to play the game.
+            </p>
+
+        </div>
 
     </div>
 
 
-    <!-- Inventory -->
-    <div id="inventory" class="panel">
-
-        <div class="panelHeader">
-
-            <span>🎒 INVENTORY</span>
-
-            <button id="closeInventory">
-                ✕
-            </button>
-
-        </div>
-
-        <div id="inventoryItems"></div>
-
-    </div>
-
-
-    <!-- Crafting -->
-    <div id="crafting" class="panel">
-
-        <div class="panelHeader">
-
-            <span>🔨 CRAFTING</span>
-
-            <button id="closeCrafting">
-                ✕
-            </button>
-
-        </div>
-
-        <div class="craftGrid">
-
-            <button class="craft-btn"
-                    data-recipe="planks">
-                🪵 Wood → 4 Planks
-            </button>
-
-            <button class="craft-btn"
-                    data-recipe="sticks">
-                🪵 2 Planks → 4 Sticks
-            </button>
-
-            <button class="craft-btn"
-                    data-recipe="craftingTable">
-                🧱 4 Planks → Crafting Table
-            </button>
-
-            <button class="craft-btn"
-                    data-recipe="woodPickaxe">
-                ⛏️ Wooden Pickaxe
-            </button>
-
-            <button class="craft-btn"
-                    data-recipe="stonePickaxe">
-                ⛏️ Stone Pickaxe
-            </button>
-
-        </div>
-
-        <div id="craftMessage"></div>
-
-    </div>
-
-
-    <!-- Hotbar -->
-    <div id="hotbar">
-
-        <div class="slot selected"
-             data-block="grass"
-             data-key="1">
-
-            <span class="icon">🌱</span>
-            <span class="count" id="count-grass">0</span>
-
-        </div>
-
-
-        <div class="slot"
-             data-block="dirt"
-             data-key="2">
-
-            <span class="icon">🟫</span>
-            <span class="count" id="count-dirt">0</span>
-
-        </div>
-
-
-        <div class="slot"
-             data-block="stone"
-             data-key="3">
-
-            <span class="icon">⬜</span>
-            <span class="count" id="count-stone">0</span>
-
-        </div>
-
-
-        <div class="slot"
-             data-block="wood"
-             data-key="4">
-
-            <span class="icon">🪵</span>
-            <span class="count" id="count-wood">0</span>
-
-        </div>
-
-
-        <div class="slot"
-             data-block="leaves"
-             data-key="5">
-
-            <span class="icon">🌿</span>
-            <span class="count" id="count-leaves">0</span>
-
-        </div>
-
-
-        <div class="slot"
-             data-block="coal"
-             data-key="6">
-
-            <span class="icon">⚫</span>
-            <span class="count" id="count-coal">0</span>
-
-        </div>
-
-
-        <div class="slot"
-             data-block="craftingTable"
-             data-key="7">
-
-            <span class="icon">🧱</span>
-            <span class="count" id="count-craftingTable">0</span>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- Mobile Controls -->
-
-    <div id="mobileControls">
-
-        <!-- Joystick -->
-        <div id="joystick">
-
-            <div id="joystickKnob"></div>
-
-        </div>
-
-
-        <!-- Look Area -->
-        <div id="lookArea"></div>
-
-
-        <!-- Buttons -->
-
-        <button id="jumpBtn"
-                class="mobileBtn">
-            ⬆
-        </button>
-
-
-        <button id="mineBtn"
-                class="mobileBtn">
-            ⛏
-        </button>
-
-
-        <button id="placeBtn"
-                class="mobileBtn">
-            🧱
-        </button>
-
-
-        <button id="inventoryBtn"
-                class="mobileBtn">
-            🎒
-        </button>
-
-
-        <button id="craftBtn"
-                class="mobileBtn">
-            🔨
-        </button>
-
-    </div>
-
-
-    <!-- Landscape message -->
-    <div id="rotateScreen">
-
-        <div>
-            📱
-            <br><br>
-            Please rotate your phone
-            <br>
-            to landscape mode
-        </div>
-
-    </div>
-
-</div>
-
-
-<script src="script.js"></script>
+    <!-- ==========================================
+         JAVASCRIPT
+    =========================================== -->
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>
