@@ -1,6 +1,6 @@
 /* =========================================================
    BLOCK WORLD SURVIVAL
-   CLEAN SCRIPT.JS
+   CLEAN COMPLETE SCRIPT.JS
    ========================================================= */
 
 /* global THREE */
@@ -20,7 +20,9 @@ threeScript.onload = function () {
 };
 
 threeScript.onerror = function () {
-    alert("Three.js load nahi ho paaya. Internet connection check karo.");
+    alert(
+        "Three.js load nahi ho paaya. Internet connection check karo."
+    );
 };
 
 document.head.appendChild(threeScript);
@@ -33,12 +35,17 @@ document.head.appendChild(threeScript);
 function startGame() {
 
     /* =====================================================
-       BASIC ELEMENTS
+       BASIC HTML ELEMENTS
        ===================================================== */
 
-    const loadingScreen = document.getElementById("loadingScreen");
-    const homeScreen = document.getElementById("homeScreen");
-    const game = document.getElementById("game");
+    const loadingScreen =
+        document.getElementById("loadingScreen");
+
+    const homeScreen =
+        document.getElementById("homeScreen");
+
+    const game =
+        document.getElementById("game");
 
     const playerNameInput =
         document.getElementById("playerNameInput");
@@ -71,15 +78,17 @@ function startGame() {
     let selectedKit = "starter";
 
     let appearance = {
+
         head: "none",
         shirt: "green",
         pants: "blue",
         shoes: "white"
+
     };
 
 
     /* =====================================================
-       SAFE STORAGE
+       SAVE DATA
        ===================================================== */
 
     function saveData() {
@@ -103,54 +112,78 @@ function startGame() {
 
         } catch (error) {
 
-            console.log("Storage unavailable.");
+            console.log(
+                "Storage unavailable."
+            );
 
         }
 
     }
 
 
+    /* =====================================================
+       LOAD DATA
+       ===================================================== */
+
     function loadData() {
 
         try {
 
             const savedName =
-                localStorage.getItem("blockWorldName");
+                localStorage.getItem(
+                    "blockWorldName"
+                );
 
             const savedKit =
-                localStorage.getItem("blockWorldKit");
+                localStorage.getItem(
+                    "blockWorldKit"
+                );
 
             const savedAppearance =
-                localStorage.getItem("blockWorldAppearance");
+                localStorage.getItem(
+                    "blockWorldAppearance"
+                );
 
 
             if (savedName) {
-                playerName = savedName;
+
+                playerName =
+                    savedName;
+
             }
 
 
             if (savedKit) {
-                selectedKit = savedKit;
+
+                selectedKit =
+                    savedKit;
+
             }
 
 
             if (savedAppearance) {
 
                 const data =
-                    JSON.parse(savedAppearance);
+                    JSON.parse(
+                        savedAppearance
+                    );
 
                 if (data) {
+
                     appearance = {
                         ...appearance,
                         ...data
                     };
+
                 }
 
             }
 
         } catch (error) {
 
-            console.log("Could not load saved data.");
+            console.log(
+                "Could not load saved data."
+            );
 
         }
 
@@ -161,27 +194,40 @@ function startGame() {
 
 
     /* =====================================================
-       HOME NAME
+       PLAYER NAME UI
        ===================================================== */
 
     if (playerNameInput) {
+
         playerNameInput.value =
-            playerName === "Player" ? "" : playerName;
+            playerName === "Player"
+                ? ""
+                : playerName;
+
     }
 
 
     function updatePlayerNameUI() {
 
         if (homePlayerName) {
-            homePlayerName.textContent = playerName;
+
+            homePlayerName.textContent =
+                playerName;
+
         }
 
         if (profileName) {
-            profileName.textContent = playerName;
+
+            profileName.textContent =
+                playerName;
+
         }
 
         if (playerNameHud) {
-            playerNameHud.textContent = playerName;
+
+            playerNameHud.textContent =
+                playerName;
+
         }
 
     }
@@ -196,20 +242,36 @@ function startGame() {
 
     let toastTimer = null;
 
+
     function showHomeToast(text) {
 
         if (!homeToast) return;
 
-        homeToast.textContent = text;
-        homeToast.classList.add("show");
 
-        clearTimeout(toastTimer);
+        homeToast.textContent =
+            text;
 
-        toastTimer = setTimeout(function () {
+        homeToast.classList.add(
+            "show"
+        );
 
-            homeToast.classList.remove("show");
 
-        }, 1800);
+        clearTimeout(
+            toastTimer
+        );
+
+
+        toastTimer =
+            setTimeout(
+                function () {
+
+                    homeToast.classList.remove(
+                        "show"
+                    );
+
+                },
+                1800
+            );
 
     }
 
@@ -218,60 +280,89 @@ function startGame() {
        HOME PANELS
        ===================================================== */
 
-    const homePanels = document.querySelectorAll(
-        ".home-subpanel"
-    );
+    const homePanels =
+        document.querySelectorAll(
+            ".home-subpanel"
+        );
 
-    const homeMenuButtons = document.querySelectorAll(
-        "[data-home-panel]"
-    );
 
-    const homeBackButtons = document.querySelectorAll(
-        ".home-back"
-    );
+    const homeMenuButtons =
+        document.querySelectorAll(
+            "[data-home-panel]"
+        );
+
+
+    const homeBackButtons =
+        document.querySelectorAll(
+            ".home-back"
+        );
 
 
     function closeHomePanels() {
 
-        homePanels.forEach(function (panel) {
+        homePanels.forEach(
+            function (panel) {
 
-            panel.classList.add("hidden");
+                panel.classList.add(
+                    "hidden"
+                );
 
-        });
+            }
+        );
 
     }
 
 
-    homeMenuButtons.forEach(function (button) {
+    homeMenuButtons.forEach(
+        function (button) {
 
-        button.addEventListener("click", function () {
+            button.addEventListener(
+                "click",
+                function () {
 
-            const panelId =
-                button.getAttribute("data-home-panel");
-
-            const panel =
-                document.getElementById(panelId);
-
-            if (!panel) return;
-
-            closeHomePanels();
-
-            panel.classList.remove("hidden");
-
-        });
-
-    });
+                    const panelId =
+                        button.getAttribute(
+                            "data-home-panel"
+                        );
 
 
-    homeBackButtons.forEach(function (button) {
+                    const panel =
+                        document.getElementById(
+                            panelId
+                        );
 
-        button.addEventListener("click", function () {
 
-            closeHomePanels();
+                    if (!panel) return;
 
-        });
 
-    });
+                    closeHomePanels();
+
+
+                    panel.classList.remove(
+                        "hidden"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    homeBackButtons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    closeHomePanels();
+
+                }
+            );
+
+        }
+    );
 
 
     /* =====================================================
@@ -279,68 +370,107 @@ function startGame() {
        ===================================================== */
 
     const kitOptions =
-        document.querySelectorAll(".kit-option");
+        document.querySelectorAll(
+            ".kit-option"
+        );
+
 
     const selectedKitName =
-        document.getElementById("selectedKitName");
+        document.getElementById(
+            "selectedKitName"
+        );
+
 
     const kitEquipButton =
-        document.querySelector(".kit-equip");
+        document.querySelector(
+            ".kit-equip"
+        );
 
 
     function updateKitUI() {
 
-        kitOptions.forEach(function (option) {
+        kitOptions.forEach(
+            function (option) {
 
-            const kit =
-                option.getAttribute("data-kit");
+                const kit =
+                    option.getAttribute(
+                        "data-kit"
+                    );
 
-            if (kit === selectedKit) {
-                option.classList.add("selected");
-            } else {
-                option.classList.remove("selected");
+
+                if (
+                    kit === selectedKit
+                ) {
+
+                    option.classList.add(
+                        "selected"
+                    );
+
+                } else {
+
+                    option.classList.remove(
+                        "selected"
+                    );
+
+                }
+
             }
-
-        });
+        );
 
 
         if (selectedKitName) {
 
             const names = {
+
                 starter: "STARTER",
                 builder: "BUILDER",
                 explorer: "EXPLORER"
+
             };
 
+
             selectedKitName.textContent =
-                names[selectedKit] || "STARTER";
+                names[selectedKit] ||
+                "STARTER";
 
         }
 
     }
 
 
-    kitOptions.forEach(function (option) {
+    kitOptions.forEach(
+        function (option) {
 
-        option.addEventListener("click", function () {
+            option.addEventListener(
+                "click",
+                function () {
 
-            const kit =
-                option.getAttribute("data-kit");
+                    const kit =
+                        option.getAttribute(
+                            "data-kit"
+                        );
 
-            if (!kit) return;
 
-            selectedKit = kit;
+                    if (!kit) return;
 
-            updateKitUI();
 
-            showHomeToast(
-                "Kit selected: " +
-                kit.toUpperCase()
+                    selectedKit =
+                        kit;
+
+
+                    updateKitUI();
+
+
+                    showHomeToast(
+                        "Kit selected: " +
+                        kit.toUpperCase()
+                    );
+
+                }
             );
 
-        });
-
-    });
+        }
+    );
 
 
     if (kitEquipButton) {
@@ -373,46 +503,71 @@ function startGame() {
        ===================================================== */
 
     const clothOptions =
-        document.querySelectorAll(".cloth-option");
+        document.querySelectorAll(
+            ".cloth-option"
+        );
 
 
     const previewHat =
-        document.getElementById("previewHat");
+        document.getElementById(
+            "previewHat"
+        );
+
 
     const previewShirt =
-        document.getElementById("previewShirt");
+        document.getElementById(
+            "previewShirt"
+        );
+
 
     const previewPants =
-        document.getElementById("previewPants");
+        document.getElementById(
+            "previewPants"
+        );
+
 
     const previewShoes =
-        document.getElementById("previewShoes");
+        document.getElementById(
+            "previewShoes"
+        );
 
 
     function updateClothesButtons() {
 
-        clothOptions.forEach(function (button) {
+        clothOptions.forEach(
+            function (button) {
 
-            const category =
-                button.getAttribute("data-category");
+                const category =
+                    button.getAttribute(
+                        "data-category"
+                    );
 
-            const value =
-                button.getAttribute("data-value");
+
+                const value =
+                    button.getAttribute(
+                        "data-value"
+                    );
 
 
-            if (
-                appearance[category] === value
-            ) {
+                if (
+                    appearance[category] ===
+                    value
+                ) {
 
-                button.classList.add("selected");
+                    button.classList.add(
+                        "selected"
+                    );
 
-            } else {
+                } else {
 
-                button.classList.remove("selected");
+                    button.classList.remove(
+                        "selected"
+                    );
+
+                }
 
             }
-
-        });
+        );
 
     }
 
@@ -429,8 +584,10 @@ function startGame() {
 
             };
 
+
             previewHat.textContent =
-                hats[appearance.head] || "";
+                hats[appearance.head] ||
+                "";
 
         }
 
@@ -445,8 +602,11 @@ function startGame() {
 
             };
 
+
             previewShirt.style.background =
-                shirtColors[appearance.shirt] ||
+                shirtColors[
+                    appearance.shirt
+                ] ||
                 "#32a852";
 
         }
@@ -462,8 +622,11 @@ function startGame() {
 
             };
 
+
             previewPants.style.background =
-                pantsColors[appearance.pants] ||
+                pantsColors[
+                    appearance.pants
+                ] ||
                 "#315d9d";
 
         }
@@ -478,8 +641,11 @@ function startGame() {
 
             };
 
+
             previewShoes.style.background =
-                shoesColors[appearance.shoes] ||
+                shoesColors[
+                    appearance.shoes
+                ] ||
                 "#ffffff";
 
         }
@@ -490,43 +656,54 @@ function startGame() {
     }
 
 
-    clothOptions.forEach(function (button) {
+    clothOptions.forEach(
+        function (button) {
 
-        button.addEventListener(
-            "click",
-            function () {
+            button.addEventListener(
+                "click",
+                function () {
 
-                const category =
-                    button.getAttribute(
-                        "data-category"
+                    const category =
+                        button.getAttribute(
+                            "data-category"
+                        );
+
+
+                    const value =
+                        button.getAttribute(
+                            "data-value"
+                        );
+
+
+                    if (
+                        !category ||
+                        !value
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    appearance[category] =
+                        value;
+
+
+                    updateClothesPreview();
+
+                    saveData();
+
+
+                    showHomeToast(
+                        category.toUpperCase() +
+                        " changed"
                     );
 
-                const value =
-                    button.getAttribute(
-                        "data-value"
-                    );
-
-
-                if (!category || !value) {
-                    return;
                 }
+            );
 
-
-                appearance[category] = value;
-
-                updateClothesPreview();
-
-                saveData();
-
-                showHomeToast(
-                    category.toUpperCase() +
-                    " changed"
-                );
-
-            }
-        );
-
-    });
+        }
+    );
 
 
     updateClothesPreview();
@@ -536,37 +713,61 @@ function startGame() {
        THREE.JS VARIABLES
        ===================================================== */
 
-    let scene;
-    let camera;
-    let renderer;
+    let scene = null;
 
-    let clock;
+    let camera = null;
 
-    let player;
+    let renderer = null;
+
+    let clock = null;
+
+    let player = null;
+
 
     let yaw = 0;
+
     let pitch = 0;
 
     let velocityY = 0;
 
     let canJump = true;
 
+
     let selectedSlot = 1;
 
+
     let healthValue = 100;
+
     let hungerValue = 100;
+
 
     let messageTimer = null;
 
 
     /* =====================================================
-       WORLD
+       WORLD VARIABLES
        ===================================================== */
 
     const blocks = [];
+
     const blockMap = new Map();
 
-    const worldSize = 32;
+
+    /*
+       CHUNK SYSTEM
+
+       1 chunk = 16 x 16 blocks
+
+       New chunks are automatically created
+       when the player moves.
+    */
+
+    const CHUNK_SIZE = 16;
+
+    const generatedChunks =
+        new Set();
+
+
     const blockSize = 1;
 
 
@@ -577,69 +778,101 @@ function startGame() {
     const blockTypes = {
 
         grass: {
+
             name: "Grass",
             emoji: "🌿",
             color: 0x4caf50
+
         },
 
+
         dirt: {
+
             name: "Dirt",
             emoji: "🟫",
             color: 0x79502e
+
         },
 
+
         stone: {
+
             name: "Stone",
             emoji: "🪨",
             color: 0x858585
+
         },
 
+
         wood: {
+
             name: "Wood",
             emoji: "🪵",
             color: 0x8a5a32
+
         },
 
+
         leaves: {
+
             name: "Leaves",
             emoji: "🍃",
             color: 0x258a45
+
         },
 
+
         coal: {
+
             name: "Coal",
             emoji: "⚫",
             color: 0x202020
+
         },
 
+
         craftingTable: {
+
             name: "Crafting Table",
             emoji: "🧱",
             color: 0x9b6237
+
         },
 
+
         planks: {
+
             name: "Planks",
             emoji: "🪵",
             color: 0xb47743
+
         },
 
+
         sticks: {
+
             name: "Sticks",
             emoji: "🪄",
             color: 0xa86d3c
+
         },
 
+
         woodenPickaxe: {
+
             name: "Wooden Pickaxe",
             emoji: "⛏️",
             color: 0x9b673d
+
         },
 
+
         stonePickaxe: {
+
             name: "Stone Pickaxe",
             emoji: "⛏️",
             color: 0x7d858b
+
         }
 
     };
@@ -667,7 +900,59 @@ function startGame() {
 
 
     /* =====================================================
-       HOTBAR TYPES
+       KIT STARTING ITEMS
+       ===================================================== */
+
+    function applySelectedKit() {
+
+        /*
+           Kit items are only added once when
+           the game starts.
+        */
+
+        if (
+            inventory.grass === 0 &&
+            inventory.dirt === 0 &&
+            inventory.stone === 0 &&
+            inventory.planks === 0 &&
+            inventory.sticks === 0
+        ) {
+
+            if (selectedKit === "builder") {
+
+                inventory.grass = 20;
+                inventory.dirt = 20;
+                inventory.stone = 15;
+                inventory.wood = 6;
+
+            }
+            else if (
+                selectedKit === "explorer"
+            ) {
+
+                inventory.grass = 15;
+                inventory.dirt = 15;
+                inventory.stone = 10;
+                inventory.wood = 8;
+                inventory.coal = 5;
+
+            }
+            else {
+
+                inventory.grass = 10;
+                inventory.dirt = 10;
+                inventory.stone = 5;
+                inventory.wood = 3;
+
+            }
+
+        }
+
+    }
+
+
+    /* =====================================================
+       HOTBAR
        ===================================================== */
 
     const hotbarItems = {
@@ -686,158 +971,6 @@ function startGame() {
 
 
     /* =====================================================
-       INIT THREE.JS
-       ===================================================== */
-
-    function initializeGame() {
-
-        if (initialized) return;
-
-        initialized = true;
-
-
-        scene = new THREE.Scene();
-
-        scene.background =
-            new THREE.Color(0x79b7df);
-
-
-        scene.fog =
-            new THREE.Fog(0x79b7df, 20, 75);
-
-
-        camera =
-            new THREE.PerspectiveCamera(
-                75,
-                window.innerWidth /
-                window.innerHeight,
-                0.1,
-                150
-            );
-
-
-        camera.position.set(
-            0,
-            4,
-            6
-        );
-
-
-        renderer =
-            new THREE.WebGLRenderer({
-                antialias: true
-            });
-
-
-        renderer.setPixelRatio(
-            Math.min(window.devicePixelRatio, 2)
-        );
-
-
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-
-        renderer.shadowMap.enabled = true;
-
-        renderer.shadowMap.type =
-            THREE.PCFSoftShadowMap;
-
-
-        game.insertBefore(
-            renderer.domElement,
-            game.firstChild
-        );
-
-
-        clock = new THREE.Clock();
-
-
-        /* =================================================
-           LIGHTS
-           ================================================= */
-
-        const ambient =
-            new THREE.HemisphereLight(
-                0xffffff,
-                0x35513d,
-                1.3
-            );
-
-        scene.add(ambient);
-
-
-        const sun =
-            new THREE.DirectionalLight(
-                0xffffff,
-                1.5
-            );
-
-        sun.position.set(
-            30,
-            50,
-            20
-        );
-
-        sun.castShadow = true;
-
-        sun.shadow.mapSize.width = 1024;
-        sun.shadow.mapSize.height = 1024;
-
-        scene.add(sun);
-
-
-        /* =================================================
-           WORLD
-           ================================================= */
-
-        generateWorld();
-
-
-        /* =================================================
-           PLAYER
-           ================================================= */
-
-        createPlayer();
-
-
-        /* =================================================
-           CONTROLS
-           ================================================= */
-       setupControls();
-
-updateInventory();
-
-updateHotbar();
-
-updateSurvivalUI();
-
-       /* setupControls();
-
-        updateInventory();
-
-        setupCrafting();
-
-        setupMobileControls();
-
-        setupHotbar();*///
-      
-
-
-        window.addEventListener(
-            "resize",
-            onResize
-        );
-
-
-        animate();
-
-    }
-
-
-    /* =====================================================
        CREATE BLOCK
        ===================================================== */
 
@@ -848,19 +981,29 @@ updateSurvivalUI();
         z
     ) {
 
+        if (!scene) return null;
+
+
         const key =
             x + "|" + y + "|" + z;
 
 
         if (blockMap.has(key)) {
+
             return null;
+
         }
 
 
         const data =
             blockTypes[type];
 
-        if (!data) return null;
+
+        if (!data) {
+
+            return null;
+
+        }
 
 
         const geometry =
@@ -873,7 +1016,9 @@ updateSurvivalUI();
 
         const material =
             new THREE.MeshLambertMaterial({
+
                 color: data.color
+
             });
 
 
@@ -892,13 +1037,21 @@ updateSurvivalUI();
 
 
         mesh.castShadow = true;
+
         mesh.receiveShadow = true;
 
 
-        mesh.userData.blockType = type;
-        mesh.userData.x = x;
-        mesh.userData.y = y;
-        mesh.userData.z = z;
+        mesh.userData.blockType =
+            type;
+
+        mesh.userData.x =
+            x;
+
+        mesh.userData.y =
+            y;
+
+        mesh.userData.z =
+            z;
 
 
         scene.add(mesh);
@@ -906,7 +1059,10 @@ updateSurvivalUI();
 
         blocks.push(mesh);
 
-        blockMap.set(key, mesh);
+        blockMap.set(
+            key,
+            mesh
+        );
 
 
         return mesh;
@@ -926,11 +1082,14 @@ updateSurvivalUI();
         const type =
             mesh.userData.blockType;
 
+
         const x =
             mesh.userData.x;
 
+
         const y =
             mesh.userData.y;
+
 
         const z =
             mesh.userData.z;
@@ -940,7 +1099,12 @@ updateSurvivalUI();
             x + "|" + y + "|" + z;
 
 
-        scene.remove(mesh);
+        if (scene) {
+
+            scene.remove(mesh);
+
+        }
+
 
         blockMap.delete(key);
 
@@ -948,21 +1112,35 @@ updateSurvivalUI();
         const index =
             blocks.indexOf(mesh);
 
+
         if (index !== -1) {
-            blocks.splice(index, 1);
+
+            blocks.splice(
+                index,
+                1
+            );
+
         }
 
 
         if (mesh.geometry) {
+
             mesh.geometry.dispose();
+
         }
+
 
         if (mesh.material) {
+
             mesh.material.dispose();
+
         }
 
 
-        if (inventory[type] !== undefined) {
+        if (
+            inventory[type] !==
+            undefined
+        ) {
 
             inventory[type]++;
 
@@ -977,178 +1155,223 @@ updateSurvivalUI();
 
 
     /* =====================================================
-       WORLD GENERATION
+       TERRAIN HEIGHT
        ===================================================== */
-   function generateWorld() {
 
-    const renderDistance = 5;
-
-    for (let cx = -renderDistance; cx <= renderDistance; cx++) {
-
-        for (let cz = -renderDistance; cz <= renderDistance; cz++) {
-
-            generateChunk(cx, cz);
-
-        }
-
-    }
-
-}
-   const CHUNK_SIZE = 16;
-const generatedChunks = new Set();
-
-function generateChunk(chunkX, chunkZ) {
-
-    const chunkKey =
-        chunkX + "|" + chunkZ;
-
-    if (generatedChunks.has(chunkKey)) {
-        return;
-    }
-
-    generatedChunks.add(chunkKey);
-
-    const startX =
-        chunkX * CHUNK_SIZE;
-
-    const startZ =
-        chunkZ * CHUNK_SIZE;
-
-
-    for (
-        let x = startX;
-        x < startX + CHUNK_SIZE;
-        x++
-    ) {
-
-        for (
-            let z = startZ;
-            z < startZ + CHUNK_SIZE;
-            z++
-        ) {
-
-            let height =
-                1 +
-                Math.floor(
-                    Math.sin(x * 0.15) * 1.5 +
-                    Math.cos(z * 0.15) * 1.5
-                );
-
-            height =
-                Math.max(
-                    0,
-                    Math.min(4, height)
-                );
-
-
-            for (
-                let y = 0;
-                y <= height;
-                y++
-            ) {
-
-                let type = "stone";
-
-
-                if (y === height) {
-
-                    type = "grass";
-
-                }
-                else if (
-                    y >= height - 2
-                ) {
-
-                    type = "dirt";
-
-                }
-
-
-                /* COAL */
-
-                if (
-                    type === "stone" &&
-                    y <= 1 &&
-                    Math.random() < 0.08
-                ) {
-
-                    type = "coal";
-
-                }
-
-
-                createBlock(
-                    type,
-                    x,
-                    y,
-                    z
-                );
-
-            }
-
-
-            /* TREES */
-
-            const treeChance =
-                Math.random();
-
-
-            if (
-                treeChance < 0.045 &&
-                Math.abs(x) > 3 &&
-                Math.abs(z) > 3 &&
-                height >= 2
-            ) {
-
-                createTree(
-                    x,
-                    height + 1,
-                    z
-                );
-
-            }
-
-        }
-
-    }
-
-}
-
-
-
-
-
-
-
-    function removeGeneratedBlock(
+    function getTerrainHeight(
         x,
-        y,
         z
     ) {
 
-        const key =
-            x + "|" + y + "|" + z;
+        let height =
+            2 +
+            Math.floor(
+                Math.sin(x * 0.13) * 1.3 +
+                Math.cos(z * 0.11) * 1.3 +
+                Math.sin(
+                    (x + z) * 0.07
+                ) * 0.8
+            );
 
-        const mesh =
-            blockMap.get(key);
 
-        if (!mesh) return;
+        height =
+            Math.max(
+                0,
+                Math.min(
+                    5,
+                    height
+                )
+            );
 
-        scene.remove(mesh);
 
-        blockMap.delete(key);
+        return height;
 
-        const index =
-            blocks.indexOf(mesh);
+    }
 
-        if (index !== -1) {
-            blocks.splice(index, 1);
+
+    /* =====================================================
+       GENERATE WORLD
+       ===================================================== */
+
+    function generateWorld() {
+
+        /*
+           Starting render distance.
+
+           5 means 11 x 11 chunks
+           are generated around 0,0.
+        */
+
+        const renderDistance = 5;
+
+
+        for (
+            let cx = -renderDistance;
+            cx <= renderDistance;
+            cx++
+        ) {
+
+            for (
+                let cz = -renderDistance;
+                cz <= renderDistance;
+                cz++
+            ) {
+
+                generateChunk(
+                    cx,
+                    cz
+                );
+
+            }
+
         }
 
-        mesh.geometry.dispose();
-        mesh.material.dispose();
+    }
 
-    }*/
+
+    /* =====================================================
+       GENERATE CHUNK
+       ===================================================== */
+
+    function generateChunk(
+        chunkX,
+        chunkZ
+    ) {
+
+        const chunkKey =
+            chunkX + "|" + chunkZ;
+
+
+        if (
+            generatedChunks.has(
+                chunkKey
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        generatedChunks.add(
+            chunkKey
+        );
+
+
+        const startX =
+            chunkX *
+            CHUNK_SIZE;
+
+
+        const startZ =
+            chunkZ *
+            CHUNK_SIZE;
+
+
+        for (
+            let x = startX;
+            x < startX + CHUNK_SIZE;
+            x++
+        ) {
+
+            for (
+                let z = startZ;
+                z < startZ + CHUNK_SIZE;
+                z++
+            ) {
+
+                const height =
+                    getTerrainHeight(
+                        x,
+                        z
+                    );
+
+
+                /*
+                   GROUND
+                */
+
+                for (
+                    let y = 0;
+                    y <= height;
+                    y++
+                ) {
+
+                    let type =
+                        "stone";
+
+
+                    if (
+                        y === height
+                    ) {
+
+                        type =
+                            "grass";
+
+                    }
+                    else if (
+                        y >= height - 2
+                    ) {
+
+                        type =
+                            "dirt";
+
+                    }
+
+
+                    /*
+                       COAL
+                    */
+
+                    if (
+                        type === "stone" &&
+                        y <= 2 &&
+                        Math.random() < 0.07
+                    ) {
+
+                        type =
+                            "coal";
+
+                    }
+
+
+                    createBlock(
+                        type,
+                        x,
+                        y,
+                        z
+                    );
+
+                }
+
+
+                /*
+                   TREES
+
+                   Do not create too many
+                   trees near starting area.
+                */
+
+                if (
+                    Math.abs(x) > 4 &&
+                    Math.abs(z) > 4 &&
+                    height >= 2 &&
+                    Math.random() < 0.035
+                ) {
+
+                    createTree(
+                        x,
+                        height + 1,
+                        z
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
 
 
     /* =====================================================
@@ -1160,6 +1383,10 @@ function generateChunk(chunkX, chunkZ) {
         baseY,
         z
     ) {
+
+        /*
+           TRUNK
+        */
 
         for (
             let y = baseY;
@@ -1176,6 +1403,10 @@ function generateChunk(chunkX, chunkZ) {
 
         }
 
+
+        /*
+           LEAVES
+        */
 
         for (
             let dx = -2;
@@ -1233,22 +1464,32 @@ function generateChunk(chunkX, chunkZ) {
             new THREE.Group();
 
 
+        /*
+           BODY
+        */
+
         const body =
             new THREE.Mesh(
+
                 new THREE.BoxGeometry(
                     0.65,
                     1.05,
                     0.4
                 ),
+
                 new THREE.MeshLambertMaterial({
+
                     color: 0x32a852
+
                 })
+
             );
 
 
         body.position.y = 0;
 
         body.castShadow = true;
+
 
         player.add(body);
 
@@ -1257,12 +1498,201 @@ function generateChunk(chunkX, chunkZ) {
             body;
 
 
+        /*
+           HEAD
+        */
+
+        const head =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+                    0.58,
+                    0.58,
+                    0.58
+                ),
+
+                new THREE.MeshLambertMaterial({
+
+                    color: 0xf0b58b
+
+                })
+
+            );
+
+
+        head.position.y =
+            0.82;
+
+
+        head.castShadow = true;
+
+
+        player.add(head);
+
+
+        player.userData.head =
+            head;
+
+
+        /*
+           LEGS
+        */
+
+        const leftLeg =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+                    0.28,
+                    0.65,
+                    0.35
+                ),
+
+                new THREE.MeshLambertMaterial({
+
+                    color: 0x315d9d
+
+                })
+
+            );
+
+
+        leftLeg.position.set(
+            -0.17,
+            -0.82,
+            0
+        );
+
+
+        leftLeg.castShadow = true;
+
+
+        player.add(leftLeg);
+
+
+        const rightLeg =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+                    0.28,
+                    0.65,
+                    0.35
+                ),
+
+                new THREE.MeshLambertMaterial({
+
+                    color: 0x315d9d
+
+                })
+
+            );
+
+
+        rightLeg.position.set(
+            0.17,
+            -0.82,
+            0
+        );
+
+
+        rightLeg.castShadow = true;
+
+
+        player.add(rightLeg);
+
+
+        player.userData.leftLeg =
+            leftLeg;
+
+
+        player.userData.rightLeg =
+            rightLeg;
+
+
+        /*
+           SHOES
+        */
+
+        const leftShoe =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+                    0.3,
+                    0.18,
+                    0.42
+                ),
+
+                new THREE.MeshLambertMaterial({
+
+                    color: 0xffffff
+
+                })
+
+            );
+
+
+        leftShoe.position.set(
+            -0.17,
+            -1.18,
+            0.04
+        );
+
+
+        player.add(leftShoe);
+
+
+        const rightShoe =
+            new THREE.Mesh(
+
+                new THREE.BoxGeometry(
+                    0.3,
+                    0.18,
+                    0.42
+                ),
+
+                new THREE.MeshLambertMaterial({
+
+                    color: 0xffffff
+
+                })
+
+            );
+
+
+        rightShoe.position.set(
+            0.17,
+            -1.18,
+            0.04
+        );
+
+
+        player.add(rightShoe);
+
+
+        player.userData.leftShoe =
+            leftShoe;
+
+
+        player.userData.rightShoe =
+            rightShoe;
+
+
         scene.add(player);
+
+
+        /*
+           PLAYER START POSITION
+        */
+
+        const startHeight =
+            getTerrainHeight(
+                0,
+                5
+            );
 
 
         player.position.set(
             0,
-            3,
+            startHeight + 1.8,
             5
         );
 
@@ -1273,7 +1703,7 @@ function generateChunk(chunkX, chunkZ) {
 
 
     /* =====================================================
-       PLAYER CLOTHES
+       PLAYER APPEARANCE
        ===================================================== */
 
     function applyAppearanceToPlayer() {
@@ -1284,8 +1714,30 @@ function generateChunk(chunkX, chunkZ) {
         const body =
             player.userData.body;
 
-        if (!body) return;
 
+        const head =
+            player.userData.head;
+
+
+        const leftLeg =
+            player.userData.leftLeg;
+
+
+        const rightLeg =
+            player.userData.rightLeg;
+
+
+        const leftShoe =
+            player.userData.leftShoe;
+
+
+        const rightShoe =
+            player.userData.rightShoe;
+
+
+        /*
+           SHIRT
+        */
 
         const shirtColors = {
 
@@ -1296,19 +1748,119 @@ function generateChunk(chunkX, chunkZ) {
         };
 
 
-        body.material.color.setHex(
-            shirtColors[
-                appearance.shirt
-            ] || shirtColors.green
-        );
+        if (body) {
+
+            body.material.color.setHex(
+
+                shirtColors[
+                    appearance.shirt
+                ] ||
+                shirtColors.green
+
+            );
+
+        }
 
 
-        /* STORE APPEARANCE */
+        /*
+           PANTS
+        */
 
-        player.userData.appearance =
-            {
-                ...appearance
-            };
+        const pantsColors = {
+
+            blue: 0x315d9d,
+            black: 0x151515,
+            brown: 0x71482e
+
+        };
+
+
+        if (leftLeg) {
+
+            leftLeg.material.color.setHex(
+
+                pantsColors[
+                    appearance.pants
+                ] ||
+                pantsColors.blue
+
+            );
+
+        }
+
+
+        if (rightLeg) {
+
+            rightLeg.material.color.setHex(
+
+                pantsColors[
+                    appearance.pants
+                ] ||
+                pantsColors.blue
+
+            );
+
+        }
+
+
+        /*
+           SHOES
+        */
+
+        const shoeColors = {
+
+            white: 0xffffff,
+            black: 0x111111
+
+        };
+
+
+        if (leftShoe) {
+
+            leftShoe.material.color.setHex(
+
+                shoeColors[
+                    appearance.shoes
+                ] ||
+                shoeColors.white
+
+            );
+
+        }
+
+
+        if (rightShoe) {
+
+            rightShoe.material.color.setHex(
+
+                shoeColors[
+                    appearance.shoes
+                ] ||
+                shoeColors.white
+
+            );
+
+        }
+
+
+        /*
+           HEAD / HAT
+
+           Simple color change for now.
+        */
+
+        if (head) {
+
+            head.material.color.setHex(
+                0xf0b58b
+            );
+
+        }
+
+
+        player.userData.appearance = {
+            ...appearance
+        };
 
     }
 
@@ -1335,10 +1887,19 @@ function generateChunk(chunkX, chunkZ) {
 
 
     let joystickX = 0;
+
     let joystickY = 0;
 
 
+    /* =====================================================
+       CONTROLS
+       ===================================================== */
+
     function setupControls() {
+
+        /*
+           KEYBOARD
+        */
 
         document.addEventListener(
             "keydown",
@@ -1355,7 +1916,9 @@ function generateChunk(chunkX, chunkZ) {
                 }
 
 
-                if (event.key === " ") {
+                if (
+                    event.key === " "
+                ) {
 
                     event.preventDefault();
 
@@ -1390,7 +1953,9 @@ function generateChunk(chunkX, chunkZ) {
                 ) {
 
                     selectHotbar(
-                        Number(event.key)
+                        Number(
+                            event.key
+                        )
                     );
 
                 }
@@ -1417,7 +1982,9 @@ function generateChunk(chunkX, chunkZ) {
         );
 
 
-        /* MOUSE */
+        /*
+           MOUSE LOOK
+        */
 
         document.addEventListener(
             "mousemove",
@@ -1425,7 +1992,9 @@ function generateChunk(chunkX, chunkZ) {
 
                 if (!gameStarted) return;
 
+
                 if (
+                    renderer &&
                     document.pointerLockElement ===
                     renderer.domElement
                 ) {
@@ -1433,6 +2002,7 @@ function generateChunk(chunkX, chunkZ) {
                     yaw -=
                         event.movementX *
                         0.002;
+
 
                     pitch -=
                         event.movementY *
@@ -1454,50 +2024,80 @@ function generateChunk(chunkX, chunkZ) {
         );
 
 
-        renderer.domElement.addEventListener(
-            "click",
-            function () {
+        /*
+           CLICK TO LOCK MOUSE
+        */
 
-                if (!gameStarted) return;
+        if (renderer) {
 
-                renderer.domElement.requestPointerLock();
+            renderer.domElement.addEventListener(
+                "click",
+                function () {
 
-            }
-        );
+                    if (!gameStarted) {
+                        return;
+                    }
 
 
-        /* LEFT CLICK */
+                    if (
+                        renderer.domElement.requestPointerLock
+                    ) {
 
-        renderer.domElement.addEventListener(
-            "mousedown",
-            function (event) {
+                        renderer.domElement.requestPointerLock();
 
-                if (!gameStarted) return;
-
-                if (event.button === 0) {
-
-                    mineBlock();
+                    }
 
                 }
-
-            }
-        );
+            );
 
 
-        /* RIGHT CLICK */
+            /*
+               LEFT CLICK = MINE
+            */
 
-        renderer.domElement.addEventListener(
-            "contextmenu",
-            function (event) {
+            renderer.domElement.addEventListener(
+                "mousedown",
+                function (event) {
 
-                event.preventDefault();
+                    if (!gameStarted) {
+                        return;
+                    }
 
-                if (!gameStarted) return;
 
-                placeBlock();
+                    if (
+                        event.button === 0
+                    ) {
 
-            }
-        );
+                        mineBlock();
+
+                    }
+
+                }
+            );
+
+
+            /*
+               RIGHT CLICK = PLACE
+            */
+
+            renderer.domElement.addEventListener(
+                "contextmenu",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    if (!gameStarted) {
+                        return;
+                    }
+
+
+                    placeBlock();
+
+                }
+            );
+
+        }
 
     }
 
@@ -1512,6 +2112,7 @@ function generateChunk(chunkX, chunkZ) {
 
         if (!canJump) return;
 
+
         velocityY = 7;
 
         canJump = false;
@@ -1525,16 +2126,24 @@ function generateChunk(chunkX, chunkZ) {
 
     function updatePlayer(delta) {
 
-        if (!player || !camera) return;
+        if (!player || !camera) {
+            return;
+        }
 
-        if (!gameStarted) return;
+
+        if (!gameStarted) {
+            return;
+        }
 
 
         const speed =
-            keys.Shift ? 8 : 4.5;
+            keys.Shift
+                ? 8
+                : 4.5;
 
 
         let forward = 0;
+
         let side = 0;
 
 
@@ -1542,7 +2151,9 @@ function generateChunk(chunkX, chunkZ) {
             keys.ArrowUp ||
             keys.w
         ) {
+
             forward += 1;
+
         }
 
 
@@ -1550,7 +2161,9 @@ function generateChunk(chunkX, chunkZ) {
             keys.ArrowDown ||
             keys.s
         ) {
+
             forward -= 1;
+
         }
 
 
@@ -1558,7 +2171,9 @@ function generateChunk(chunkX, chunkZ) {
             keys.ArrowRight ||
             keys.d
         ) {
+
             side += 1;
+
         }
 
 
@@ -1566,12 +2181,22 @@ function generateChunk(chunkX, chunkZ) {
             keys.ArrowLeft ||
             keys.a
         ) {
+
             side -= 1;
+
         }
 
 
-        forward += -joystickY;
-        side += joystickX;
+        /*
+           JOYSTICK
+        */
+
+        forward +=
+            -joystickY;
+
+
+        side +=
+            joystickX;
 
 
         const length =
@@ -1583,34 +2208,45 @@ function generateChunk(chunkX, chunkZ) {
 
         if (length > 1) {
 
-            forward /= length;
-            side /= length;
+            forward /=
+                length;
+
+            side /=
+                length;
 
         }
 
 
-        /* CAMERA DIRECTION */
+        /*
+           CAMERA DIRECTION
+        */
 
         const direction =
             new THREE.Vector3(
+
                 Math.sin(yaw),
                 0,
                 Math.cos(yaw)
+
             );
 
 
         const right =
             new THREE.Vector3(
+
                 Math.cos(yaw),
                 0,
                 -Math.sin(yaw)
+
             );
 
 
         player.position.x +=
             (
-                direction.x * forward +
-                right.x * side
+                direction.x *
+                forward +
+                right.x *
+                side
             ) *
             speed *
             delta;
@@ -1618,14 +2254,18 @@ function generateChunk(chunkX, chunkZ) {
 
         player.position.z +=
             (
-                direction.z * forward +
-                right.z * side
+                direction.z *
+                forward +
+                right.z *
+                side
             ) *
             speed *
             delta;
 
 
-        /* GRAVITY */
+        /*
+           GRAVITY
+        */
 
         velocityY -=
             18 * delta;
@@ -1635,13 +2275,43 @@ function generateChunk(chunkX, chunkZ) {
             velocityY * delta;
 
 
-        const groundY = 2.0;
+        /*
+           TERRAIN HEIGHT
+
+           Player follows terrain.
+        */
+
+        const terrainX =
+            Math.round(
+                player.position.x
+            );
 
 
-        if (player.position.y <= groundY) {
+        const terrainZ =
+            Math.round(
+                player.position.z
+            );
+
+
+        const terrainHeight =
+            getTerrainHeight(
+                terrainX,
+                terrainZ
+            );
+
+
+        const groundY =
+            terrainHeight + 1.8;
+
+
+        if (
+            player.position.y <=
+            groundY
+        ) {
 
             player.position.y =
                 groundY;
+
 
             velocityY = 0;
 
@@ -1650,14 +2320,17 @@ function generateChunk(chunkX, chunkZ) {
         }
 
 
-        /* CAMERA */
+        /*
+           CAMERA
+        */
 
         camera.position.x =
             player.position.x;
 
 
         camera.position.y =
-            player.position.y + 1.25;
+            player.position.y +
+            1.25;
 
 
         camera.position.z =
@@ -1679,7 +2352,7 @@ function generateChunk(chunkX, chunkZ) {
 
 
     /* =====================================================
-       MINE
+       RAYCASTER
        ===================================================== */
 
     const raycaster =
@@ -1688,12 +2361,20 @@ function generateChunk(chunkX, chunkZ) {
 
     function getCenterRay() {
 
-        if (!camera) return null;
+        if (!camera) {
+            return null;
+        }
 
 
         raycaster.setFromCamera(
-            new THREE.Vector2(0, 0),
+
+            new THREE.Vector2(
+                0,
+                0
+            ),
+
             camera
+
         );
 
 
@@ -1705,13 +2386,20 @@ function generateChunk(chunkX, chunkZ) {
     }
 
 
+    /* =====================================================
+       MINE BLOCK
+       ===================================================== */
+
     function mineBlock() {
 
         const hits =
             getCenterRay();
 
 
-        if (!hits || hits.length === 0) {
+        if (
+            !hits ||
+            hits.length === 0
+        ) {
 
             showMessage(
                 "Koi block target nahi mila."
@@ -1743,27 +2431,37 @@ function generateChunk(chunkX, chunkZ) {
             hit.object;
 
 
+        const minedType =
+            mesh.userData.blockType;
+
+
         removeBlock(mesh);
 
 
-        showMessage(
-            "+" +
-            blockTypes[
-                mesh.userData.blockType
-            ].name
-        );
+        if (
+            blockTypes[minedType]
+        ) {
+
+            showMessage(
+                "+" +
+                blockTypes[minedType].name
+            );
+
+        }
 
     }
 
 
     /* =====================================================
-       PLACE
+       PLACE BLOCK
        ===================================================== */
 
     function placeBlock() {
 
         const type =
-            hotbarItems[selectedSlot];
+            hotbarItems[
+                selectedSlot
+            ];
 
 
         if (!type) return;
@@ -1789,10 +2487,13 @@ function generateChunk(chunkX, chunkZ) {
             getCenterRay();
 
 
-        if (!hits || hits.length === 0) {
+        if (
+            !hits ||
+            hits.length === 0
+        ) {
 
             showMessage(
-                "Place karne ke liye block select karo."
+                "Block ke paas aim karo."
             );
 
             return;
@@ -1804,7 +2505,9 @@ function generateChunk(chunkX, chunkZ) {
             hits[0];
 
 
-        if (hit.distance > 6) {
+        if (
+            hit.distance > 6
+        ) {
 
             showMessage(
                 "Block bahut door hai."
@@ -1827,21 +2530,33 @@ function generateChunk(chunkX, chunkZ) {
 
 
         const x =
-            Math.round(point.x);
+            Math.round(
+                point.x
+            );
+
 
         const y =
-            Math.round(point.y);
+            Math.round(
+                point.y
+            );
+
 
         const z =
-            Math.round(point.z);
+            Math.round(
+                point.z
+            );
 
 
         const key =
             x + "|" + y + "|" + z;
 
 
-        if (blockMap.has(key)) {
+        if (
+            blockMap.has(key)
+        ) {
+
             return;
+
         }
 
 
@@ -1857,6 +2572,7 @@ function generateChunk(chunkX, chunkZ) {
 
 
         updateInventory();
+
         updateHotbar();
 
 
@@ -1876,10 +2592,12 @@ function generateChunk(chunkX, chunkZ) {
             "inventoryPanel"
         );
 
+
     const inventoryItems =
         document.getElementById(
             "inventoryItems"
         );
+
 
     const closeInventory =
         document.getElementById(
@@ -1889,13 +2607,18 @@ function generateChunk(chunkX, chunkZ) {
 
     function updateInventory() {
 
-        if (!inventoryItems) return;
+        if (!inventoryItems) {
+            return;
+        }
 
 
-        inventoryItems.innerHTML = "";
+        inventoryItems.innerHTML =
+            "";
 
 
-        Object.keys(inventory).forEach(
+        Object.keys(
+            inventory
+        ).forEach(
             function (type) {
 
                 const amount =
@@ -1904,6 +2627,9 @@ function generateChunk(chunkX, chunkZ) {
 
                 const data =
                     blockTypes[type];
+
+
+                if (!data) return;
 
 
                 const item =
@@ -1917,15 +2643,20 @@ function generateChunk(chunkX, chunkZ) {
 
 
                 item.innerHTML = `
+
                     <div>
+
                         <strong>
-                            ${data.emoji} ${data.name}
+                            ${data.emoji}
+                            ${data.name}
                         </strong>
+
                     </div>
 
                     <span>
                         ${amount}
                     </span>
+
                 `;
 
 
@@ -1941,7 +2672,10 @@ function generateChunk(chunkX, chunkZ) {
 
     function toggleInventory() {
 
-        if (!inventoryPanel) return;
+        if (!inventoryPanel) {
+            return;
+        }
+
 
         if (
             inventoryPanel.classList.contains(
@@ -1951,13 +2685,16 @@ function generateChunk(chunkX, chunkZ) {
 
             closeCraftingPanel();
 
+
             inventoryPanel.classList.remove(
                 "hidden"
             );
 
+
             updateInventory();
 
-        } else {
+        }
+        else {
 
             inventoryPanel.classList.add(
                 "hidden"
@@ -1974,17 +2711,18 @@ function generateChunk(chunkX, chunkZ) {
             "click",
             function () {
 
-                inventoryPanel.classList.add(
-                    "hidden"
-                );
+                if (inventoryPanel) {
+
+                    inventoryPanel.classList.add(
+                        "hidden"
+                    );
+
+                }
 
             }
         );
 
     }
-
-
-    updateInventory();
 
 
     /* =====================================================
@@ -1996,10 +2734,12 @@ function generateChunk(chunkX, chunkZ) {
             "craftingPanel"
         );
 
+
     const closeCrafting =
         document.getElementById(
             "closeCrafting"
         );
+
 
     const craftButtons =
         document.querySelectorAll(
@@ -2010,50 +2750,77 @@ function generateChunk(chunkX, chunkZ) {
     const recipes = {
 
         planks: {
+
             need: {
                 wood: 1
             },
+
             give: {
                 planks: 4
             }
+
         },
 
+
         sticks: {
+
             need: {
                 planks: 2
             },
+
             give: {
                 sticks: 4
             }
+
         },
 
+
         craftingTable: {
+
             need: {
                 planks: 4
             },
+
             give: {
                 craftingTable: 1
             }
+
         },
+
 
         woodenPickaxe: {
+
             need: {
+
                 planks: 3,
                 sticks: 2
+
             },
+
             give: {
+
                 woodenPickaxe: 1
+
             }
+
         },
 
+
         stonePickaxe: {
+
             need: {
+
                 stone: 3,
                 sticks: 2
+
             },
+
             give: {
+
                 stonePickaxe: 1
+
             }
+
         }
 
     };
@@ -2061,7 +2828,10 @@ function generateChunk(chunkX, chunkZ) {
 
     function closeCraftingPanel() {
 
-        if (!craftingPanel) return;
+        if (!craftingPanel) {
+            return;
+        }
+
 
         craftingPanel.classList.add(
             "hidden"
@@ -2072,7 +2842,9 @@ function generateChunk(chunkX, chunkZ) {
 
     function toggleCrafting() {
 
-        if (!craftingPanel) return;
+        if (!craftingPanel) {
+            return;
+        }
 
 
         if (
@@ -2089,11 +2861,13 @@ function generateChunk(chunkX, chunkZ) {
 
             }
 
+
             craftingPanel.classList.remove(
                 "hidden"
             );
 
-        } else {
+        }
+        else {
 
             craftingPanel.classList.add(
                 "hidden"
@@ -2107,13 +2881,19 @@ function generateChunk(chunkX, chunkZ) {
     function craft(recipeName) {
 
         const recipe =
-            recipes[recipeName];
+            recipes[
+                recipeName
+            ];
 
 
-        if (!recipe) return;
+        if (!recipe) {
+            return;
+        }
 
 
-        /* CHECK */
+        /*
+           CHECK RESOURCES
+        */
 
         for (
             const item in recipe.need
@@ -2135,7 +2915,9 @@ function generateChunk(chunkX, chunkZ) {
         }
 
 
-        /* REMOVE */
+        /*
+           REMOVE
+        */
 
         for (
             const item in recipe.need
@@ -2147,7 +2929,9 @@ function generateChunk(chunkX, chunkZ) {
         }
 
 
-        /* GIVE */
+        /*
+           GIVE
+        */
 
         for (
             const item in recipe.give
@@ -2161,11 +2945,14 @@ function generateChunk(chunkX, chunkZ) {
 
 
         updateInventory();
+
         updateHotbar();
 
 
         const outputName =
-            Object.keys(recipe.give)[0];
+            Object.keys(
+                recipe.give
+            )[0];
 
 
         showMessage(
@@ -2189,6 +2976,7 @@ function generateChunk(chunkX, chunkZ) {
                         button.getAttribute(
                             "data-recipe"
                         );
+
 
                     craft(recipe);
 
@@ -2224,10 +3012,15 @@ function generateChunk(chunkX, chunkZ) {
         if (
             slot < 1 ||
             slot > 9
-        ) return;
+        ) {
+
+            return;
+
+        }
 
 
-        selectedSlot = slot;
+        selectedSlot =
+            slot;
 
 
         hotbarSlots.forEach(
@@ -2242,14 +3035,16 @@ function generateChunk(chunkX, chunkZ) {
 
 
                 if (
-                    number === selectedSlot
+                    number ===
+                    selectedSlot
                 ) {
 
                     element.classList.add(
                         "selected"
                     );
 
-                } else {
+                }
+                else {
 
                     element.classList.remove(
                         "selected"
@@ -2283,7 +3078,9 @@ function generateChunk(chunkX, chunkZ) {
                     hotbarItems[number];
 
 
-                if (!type) return;
+                if (!type) {
+                    return;
+                }
 
 
                 const data =
@@ -2291,19 +3088,33 @@ function generateChunk(chunkX, chunkZ) {
 
 
                 slot.innerHTML = `
-                    <span>${number}</span>
+
+                    <span>
+                        ${number}
+                    </span>
+
                     ${data.emoji}
+
                     <small class="hotbar-count">
                         ${inventory[type] || 0}
                     </small>
+
                 `;
 
 
                 if (
-                    number === selectedSlot
+                    number ===
+                    selectedSlot
                 ) {
 
                     slot.classList.add(
+                        "selected"
+                    );
+
+                }
+                else {
+
+                    slot.classList.remove(
                         "selected"
                     );
 
@@ -2329,7 +3140,10 @@ function generateChunk(chunkX, chunkZ) {
                             )
                         );
 
-                    selectHotbar(number);
+
+                    selectHotbar(
+                        number
+                    );
 
                 }
             );
@@ -2338,11 +3152,8 @@ function generateChunk(chunkX, chunkZ) {
     );
 
 
-    updateHotbar();
-
-
     /* =====================================================
-       MOBILE CONTROLS
+       MOBILE JOYSTICK
        ===================================================== */
 
     const joystick =
@@ -2350,14 +3161,10 @@ function generateChunk(chunkX, chunkZ) {
             "joystick"
         );
 
+
     const joystickKnob =
         document.getElementById(
             "joystickKnob"
-        );
-
-    const lookArea =
-        document.getElementById(
-            "lookArea"
         );
 
 
@@ -2370,13 +3177,24 @@ function generateChunk(chunkX, chunkZ) {
             "pointerdown",
             function (event) {
 
-                joystickActive = true;
+                joystickActive =
+                    true;
 
-                joystick.setPointerCapture(
-                    event.pointerId
+
+                if (
+                    joystick.setPointerCapture
+                ) {
+
+                    joystick.setPointerCapture(
+                        event.pointerId
+                    );
+
+                }
+
+
+                updateJoystick(
+                    event
                 );
-
-                updateJoystick(event);
 
             }
         );
@@ -2386,9 +3204,18 @@ function generateChunk(chunkX, chunkZ) {
             "pointermove",
             function (event) {
 
-                if (!joystickActive) return;
+                if (
+                    !joystickActive
+                ) {
 
-                updateJoystick(event);
+                    return;
+
+                }
+
+
+                updateJoystick(
+                    event
+                );
 
             }
         );
@@ -2410,8 +3237,13 @@ function generateChunk(chunkX, chunkZ) {
 
     function updateJoystick(event) {
 
-        if (!joystick || !joystickKnob) {
+        if (
+            !joystick ||
+            !joystickKnob
+        ) {
+
             return;
+
         }
 
 
@@ -2446,17 +3278,23 @@ function generateChunk(chunkX, chunkZ) {
 
         const distance =
             Math.sqrt(
-                x * x + y * y
+                x * x +
+                y * y
             );
 
 
-        if (distance > max) {
+        if (
+            distance > max
+        ) {
 
             x =
-                x / distance * max;
+                x / distance *
+                max;
+
 
             y =
-                y / distance * max;
+                y / distance *
+                max;
 
         }
 
@@ -2468,6 +3306,7 @@ function generateChunk(chunkX, chunkZ) {
         joystickX =
             x / max;
 
+
         joystickY =
             y / max;
 
@@ -2476,9 +3315,12 @@ function generateChunk(chunkX, chunkZ) {
 
     function resetJoystick() {
 
-        joystickActive = false;
+        joystickActive =
+            false;
+
 
         joystickX = 0;
+
         joystickY = 0;
 
 
@@ -2492,10 +3334,20 @@ function generateChunk(chunkX, chunkZ) {
     }
 
 
-    /* MOBILE LOOK */
+    /* =====================================================
+       MOBILE LOOK
+       ===================================================== */
+
+    const lookArea =
+        document.getElementById(
+            "lookArea"
+        );
+
 
     let lastTouchX = 0;
+
     let lastTouchY = 0;
+
     let looking = false;
 
 
@@ -2507,15 +3359,24 @@ function generateChunk(chunkX, chunkZ) {
 
                 looking = true;
 
+
                 lastTouchX =
                     event.clientX;
+
 
                 lastTouchY =
                     event.clientY;
 
-                lookArea.setPointerCapture(
-                    event.pointerId
-                );
+
+                if (
+                    lookArea.setPointerCapture
+                ) {
+
+                    lookArea.setPointerCapture(
+                        event.pointerId
+                    );
+
+                }
 
             }
         );
@@ -2525,12 +3386,15 @@ function generateChunk(chunkX, chunkZ) {
             "pointermove",
             function (event) {
 
-                if (!looking) return;
+                if (!looking) {
+                    return;
+                }
 
 
                 const dx =
                     event.clientX -
                     lastTouchX;
+
 
                 const dy =
                     event.clientY -
@@ -2540,13 +3404,17 @@ function generateChunk(chunkX, chunkZ) {
                 lastTouchX =
                     event.clientX;
 
+
                 lastTouchY =
                     event.clientY;
 
 
-                yaw -= dx * 0.008;
+                yaw -=
+                    dx * 0.008;
 
-                pitch -= dy * 0.008;
+
+                pitch -=
+                    dy * 0.008;
 
 
                 pitch =
@@ -2593,20 +3461,24 @@ function generateChunk(chunkX, chunkZ) {
             "jumpBtn"
         );
 
+
     const mineBtn =
         document.getElementById(
             "mineBtn"
         );
+
 
     const placeBtn =
         document.getElementById(
             "placeBtn"
         );
 
+
     const inventoryBtn =
         document.getElementById(
             "inventoryBtn"
         );
+
 
     const craftingBtn =
         document.getElementById(
@@ -2703,14 +3575,21 @@ function generateChunk(chunkX, chunkZ) {
 
     function updateSurvival(delta) {
 
-        if (!gameStarted) return;
-
-
-        survivalTimer += delta;
-
-
-        if (survivalTimer < 10) {
+        if (!gameStarted) {
             return;
+        }
+
+
+        survivalTimer +=
+            delta;
+
+
+        if (
+            survivalTimer < 10
+        ) {
+
+            return;
+
         }
 
 
@@ -2724,7 +3603,9 @@ function generateChunk(chunkX, chunkZ) {
             );
 
 
-        if (hungerValue <= 0) {
+        if (
+            hungerValue <= 0
+        ) {
 
             healthValue =
                 Math.max(
@@ -2738,20 +3619,36 @@ function generateChunk(chunkX, chunkZ) {
         updateSurvivalUI();
 
 
-        if (healthValue <= 0) {
+        if (
+            healthValue <= 0
+        ) {
 
             showMessage(
                 "You need food and rest!"
             );
 
+
             healthValue = 100;
+
             hungerValue = 100;
 
-            player.position.set(
-                0,
-                3,
-                5
-            );
+
+            if (player) {
+
+                const startHeight =
+                    getTerrainHeight(
+                        0,
+                        5
+                    );
+
+
+                player.position.set(
+                    0,
+                    startHeight + 1.8,
+                    5
+                );
+
+            }
 
         }
 
@@ -2765,6 +3662,7 @@ function generateChunk(chunkX, chunkZ) {
                 "health"
             );
 
+
         const hunger =
             document.getElementById(
                 "hunger"
@@ -2774,7 +3672,8 @@ function generateChunk(chunkX, chunkZ) {
         if (health) {
 
             health.style.width =
-                healthValue + "%";
+                healthValue +
+                "%";
 
         }
 
@@ -2782,14 +3681,12 @@ function generateChunk(chunkX, chunkZ) {
         if (hunger) {
 
             hunger.style.width =
-                hungerValue + "%";
+                hungerValue +
+                "%";
 
         }
 
     }
-
-
-    updateSurvivalUI();
 
 
     /* =====================================================
@@ -2804,15 +3701,23 @@ function generateChunk(chunkX, chunkZ) {
             );
 
 
-        if (!message) return;
+        if (!message) {
+            return;
+        }
 
 
-        message.textContent = text;
+        message.textContent =
+            text;
 
-        message.classList.add("show");
+
+        message.classList.add(
+            "show"
+        );
 
 
-        clearTimeout(messageTimer);
+        clearTimeout(
+            messageTimer
+        );
 
 
         messageTimer =
@@ -2831,13 +3736,316 @@ function generateChunk(chunkX, chunkZ) {
 
 
     /* =====================================================
+       LOAD NEARBY CHUNKS
+       ===================================================== */
+
+    function loadNearbyChunks() {
+
+        if (!player) {
+            return;
+        }
+
+
+        const chunkX =
+            Math.floor(
+                player.position.x /
+                CHUNK_SIZE
+            );
+
+
+        const chunkZ =
+            Math.floor(
+                player.position.z /
+                CHUNK_SIZE
+            );
+
+
+        /*
+           2 = chunks around player.
+
+           5 x 5 area will be loaded.
+        */
+
+        const renderDistance = 2;
+
+
+        for (
+            let cx =
+                chunkX -
+                renderDistance;
+
+            cx <=
+                chunkX +
+                renderDistance;
+
+            cx++
+        ) {
+
+            for (
+                let cz =
+                    chunkZ -
+                    renderDistance;
+
+                cz <=
+                    chunkZ +
+                    renderDistance;
+
+                cz++
+            ) {
+
+                generateChunk(
+                    cx,
+                    cz
+                );
+
+            }
+
+        }
+
+    }
+
+
+    /* =====================================================
+       INITIALIZE GAME
+       ===================================================== */
+
+    function initializeGame() {
+
+        if (initialized) {
+            return;
+        }
+
+
+        initialized = true;
+
+
+        /*
+           SCENE
+        */
+
+        scene =
+            new THREE.Scene();
+
+
+        scene.background =
+            new THREE.Color(
+                0x79b7df
+            );
+
+
+        scene.fog =
+            new THREE.Fog(
+                0x79b7df,
+                20,
+                100
+            );
+
+
+        /*
+           CAMERA
+        */
+
+        camera =
+            new THREE.PerspectiveCamera(
+
+                75,
+
+                window.innerWidth /
+                window.innerHeight,
+
+                0.1,
+
+                200
+
+            );
+
+
+        camera.position.set(
+            0,
+            5,
+            6
+        );
+
+
+        /*
+           RENDERER
+        */
+
+        renderer =
+            new THREE.WebGLRenderer({
+
+                antialias: true
+
+            });
+
+
+        renderer.setPixelRatio(
+
+            Math.min(
+                window.devicePixelRatio,
+                2
+            )
+
+        );
+
+
+        renderer.setSize(
+
+            window.innerWidth,
+            window.innerHeight
+
+        );
+
+
+        renderer.shadowMap.enabled =
+            true;
+
+
+        renderer.shadowMap.type =
+            THREE.PCFSoftShadowMap;
+
+
+        if (game) {
+
+            game.insertBefore(
+
+                renderer.domElement,
+
+                game.firstChild
+
+            );
+
+        }
+
+
+        /*
+           CLOCK
+        */
+
+        clock =
+            new THREE.Clock();
+
+
+        /* =================================================
+           LIGHTS
+           ================================================= */
+
+        const ambient =
+            new THREE.HemisphereLight(
+
+                0xffffff,
+                0x35513d,
+                1.3
+
+            );
+
+
+        scene.add(
+            ambient
+        );
+
+
+        const sun =
+            new THREE.DirectionalLight(
+
+                0xffffff,
+                1.5
+
+            );
+
+
+        sun.position.set(
+            30,
+            50,
+            20
+        );
+
+
+        sun.castShadow =
+            true;
+
+
+        sun.shadow.mapSize.width =
+            1024;
+
+
+        sun.shadow.mapSize.height =
+            1024;
+
+
+        scene.add(
+            sun
+        );
+
+
+        /* =================================================
+           WORLD
+           ================================================= */
+
+        generateWorld();
+
+
+        /* =================================================
+           KIT
+           ================================================= */
+
+        applySelectedKit();
+
+
+        /* =================================================
+           PLAYER
+           ================================================= */
+
+        createPlayer();
+
+
+        /* =================================================
+           CONTROLS
+           ================================================= */
+
+        setupControls();
+
+
+        updateInventory();
+
+        updateHotbar();
+
+        updateSurvivalUI();
+
+
+        /* =================================================
+           RESIZE
+           ================================================= */
+
+        window.addEventListener(
+            "resize",
+            onResize
+        );
+
+
+        /*
+           START LOOP
+        */
+
+        animate();
+
+    }
+
+
+    /* =====================================================
        START GAME FROM HOME
        ===================================================== */
 
     function startFromHome() {
 
-        if (gameStarted) return;
+        if (gameStarted) {
+            return;
+        }
 
+
+        /*
+           NAME
+        */
 
         if (playerNameInput) {
 
@@ -2845,7 +4053,9 @@ function generateChunk(chunkX, chunkZ) {
                 playerNameInput.value.trim();
 
 
-            if (enteredName.length > 0) {
+            if (
+                enteredName.length > 0
+            ) {
 
                 playerName =
                     enteredName.substring(
@@ -2853,9 +4063,11 @@ function generateChunk(chunkX, chunkZ) {
                         16
                     );
 
-            } else {
+            }
+            else {
 
-                playerName = "Player";
+                playerName =
+                    "Player";
 
             }
 
@@ -2864,15 +4076,27 @@ function generateChunk(chunkX, chunkZ) {
 
         updatePlayerNameUI();
 
+
         saveData();
 
 
+        /*
+           INITIALIZE
+        */
+
         if (!initialized) {
+
             initializeGame();
+
         }
 
 
-        gameStarted = true;
+        /*
+           GAME START
+        */
+
+        gameStarted =
+            true;
 
 
         if (homeScreen) {
@@ -2895,7 +4119,8 @@ function generateChunk(chunkX, chunkZ) {
 
         if (player) {
 
-            player.visible = true;
+            player.visible =
+                true;
 
         }
 
@@ -2940,7 +4165,7 @@ function generateChunk(chunkX, chunkZ) {
 
 
     /* =====================================================
-       ESC = CLOSE PANELS
+       ESC
        ===================================================== */
 
     document.addEventListener(
@@ -2950,7 +4175,9 @@ function generateChunk(chunkX, chunkZ) {
             if (
                 event.key !== "Escape"
             ) {
+
                 return;
+
             }
 
 
@@ -2981,8 +4208,13 @@ function generateChunk(chunkX, chunkZ) {
 
     function onResize() {
 
-        if (!camera || !renderer) {
+        if (
+            !camera ||
+            !renderer
+        ) {
+
             return;
+
         }
 
 
@@ -3001,43 +4233,6 @@ function generateChunk(chunkX, chunkZ) {
 
     }
 
-function loadNearbyChunks() {
-
-    if (!player) return;
-
-    const chunkX =
-        Math.floor(
-            player.position.x / CHUNK_SIZE
-        );
-
-    const chunkZ =
-        Math.floor(
-            player.position.z / CHUNK_SIZE
-        );
-
-    const renderDistance = 2;
-
-
-    for (
-        let cx = chunkX - renderDistance;
-        cx <= chunkX + renderDistance;
-        cx++
-    ) {
-
-        for (
-            let cz = chunkZ - renderDistance;
-            cz <= chunkZ + renderDistance;
-            cz++
-        ) {
-
-            generateChunk(cx, cz);
-
-        }
-
-    }
-
-}
-
 
     /* =====================================================
        GAME LOOP
@@ -3050,7 +4245,9 @@ function loadNearbyChunks() {
         );
 
 
-        if (!clock) return;
+        if (!clock) {
+            return;
+        }
 
 
         const delta =
@@ -3060,13 +4257,47 @@ function loadNearbyChunks() {
             );
 
 
-        updatePlayer(delta);
-       loadNearbyChunks();
+        /*
+           PLAYER
+        */
 
-        updateSurvival(delta);
+        updatePlayer(
+            delta
+        );
 
 
-        if (renderer && scene && camera) {
+        /*
+           INFINITE WORLD
+
+           Player moves to a new
+           chunk → new land generated.
+        */
+
+        if (gameStarted) {
+
+            loadNearbyChunks();
+
+        }
+
+
+        /*
+           SURVIVAL
+        */
+
+        updateSurvival(
+            delta
+        );
+
+
+        /*
+           RENDER
+        */
+
+        if (
+            renderer &&
+            scene &&
+            camera
+        ) {
 
             renderer.render(
                 scene,
@@ -3079,7 +4310,7 @@ function loadNearbyChunks() {
 
 
     /* =====================================================
-       LOADING -> HOME
+       LOADING SCREEN → HOME
        ===================================================== */
 
     if (loadingScreen) {
@@ -3109,6 +4340,10 @@ function loadNearbyChunks() {
     }
 
 
+    /*
+       ONLY ONE LOADING TIMER
+    */
+
     setTimeout(
         function () {
 
@@ -3132,32 +4367,5 @@ function loadNearbyChunks() {
         },
         1500
     );
-/* =====================================================
-   LOADING -> HOME
-   ===================================================== */
-
-if (loadingScreen) {
-    loadingScreen.classList.remove("hidden");
-}
-
-if (homeScreen) {
-    homeScreen.classList.add("hidden");
-}
-
-if (game) {
-    game.classList.add("hidden");
-}
-
-setTimeout(function () {
-
-    if (loadingScreen) {
-        loadingScreen.classList.add("hidden");
-    }
-
-    if (homeScreen) {
-        homeScreen.classList.remove("hidden");
-    }
-
-}, 1500);
 
 }
