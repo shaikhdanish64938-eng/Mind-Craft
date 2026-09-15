@@ -1,13 +1,7 @@
-/* =========================================================
-   BLOCK WORLD SURVIVAL
-   CLEAN COMPLETE SCRIPT.JS
-   ========================================================= */
-
 /* global THREE */
 
-
 /* =========================================================
-   THREE.JS LOAD
+   MIND CRAFT - COMPLETE GAME SCRIPT
    ========================================================= */
 
 const threeScript = document.createElement("script");
@@ -15,27 +9,22 @@ const threeScript = document.createElement("script");
 threeScript.src =
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
 
-threeScript.onload = function () {
-    startGame();
-};
-
-threeScript.onerror = function () {
-    alert(
-        "Three.js load nahi ho paaya. Internet connection check karo."
-    );
-};
+threeScript.onload = startGame;
 
 document.head.appendChild(threeScript);
 
 
 /* =========================================================
-   MAIN
+   MAIN START
    ========================================================= */
 
 function startGame() {
 
+    let gameStarted = false;
+    let gameInitialized = false;
+
     /* =====================================================
-       BASIC HTML ELEMENTS
+       HTML ELEMENTS
        ===================================================== */
 
     const loadingScreen =
@@ -65,214 +54,220 @@ function startGame() {
     const homeToast =
         document.getElementById("homeToast");
 
+    const inventoryPanel =
+        document.getElementById("inventoryPanel");
+
+    const craftingPanel =
+        document.getElementById("craftingPanel");
+
+    const inventoryItems =
+        document.getElementById("inventoryItems");
+
+    const craftingItems =
+        document.getElementById("craftingItems");
+
+    const closeInventory =
+        document.getElementById("closeInventory");
+
+    const closeCrafting =
+        document.getElementById("closeCrafting");
+
+    const mobileControls =
+        document.getElementById("mobileControls");
+
+    const joystick =
+        document.getElementById("joystick");
+
+    const joystickKnob =
+        document.getElementById("joystickKnob");
+
+    const jumpBtn =
+        document.getElementById("jumpBtn");
+
+    const mineBtn =
+        document.getElementById("mineBtn");
+
+    const placeBtn =
+        document.getElementById("placeBtn");
+
+    const inventoryBtn =
+        document.getElementById("inventoryBtn");
+
+    const craftingBtn =
+        document.getElementById("craftingBtn");
+
+    const rotateScreen =
+        document.getElementById("rotateScreen");
+
+    const health =
+        document.getElementById("health");
+
+    const hunger =
+        document.getElementById("hunger");
+
+    const message =
+        document.getElementById("message");
+
+    const pcHelp =
+        document.getElementById("pcHelp");
+
 
     /* =====================================================
-       GAME STATE
+       HOME DATA
        ===================================================== */
 
-    let gameStarted = false;
-    let initialized = false;
+    let playerName =
+        localStorage.getItem("mindCraftPlayerName") ||
+        "PLAYER";
 
-    let playerName = "Player";
-
-    let selectedKit = "starter";
+    let selectedKit =
+        localStorage.getItem("mindCraftKit") ||
+        "starter";
 
     let appearance = {
 
-        head: "none",
-        shirt: "green",
-        pants: "blue",
-        shoes: "white"
+        hat:
+            localStorage.getItem("mindCraftHat") ||
+            "none",
 
+        shirt:
+            localStorage.getItem("mindCraftShirt") ||
+            "blue",
+
+        pants:
+            localStorage.getItem("mindCraftPants") ||
+            "dark",
+
+        shoes:
+            localStorage.getItem("mindCraftShoes") ||
+            "white"
     };
 
 
     /* =====================================================
-       SAVE DATA
+       KITS
        ===================================================== */
 
-    function saveData() {
+    const kits = {
 
-        try {
+        starter: {
 
-            localStorage.setItem(
-                "blockWorldName",
-                playerName
-            );
+            name: "STARTER KIT",
 
-            localStorage.setItem(
-                "blockWorldKit",
-                selectedKit
-            );
+            items: {
 
-            localStorage.setItem(
-                "blockWorldAppearance",
-                JSON.stringify(appearance)
-            );
+                grass: 10,
+                dirt: 10,
+                wood: 4,
+                stone: 4
+            }
+        },
 
-        } catch (error) {
+        builder: {
 
-            console.log(
-                "Storage unavailable."
-            );
+            name: "BUILDER KIT",
 
+            items: {
+
+                grass: 20,
+                dirt: 20,
+                stone: 20,
+                wood: 10
+            }
+        },
+
+        explorer: {
+
+            name: "EXPLORER KIT",
+
+            items: {
+
+                grass: 8,
+                dirt: 8,
+                stone: 12,
+                wood: 12,
+                coal: 6
+            }
         }
-
-    }
+    };
 
 
     /* =====================================================
-       LOAD DATA
+       UPDATE HOME
        ===================================================== */
 
-    function loadData() {
+    function updateHomeName() {
 
-        try {
+        if (!playerNameInput) return;
 
-            const savedName =
-                localStorage.getItem(
-                    "blockWorldName"
-                );
+        const value =
+            playerNameInput.value.trim();
 
-            const savedKit =
-                localStorage.getItem(
-                    "blockWorldKit"
-                );
+        if (value.length > 0) {
 
-            const savedAppearance =
-                localStorage.getItem(
-                    "blockWorldAppearance"
-                );
-
-
-            if (savedName) {
-
-                playerName =
-                    savedName;
-
-            }
-
-
-            if (savedKit) {
-
-                selectedKit =
-                    savedKit;
-
-            }
-
-
-            if (savedAppearance) {
-
-                const data =
-                    JSON.parse(
-                        savedAppearance
-                    );
-
-                if (data) {
-
-                    appearance = {
-                        ...appearance,
-                        ...data
-                    };
-
-                }
-
-            }
-
-        } catch (error) {
-
-            console.log(
-                "Could not load saved data."
-            );
+            playerName = value;
 
         }
-
-    }
-
-
-    loadData();
-
-
-    /* =====================================================
-       PLAYER NAME UI
-       ===================================================== */
-
-    if (playerNameInput) {
-
-        playerNameInput.value =
-            playerName === "Player"
-                ? ""
-                : playerName;
-
-    }
-
-
-    function updatePlayerNameUI() {
 
         if (homePlayerName) {
 
             homePlayerName.textContent =
                 playerName;
-
         }
 
         if (profileName) {
 
             profileName.textContent =
                 playerName;
-
         }
 
         if (playerNameHud) {
 
             playerNameHud.textContent =
                 playerName;
-
         }
 
+        localStorage.setItem(
+            "mindCraftPlayerName",
+            playerName
+        );
     }
 
 
-    updatePlayerNameUI();
+    if (playerNameInput) {
+
+        playerNameInput.value =
+            playerName;
+
+        playerNameInput.addEventListener(
+            "input",
+            updateHomeName
+        );
+    }
 
 
     /* =====================================================
-       TOAST
+       HOME TOAST
        ===================================================== */
-
-    let toastTimer = null;
-
 
     function showHomeToast(text) {
 
         if (!homeToast) return;
 
+        homeToast.textContent = text;
 
-        homeToast.textContent =
-            text;
-
-        homeToast.classList.add(
-            "show"
-        );
-
+        homeToast.classList.remove("hidden");
 
         clearTimeout(
-            toastTimer
+            showHomeToast.timer
         );
 
+        showHomeToast.timer =
+            setTimeout(function () {
 
-        toastTimer =
-            setTimeout(
-                function () {
+                homeToast.classList.add("hidden");
 
-                    homeToast.classList.remove(
-                        "show"
-                    );
-
-                },
-                1800
-            );
-
+            }, 1800);
     }
 
 
@@ -280,694 +275,486 @@ function startGame() {
        HOME PANELS
        ===================================================== */
 
-    const homePanels =
-        document.querySelectorAll(
+    function closeHomePanels() {
+
+        const panels = document.querySelectorAll(
             ".home-subpanel"
         );
 
+        panels.forEach(function (panel) {
 
-    const homeMenuButtons =
-        document.querySelectorAll(
-            "[data-home-panel]"
-        );
+            panel.classList.remove("active");
 
-
-    const homeBackButtons =
-        document.querySelectorAll(
-            ".home-back"
-        );
+        });
+    }
 
 
-    function closeHomePanels() {
+    function openHomePanel(id) {
 
-        homePanels.forEach(
-            function (panel) {
+        closeHomePanels();
 
-                panel.classList.add(
-                    "hidden"
+        const panel =
+            document.getElementById(id);
+
+        if (panel) {
+
+            panel.classList.add("active");
+
+        }
+    }
+
+
+    document.querySelectorAll(
+        "[data-home-panel]"
+    ).forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                openHomePanel(
+                    button.dataset.homePanel
                 );
 
             }
         );
 
-    }
+    });
 
 
-    homeMenuButtons.forEach(
-        function (button) {
+    document.querySelectorAll(
+        ".home-back, .close-home"
+    ).forEach(function (button) {
 
-            button.addEventListener(
-                "click",
-                function () {
+        button.addEventListener(
+            "click",
+            closeHomePanels
+        );
 
-                    const panelId =
-                        button.getAttribute(
-                            "data-home-panel"
-                        );
-
-
-                    const panel =
-                        document.getElementById(
-                            panelId
-                        );
-
-
-                    if (!panel) return;
-
-
-                    closeHomePanels();
-
-
-                    panel.classList.remove(
-                        "hidden"
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-    homeBackButtons.forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    closeHomePanels();
-
-                }
-            );
-
-        }
-    );
+    });
 
 
     /* =====================================================
-       KIT SYSTEM
+       KIT SELECTION
        ===================================================== */
 
-    const kitOptions =
-        document.querySelectorAll(
-            ".kit-option"
-        );
-
-
     const selectedKitName =
-        document.getElementById(
-            "selectedKitName"
-        );
-
-
-    const kitEquipButton =
-        document.querySelector(
-            ".kit-equip"
-        );
+        document.getElementById("selectedKitName");
 
 
     function updateKitUI() {
 
-        kitOptions.forEach(
-            function (option) {
+        document.querySelectorAll(
+            ".kit-option"
+        ).forEach(function (option) {
 
-                const kit =
-                    option.getAttribute(
-                        "data-kit"
-                    );
+            option.classList.remove("selected");
 
+            if (
+                option.dataset.kit ===
+                selectedKit
+            ) {
 
-                if (
-                    kit === selectedKit
-                ) {
-
-                    option.classList.add(
-                        "selected"
-                    );
-
-                } else {
-
-                    option.classList.remove(
-                        "selected"
-                    );
-
-                }
+                option.classList.add("selected");
 
             }
-        );
 
+        });
 
         if (selectedKitName) {
 
-            const names = {
-
-                starter: "STARTER",
-                builder: "BUILDER",
-                explorer: "EXPLORER"
-
-            };
-
-
             selectedKitName.textContent =
-                names[selectedKit] ||
-                "STARTER";
-
+                kits[selectedKit]
+                    ? kits[selectedKit].name
+                    : "STARTER KIT";
         }
-
     }
 
 
-    kitOptions.forEach(
-        function (option) {
+    document.querySelectorAll(
+        ".kit-option"
+    ).forEach(function (option) {
 
-            option.addEventListener(
-                "click",
-                function () {
-
-                    const kit =
-                        option.getAttribute(
-                            "data-kit"
-                        );
-
-
-                    if (!kit) return;
-
-
-                    selectedKit =
-                        kit;
-
-
-                    updateKitUI();
-
-
-                    showHomeToast(
-                        "Kit selected: " +
-                        kit.toUpperCase()
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-    if (kitEquipButton) {
-
-        kitEquipButton.addEventListener(
+        option.addEventListener(
             "click",
             function () {
 
-                saveData();
+                const kit =
+                    option.dataset.kit;
 
-                closeHomePanels();
+                if (!kits[kit]) return;
 
-                showHomeToast(
-                    "✓ " +
-                    selectedKit.toUpperCase() +
-                    " KIT EQUIPPED"
+                selectedKit = kit;
+
+                localStorage.setItem(
+                    "mindCraftKit",
+                    selectedKit
                 );
 
+                updateKitUI();
+
+                showHomeToast(
+                    kits[kit].name +
+                    " selected"
+                );
             }
         );
 
-    }
+    });
+
+
+    document.querySelectorAll(
+        ".kit-equip"
+    ).forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function (event) {
+
+                event.stopPropagation();
+
+                const parent =
+                    button.closest(".kit-option");
+
+                if (!parent) return;
+
+                const kit =
+                    parent.dataset.kit;
+
+                if (!kits[kit]) return;
+
+                selectedKit = kit;
+
+                localStorage.setItem(
+                    "mindCraftKit",
+                    selectedKit
+                );
+
+                updateKitUI();
+
+                showHomeToast(
+                    kits[kit].name +
+                    " equipped"
+                );
+            }
+        );
+
+    });
 
 
     updateKitUI();
 
 
     /* =====================================================
-       CLOTHES SYSTEM
+       CLOTHES
        ===================================================== */
 
-    const clothOptions =
+    function updateClothesUI() {
+
         document.querySelectorAll(
             ".cloth-option"
-        );
+        ).forEach(function (option) {
 
+            option.classList.remove("selected");
 
-    const previewHat =
-        document.getElementById(
-            "previewHat"
-        );
+            const category =
+                option.dataset.category;
 
+            const value =
+                option.dataset.value;
 
-    const previewShirt =
-        document.getElementById(
-            "previewShirt"
-        );
+            if (
+                appearance[category] ===
+                value
+            ) {
 
-
-    const previewPants =
-        document.getElementById(
-            "previewPants"
-        );
-
-
-    const previewShoes =
-        document.getElementById(
-            "previewShoes"
-        );
-
-
-    function updateClothesButtons() {
-
-        clothOptions.forEach(
-            function (button) {
-
-                const category =
-                    button.getAttribute(
-                        "data-category"
-                    );
-
-
-                const value =
-                    button.getAttribute(
-                        "data-value"
-                    );
-
-
-                if (
-                    appearance[category] ===
-                    value
-                ) {
-
-                    button.classList.add(
-                        "selected"
-                    );
-
-                } else {
-
-                    button.classList.remove(
-                        "selected"
-                    );
-
-                }
-
+                option.classList.add(
+                    "selected"
+                );
             }
-        );
+        });
 
+        updateClothesPreview();
     }
 
 
     function updateClothesPreview() {
 
-        if (previewHat) {
+        const hat =
+            document.getElementById("previewHat");
 
-            const hats = {
+        const shirt =
+            document.getElementById("previewShirt");
 
-                none: "",
-                cap: "🧢",
-                helmet: "⛑️"
+        const pants =
+            document.getElementById("previewPants");
 
-            };
+        const shoes =
+            document.getElementById("previewShoes");
 
 
-            previewHat.textContent =
-                hats[appearance.head] ||
-                "";
+        if (hat) {
 
+            hat.textContent =
+                appearance.hat === "none"
+                    ? "🙂"
+                    : "🧢";
         }
 
 
-        if (previewShirt) {
+        if (shirt) {
 
-            const shirtColors = {
-
-                green: "#32a852",
-                blue: "#2f73c8",
-                red: "#d84242"
-
-            };
-
-
-            previewShirt.style.background =
-                shirtColors[
-                    appearance.shirt
-                ] ||
-                "#32a852";
-
+            shirt.textContent =
+                appearance.shirt === "red"
+                    ? "👕"
+                    : appearance.shirt === "green"
+                    ? "🟢"
+                    : "🔵";
         }
 
 
-        if (previewPants) {
+        if (pants) {
 
-            const pantsColors = {
-
-                blue: "#315d9d",
-                black: "#151515",
-                brown: "#71482e"
-
-            };
-
-
-            previewPants.style.background =
-                pantsColors[
-                    appearance.pants
-                ] ||
-                "#315d9d";
-
+            pants.textContent =
+                appearance.pants === "light"
+                    ? "👖"
+                    : "🖤";
         }
 
 
-        if (previewShoes) {
+        if (shoes) {
 
-            const shoesColors = {
-
-                white: "#ffffff",
-                black: "#111111"
-
-            };
-
-
-            previewShoes.style.background =
-                shoesColors[
-                    appearance.shoes
-                ] ||
-                "#ffffff";
-
+            shoes.textContent =
+                appearance.shoes === "black"
+                    ? "👞"
+                    : "👟";
         }
-
-
-        updateClothesButtons();
-
     }
 
 
-    clothOptions.forEach(
-        function (button) {
+    document.querySelectorAll(
+        ".cloth-option"
+    ).forEach(function (option) {
 
-            button.addEventListener(
-                "click",
-                function () {
+        option.addEventListener(
+            "click",
+            function () {
 
-                    const category =
-                        button.getAttribute(
-                            "data-category"
-                        );
+                const category =
+                    option.dataset.category;
 
+                const value =
+                    option.dataset.value;
 
-                    const value =
-                        button.getAttribute(
-                            "data-value"
-                        );
+                if (!category || !value) {
+                    return;
+                }
 
+                appearance[category] =
+                    value;
 
-                    if (
-                        !category ||
-                        !value
-                    ) {
+                localStorage.setItem(
+                    "mindCraft" +
+                    category.charAt(0).toUpperCase() +
+                    category.slice(1),
+                    value
+                );
 
-                        return;
+                updateClothesUI();
 
-                    }
+                showHomeToast(
+                    "Clothes updated"
+                );
 
+                if (player) {
 
-                    appearance[category] =
-                        value;
-
-
-                    updateClothesPreview();
-
-                    saveData();
-
-
-                    showHomeToast(
-                        category.toUpperCase() +
-                        " changed"
-                    );
+                    applyAppearanceToPlayer();
 
                 }
-            );
+            }
+        );
 
-        }
-    );
+    });
 
 
-    updateClothesPreview();
+    updateClothesUI();
 
 
     /* =====================================================
        THREE.JS VARIABLES
        ===================================================== */
 
-    let scene = null;
+    let scene;
+    let camera;
+    let renderer;
+    let player;
 
-    let camera = null;
-
-    let renderer = null;
-
-    let clock = null;
-
-    let player = null;
-
-
-    let yaw = 0;
-
-    let pitch = 0;
-
-    let velocityY = 0;
-
-    let canJump = true;
-
-
-    let selectedSlot = 1;
-
-
-    let healthValue = 100;
-
-    let hungerValue = 100;
-
-
-    let messageTimer = null;
+    let clock =
+        new THREE.Clock();
 
 
     /* =====================================================
        WORLD VARIABLES
        ===================================================== */
 
-    const blocks = [];
-
-    const blockMap = new Map();
-
-
-    /*
-       CHUNK SYSTEM
-
-       1 chunk = 16 x 16 blocks
-
-       New chunks are automatically created
-       when the player moves.
-    */
-
     const CHUNK_SIZE = 16;
+
+    const RENDER_DISTANCE = 5;
 
     const generatedChunks =
         new Set();
 
+    const blockMap =
+        new Map();
 
-    const blockSize = 1;
+    const worldGroup =
+        new THREE.Group();
+
+    const raycaster =
+        new THREE.Raycaster();
+
+    const mouse =
+        new THREE.Vector2();
 
 
     /* =====================================================
-       BLOCK TYPES
+       BLOCK SETTINGS
        ===================================================== */
 
-    const blockTypes = {
-
-        grass: {
-
-            name: "Grass",
-            emoji: "🌿",
-            color: 0x4caf50
-
-        },
+    const BLOCK_SIZE = 1;
 
 
-        dirt: {
+    const blockColors = {
 
-            name: "Dirt",
-            emoji: "🟫",
-            color: 0x79502e
+        grass: 0x4caf50,
 
-        },
+        dirt: 0x795548,
 
+        stone: 0x777777,
 
-        stone: {
+        wood: 0x8d5a32,
 
-            name: "Stone",
-            emoji: "🪨",
-            color: 0x858585
+        leaves: 0x2e7d32,
 
-        },
+        coal: 0x202020,
 
-
-        wood: {
-
-            name: "Wood",
-            emoji: "🪵",
-            color: 0x8a5a32
-
-        },
-
-
-        leaves: {
-
-            name: "Leaves",
-            emoji: "🍃",
-            color: 0x258a45
-
-        },
-
-
-        coal: {
-
-            name: "Coal",
-            emoji: "⚫",
-            color: 0x202020
-
-        },
-
-
-        craftingTable: {
-
-            name: "Crafting Table",
-            emoji: "🧱",
-            color: 0x9b6237
-
-        },
-
-
-        planks: {
-
-            name: "Planks",
-            emoji: "🪵",
-            color: 0xb47743
-
-        },
-
-
-        sticks: {
-
-            name: "Sticks",
-            emoji: "🪄",
-            color: 0xa86d3c
-
-        },
-
-
-        woodenPickaxe: {
-
-            name: "Wooden Pickaxe",
-            emoji: "⛏️",
-            color: 0x9b673d
-
-        },
-
-
-        stonePickaxe: {
-
-            name: "Stone Pickaxe",
-            emoji: "⛏️",
-            color: 0x7d858b
-
-        }
-
+        craftingTable: 0xa66a3f
     };
 
-
-    /* =====================================================
-       INVENTORY
-       ===================================================== */
 
     const inventory = {
 
-        grass: 0,
-        dirt: 0,
-        stone: 0,
-        wood: 3,
-        leaves: 0,
-        coal: 0,
-        craftingTable: 0,
-        planks: 0,
-        sticks: 0,
-        woodenPickaxe: 0,
-        stonePickaxe: 0
+        grass: 10,
 
+        dirt: 10,
+
+        stone: 0,
+
+        wood: 3,
+
+        leaves: 0,
+
+        coal: 0,
+
+        craftingTable: 0,
+
+        planks: 0,
+
+        sticks: 0,
+
+        woodenPickaxe: 0,
+
+        stonePickaxe: 0
     };
 
 
     /* =====================================================
-       KIT STARTING ITEMS
+       GAME STATE
        ===================================================== */
 
-    function applySelectedKit() {
+    let healthValue = 100;
 
-        /*
-           Kit items are only added once when
-           the game starts.
-        */
+    let hungerValue = 100;
 
-        if (
-            inventory.grass === 0 &&
-            inventory.dirt === 0 &&
-            inventory.stone === 0 &&
-            inventory.planks === 0 &&
-            inventory.sticks === 0
-        ) {
+    let verticalVelocity = 0;
 
-            if (selectedKit === "builder") {
+    let onGround = false;
 
-                inventory.grass = 20;
-                inventory.dirt = 20;
-                inventory.stone = 15;
-                inventory.wood = 6;
+    let canJump = true;
 
-            }
-            else if (
-                selectedKit === "explorer"
-            ) {
+    let yaw = 0;
 
-                inventory.grass = 15;
-                inventory.dirt = 15;
-                inventory.stone = 10;
-                inventory.wood = 8;
-                inventory.coal = 5;
+    let pitch = 0;
 
-            }
-            else {
+    let mouseLocked = false;
 
-                inventory.grass = 10;
-                inventory.dirt = 10;
-                inventory.stone = 5;
-                inventory.wood = 3;
+    let selectedHotbarSlot = 0;
 
-            }
+    let lastChunkX = null;
 
-        }
+    let lastChunkZ = null;
 
+    let survivalTimer = 0;
+
+    let messageTimer = 0;
+
+    let kitApplied = false;
+
+
+    /* =====================================================
+       KEY STATE
+       ===================================================== */
+
+    const keys = {};
+
+
+    /* =====================================================
+       APPEARANCE PLAYER PARTS
+       ===================================================== */
+
+    let playerHead;
+    let playerBody;
+    let playerLeftLeg;
+    let playerRightLeg;
+    let playerHat;
+    let playerLeftShoe;
+    let playerRightShoe;
+
+
+    /* =====================================================
+       TERRAIN HEIGHT
+       ===================================================== */
+
+    function getTerrainHeight(x, z) {
+
+        let height =
+            1 +
+            Math.floor(
+                Math.sin(x * 0.15) * 1.5 +
+                Math.cos(z * 0.15) * 1.5
+            );
+
+        return Math.max(
+            0,
+            Math.min(4, height)
+        );
     }
 
 
     /* =====================================================
-       HOTBAR
+       BLOCK KEY
        ===================================================== */
 
-    const hotbarItems = {
+    function getBlockKey(x, y, z) {
 
-        1: "grass",
-        2: "dirt",
-        3: "stone",
-        4: "wood",
-        5: "leaves",
-        6: "coal",
-        7: "craftingTable",
-        8: "woodenPickaxe",
-        9: "stonePickaxe"
-
-    };
+        return (
+            x +
+            "|" +
+            y +
+            "|" +
+            z
+        );
+    }
 
 
     /* =====================================================
@@ -981,44 +768,29 @@ function startGame() {
         z
     ) {
 
-        if (!scene) return null;
-
-
         const key =
-            x + "|" + y + "|" + z;
-
+            getBlockKey(x, y, z);
 
         if (blockMap.has(key)) {
 
-            return null;
-
-        }
-
-
-        const data =
-            blockTypes[type];
-
-
-        if (!data) {
-
-            return null;
-
+            return blockMap.get(key);
         }
 
 
         const geometry =
             new THREE.BoxGeometry(
-                blockSize,
-                blockSize,
-                blockSize
+                BLOCK_SIZE,
+                BLOCK_SIZE,
+                BLOCK_SIZE
             );
 
 
         const material =
             new THREE.MeshLambertMaterial({
 
-                color: data.color
-
+                color:
+                    blockColors[type] ||
+                    0xffffff
             });
 
 
@@ -1036,28 +808,20 @@ function startGame() {
         );
 
 
-        mesh.castShadow = true;
-
-        mesh.receiveShadow = true;
-
-
         mesh.userData.blockType =
             type;
 
-        mesh.userData.x =
+        mesh.userData.blockX =
             x;
 
-        mesh.userData.y =
+        mesh.userData.blockY =
             y;
 
-        mesh.userData.z =
+        mesh.userData.blockZ =
             z;
 
 
-        scene.add(mesh);
-
-
-        blocks.push(mesh);
+        worldGroup.add(mesh);
 
         blockMap.set(
             key,
@@ -1066,7 +830,6 @@ function startGame() {
 
 
         return mesh;
-
     }
 
 
@@ -1079,48 +842,30 @@ function startGame() {
         if (!mesh) return;
 
 
+        const x =
+            mesh.userData.blockX;
+
+        const y =
+            mesh.userData.blockY;
+
+        const z =
+            mesh.userData.blockZ;
+
         const type =
             mesh.userData.blockType;
 
 
-        const x =
-            mesh.userData.x;
-
-
-        const y =
-            mesh.userData.y;
-
-
-        const z =
-            mesh.userData.z;
-
-
         const key =
-            x + "|" + y + "|" + z;
-
-
-        if (scene) {
-
-            scene.remove(mesh);
-
-        }
+            getBlockKey(
+                x,
+                y,
+                z
+            );
 
 
         blockMap.delete(key);
 
-
-        const index =
-            blocks.indexOf(mesh);
-
-
-        if (index !== -1) {
-
-            blocks.splice(
-                index,
-                1
-            );
-
-        }
+        worldGroup.remove(mesh);
 
 
         if (mesh.geometry) {
@@ -1128,7 +873,6 @@ function startGame() {
             mesh.geometry.dispose();
 
         }
-
 
         if (mesh.material) {
 
@@ -1144,88 +888,80 @@ function startGame() {
 
             inventory[type]++;
 
+        } else {
+
+            inventory[type] = 1;
+
         }
 
 
         updateInventory();
 
-        updateHotbar();
-
+        showMessage(
+            "+" +
+            type
+        );
     }
 
 
     /* =====================================================
-       TERRAIN HEIGHT
+       TREE
        ===================================================== */
 
-    function getTerrainHeight(
+    function createTree(
         x,
+        y,
         z
     ) {
 
-        let height =
-            2 +
-            Math.floor(
-                Math.sin(x * 0.13) * 1.3 +
-                Math.cos(z * 0.11) * 1.3 +
-                Math.sin(
-                    (x + z) * 0.07
-                ) * 0.8
+        for (
+            let i = 0;
+            i < 4;
+            i++
+        ) {
+
+            createBlock(
+                "wood",
+                x,
+                y + i,
+                z
             );
-
-
-        height =
-            Math.max(
-                0,
-                Math.min(
-                    5,
-                    height
-                )
-            );
-
-
-        return height;
-
-    }
-
-
-    /* =====================================================
-       GENERATE WORLD
-       ===================================================== */
-
-    function generateWorld() {
-
-        /*
-           Starting render distance.
-
-           5 means 11 x 11 chunks
-           are generated around 0,0.
-        */
-
-        const renderDistance = 5;
+        }
 
 
         for (
-            let cx = -renderDistance;
-            cx <= renderDistance;
-            cx++
+            let lx = -2;
+            lx <= 2;
+            lx++
         ) {
 
             for (
-                let cz = -renderDistance;
-                cz <= renderDistance;
-                cz++
+                let lz = -2;
+                lz <= 2;
+                lz++
             ) {
 
-                generateChunk(
-                    cx,
-                    cz
-                );
+                for (
+                    let ly = 2;
+                    ly <= 4;
+                    ly++
+                ) {
 
+                    if (
+                        Math.abs(lx) +
+                        Math.abs(lz) <= 3
+                    ) {
+
+                        createBlock(
+                            "leaves",
+                            x + lx,
+                            y + ly,
+                            z + lz
+                        );
+                    }
+                }
             }
-
         }
-
     }
 
 
@@ -1239,7 +975,9 @@ function startGame() {
     ) {
 
         const chunkKey =
-            chunkX + "|" + chunkZ;
+            chunkX +
+            "|" +
+            chunkZ;
 
 
         if (
@@ -1249,7 +987,6 @@ function startGame() {
         ) {
 
             return;
-
         }
 
 
@@ -1261,7 +998,6 @@ function startGame() {
         const startX =
             chunkX *
             CHUNK_SIZE;
-
 
         const startZ =
             chunkZ *
@@ -1287,10 +1023,6 @@ function startGame() {
                     );
 
 
-                /*
-                   GROUND
-                */
-
                 for (
                     let y = 0;
                     y <= height;
@@ -1308,30 +1040,33 @@ function startGame() {
                         type =
                             "grass";
 
-                    }
-                    else if (
+                    } else if (
                         y >= height - 2
                     ) {
 
                         type =
                             "dirt";
-
                     }
 
 
-                    /*
-                       COAL
-                    */
+                    const coalChance =
+                        (
+                            Math.sin(
+                                x * 7.13 +
+                                z * 3.71 +
+                                y * 2.17
+                            ) + 1
+                        ) / 2;
+
 
                     if (
                         type === "stone" &&
-                        y <= 2 &&
-                        Math.random() < 0.07
+                        y <= 1 &&
+                        coalChance < 0.09
                     ) {
 
                         type =
                             "coal";
-
                     }
 
 
@@ -1341,22 +1076,23 @@ function startGame() {
                         y,
                         z
                     );
-
                 }
 
 
-                /*
-                   TREES
+                const treeChance =
+                    (
+                        Math.sin(
+                            x * 12.73 +
+                            z * 8.31
+                        ) + 1
+                    ) / 2;
 
-                   Do not create too many
-                   trees near starting area.
-                */
 
                 if (
-                    Math.abs(x) > 4 &&
-                    Math.abs(z) > 4 &&
-                    height >= 2 &&
-                    Math.random() < 0.035
+                    treeChance < 0.045 &&
+                    Math.abs(x) > 3 &&
+                    Math.abs(z) > 3 &&
+                    height >= 2
                 ) {
 
                     createTree(
@@ -1364,98 +1100,114 @@ function startGame() {
                         height + 1,
                         z
                     );
-
                 }
-
             }
-
         }
-
     }
 
 
     /* =====================================================
-       TREE
+       GENERATE INITIAL WORLD
        ===================================================== */
 
-    function createTree(
-        x,
-        baseY,
-        z
-    ) {
-
-        /*
-           TRUNK
-        */
+    function generateWorld() {
 
         for (
-            let y = baseY;
-            y < baseY + 4;
-            y++
-        ) {
-
-            createBlock(
-                "wood",
-                x,
-                y,
-                z
-            );
-
-        }
-
-
-        /*
-           LEAVES
-        */
-
-        for (
-            let dx = -2;
-            dx <= 2;
-            dx++
+            let cx = -RENDER_DISTANCE;
+            cx <= RENDER_DISTANCE;
+            cx++
         ) {
 
             for (
-                let dz = -2;
-                dz <= 2;
-                dz++
+                let cz = -RENDER_DISTANCE;
+                cz <= RENDER_DISTANCE;
+                cz++
             ) {
 
-                for (
-                    let dy = 2;
-                    dy <= 4;
-                    dy++
-                ) {
-
-                    const distance =
-                        Math.abs(dx) +
-                        Math.abs(dz);
-
-
-                    if (
-                        distance < 3 &&
-                        Math.random() > 0.12
-                    ) {
-
-                        createBlock(
-                            "leaves",
-                            x + dx,
-                            baseY + dy,
-                            z + dz
-                        );
-
-                    }
-
-                }
-
+                generateChunk(
+                    cx,
+                    cz
+                );
             }
-
         }
-
     }
 
 
     /* =====================================================
-       PLAYER
+       LOAD NEARBY CHUNKS
+       ===================================================== */
+
+    function loadNearbyChunks() {
+
+        if (!player) return;
+
+
+        const currentChunkX =
+            Math.floor(
+                player.position.x /
+                CHUNK_SIZE
+            );
+
+        const currentChunkZ =
+            Math.floor(
+                player.position.z /
+                CHUNK_SIZE
+            );
+
+
+        if (
+            currentChunkX ===
+            lastChunkX &&
+            currentChunkZ ===
+            lastChunkZ
+        ) {
+
+            return;
+        }
+
+
+        lastChunkX =
+            currentChunkX;
+
+        lastChunkZ =
+            currentChunkZ;
+
+
+        for (
+            let cx =
+                currentChunkX -
+                2;
+
+            cx <=
+                currentChunkX +
+                2;
+
+            cx++
+        ) {
+
+            for (
+                let cz =
+                    currentChunkZ -
+                    2;
+
+                cz <=
+                    currentChunkZ +
+                    2;
+
+                cz++
+            ) {
+
+                generateChunk(
+                    cx,
+                    cz
+                );
+            }
+        }
+    }
+
+
+    /* =====================================================
+       CREATE PLAYER
        ===================================================== */
 
     function createPlayer() {
@@ -1464,246 +1216,206 @@ function startGame() {
             new THREE.Group();
 
 
-        /*
-           BODY
-        */
+        /* HEAD */
 
-        const body =
-            new THREE.Mesh(
-
-                new THREE.BoxGeometry(
-                    0.65,
-                    1.05,
-                    0.4
-                ),
-
-                new THREE.MeshLambertMaterial({
-
-                    color: 0x32a852
-
-                })
-
+        const headGeometry =
+            new THREE.BoxGeometry(
+                0.7,
+                0.7,
+                0.7
             );
 
+        const headMaterial =
+            new THREE.MeshLambertMaterial({
+                color: 0xf1c7a8
+            });
 
-        body.position.y = 0;
-
-        body.castShadow = true;
-
-
-        player.add(body);
-
-
-        player.userData.body =
-            body;
-
-
-        /*
-           HEAD
-        */
-
-        const head =
+        playerHead =
             new THREE.Mesh(
-
-                new THREE.BoxGeometry(
-                    0.58,
-                    0.58,
-                    0.58
-                ),
-
-                new THREE.MeshLambertMaterial({
-
-                    color: 0xf0b58b
-
-                })
-
+                headGeometry,
+                headMaterial
             );
 
+        playerHead.position.y =
+            1.35;
 
-        head.position.y =
-            0.82;
-
-
-        head.castShadow = true;
-
-
-        player.add(head);
+        player.add(
+            playerHead
+        );
 
 
-        player.userData.head =
-            head;
+        /* BODY */
 
-
-        /*
-           LEGS
-        */
-
-        const leftLeg =
-            new THREE.Mesh(
-
-                new THREE.BoxGeometry(
-                    0.28,
-                    0.65,
-                    0.35
-                ),
-
-                new THREE.MeshLambertMaterial({
-
-                    color: 0x315d9d
-
-                })
-
+        const bodyGeometry =
+            new THREE.BoxGeometry(
+                0.8,
+                1,
+                0.45
             );
 
+        const bodyMaterial =
+            new THREE.MeshLambertMaterial({
+                color: 0x2874d0
+            });
 
-        leftLeg.position.set(
-            -0.17,
-            -0.82,
+        playerBody =
+            new THREE.Mesh(
+                bodyGeometry,
+                bodyMaterial
+            );
+
+        playerBody.position.y =
+            0.55;
+
+        player.add(
+            playerBody
+        );
+
+
+        /* LEFT LEG */
+
+        const legGeometry =
+            new THREE.BoxGeometry(
+                0.32,
+                0.75,
+                0.4
+            );
+
+        const legMaterial =
+            new THREE.MeshLambertMaterial({
+                color: 0x202020
+            });
+
+
+        playerLeftLeg =
+            new THREE.Mesh(
+                legGeometry,
+                legMaterial
+            );
+
+        playerLeftLeg.position.set(
+            -0.2,
+            -0.3,
             0
         );
 
-
-        leftLeg.castShadow = true;
-
-
-        player.add(leftLeg);
+        player.add(
+            playerLeftLeg
+        );
 
 
-        const rightLeg =
+        /* RIGHT LEG */
+
+        playerRightLeg =
             new THREE.Mesh(
-
-                new THREE.BoxGeometry(
-                    0.28,
-                    0.65,
-                    0.35
-                ),
-
-                new THREE.MeshLambertMaterial({
-
-                    color: 0x315d9d
-
-                })
-
+                legGeometry,
+                legMaterial.clone()
             );
 
-
-        rightLeg.position.set(
-            0.17,
-            -0.82,
+        playerRightLeg.position.set(
+            0.2,
+            -0.3,
             0
         );
 
-
-        rightLeg.castShadow = true;
-
-
-        player.add(rightLeg);
-
-
-        player.userData.leftLeg =
-            leftLeg;
-
-
-        player.userData.rightLeg =
-            rightLeg;
-
-
-        /*
-           SHOES
-        */
-
-        const leftShoe =
-            new THREE.Mesh(
-
-                new THREE.BoxGeometry(
-                    0.3,
-                    0.18,
-                    0.42
-                ),
-
-                new THREE.MeshLambertMaterial({
-
-                    color: 0xffffff
-
-                })
-
-            );
-
-
-        leftShoe.position.set(
-            -0.17,
-            -1.18,
-            0.04
+        player.add(
+            playerRightLeg
         );
 
 
-        player.add(leftShoe);
+        /* SHOES */
 
-
-        const rightShoe =
-            new THREE.Mesh(
-
-                new THREE.BoxGeometry(
-                    0.3,
-                    0.18,
-                    0.42
-                ),
-
-                new THREE.MeshLambertMaterial({
-
-                    color: 0xffffff
-
-                })
-
+        const shoeGeometry =
+            new THREE.BoxGeometry(
+                0.36,
+                0.18,
+                0.48
             );
 
+        const shoeMaterial =
+            new THREE.MeshLambertMaterial({
+                color: 0xffffff
+            });
 
-        rightShoe.position.set(
-            0.17,
-            -1.18,
-            0.04
+
+        playerLeftShoe =
+            new THREE.Mesh(
+                shoeGeometry,
+                shoeMaterial
+            );
+
+        playerLeftShoe.position.set(
+            -0.2,
+            -0.72,
+            -0.04
+        );
+
+        player.add(
+            playerLeftShoe
         );
 
 
-        player.add(rightShoe);
+        playerRightShoe =
+            new THREE.Mesh(
+                shoeGeometry,
+                shoeMaterial.clone()
+            );
+
+        playerRightShoe.position.set(
+            0.2,
+            -0.72,
+            -0.04
+        );
+
+        player.add(
+            playerRightShoe
+        );
 
 
-        player.userData.leftShoe =
-            leftShoe;
+        /* HAT */
+
+        const hatGeometry =
+            new THREE.BoxGeometry(
+                0.82,
+                0.2,
+                0.82
+            );
+
+        const hatMaterial =
+            new THREE.MeshLambertMaterial({
+                color: 0x222222
+            });
+
+        playerHat =
+            new THREE.Mesh(
+                hatGeometry,
+                hatMaterial
+            );
+
+        playerHat.position.y =
+            1.78;
+
+        player.add(
+            playerHat
+        );
 
 
-        player.userData.rightShoe =
-            rightShoe;
+        player.position.set(
+            0,
+            getTerrainHeight(0, 0) + 1.03,
+            0
+        );
 
 
         scene.add(player);
 
 
-        /*
-           PLAYER START POSITION
-        */
-
-        const startHeight =
-            getTerrainHeight(
-                0,
-                5
-            );
-
-
-        player.position.set(
-            0,
-            startHeight + 1.8,
-            5
-        );
-
-
         applyAppearanceToPlayer();
-
     }
 
 
     /* =====================================================
-       PLAYER APPEARANCE
+       APPLY CLOTHES
        ===================================================== */
 
     function applyAppearanceToPlayer() {
@@ -1711,184 +1423,383 @@ function startGame() {
         if (!player) return;
 
 
-        const body =
-            player.userData.body;
+        /* SHIRT */
+
+        if (playerBody) {
+
+            let shirtColor =
+                0x2874d0;
 
 
-        const head =
-            player.userData.head;
+            if (
+                appearance.shirt ===
+                "red"
+            ) {
+
+                shirtColor =
+                    0xc62828;
+
+            } else if (
+                appearance.shirt ===
+                "green"
+            ) {
+
+                shirtColor =
+                    0x2e7d32;
+            }
 
 
-        const leftLeg =
-            player.userData.leftLeg;
-
-
-        const rightLeg =
-            player.userData.rightLeg;
-
-
-        const leftShoe =
-            player.userData.leftShoe;
-
-
-        const rightShoe =
-            player.userData.rightShoe;
-
-
-        /*
-           SHIRT
-        */
-
-        const shirtColors = {
-
-            green: 0x32a852,
-            blue: 0x3175c6,
-            red: 0xd84242
-
-        };
-
-
-        if (body) {
-
-            body.material.color.setHex(
-
-                shirtColors[
-                    appearance.shirt
-                ] ||
-                shirtColors.green
-
+            playerBody.material.color.setHex(
+                shirtColor
             );
-
         }
 
 
-        /*
-           PANTS
-        */
+        /* PANTS */
 
-        const pantsColors = {
+        if (
+            playerLeftLeg &&
+            playerRightLeg
+        ) {
 
-            blue: 0x315d9d,
-            black: 0x151515,
-            brown: 0x71482e
-
-        };
+            let pantsColor =
+                0x202020;
 
 
-        if (leftLeg) {
+            if (
+                appearance.pants ===
+                "light"
+            ) {
 
-            leftLeg.material.color.setHex(
+                pantsColor =
+                    0x9e9e9e;
+            }
 
-                pantsColors[
-                    appearance.pants
-                ] ||
-                pantsColors.blue
 
+            playerLeftLeg.material.color.setHex(
+                pantsColor
             );
 
+            playerRightLeg.material.color.setHex(
+                pantsColor
+            );
         }
 
 
-        if (rightLeg) {
+        /* SHOES */
 
-            rightLeg.material.color.setHex(
+        if (
+            playerLeftShoe &&
+            playerRightShoe
+        ) {
 
-                pantsColors[
-                    appearance.pants
-                ] ||
-                pantsColors.blue
+            const shoeColor =
+                appearance.shoes ===
+                "black"
+                    ? 0x111111
+                    : 0xffffff;
 
+
+            playerLeftShoe.material.color.setHex(
+                shoeColor
             );
 
+            playerRightShoe.material.color.setHex(
+                shoeColor
+            );
         }
 
 
-        /*
-           SHOES
-        */
+        /* HAT */
 
-        const shoeColors = {
+        if (playerHat) {
 
-            white: 0xffffff,
-            black: 0x111111
-
-        };
-
-
-        if (leftShoe) {
-
-            leftShoe.material.color.setHex(
-
-                shoeColors[
-                    appearance.shoes
-                ] ||
-                shoeColors.white
-
-            );
-
+            playerHat.visible =
+                appearance.hat !==
+                "none";
         }
-
-
-        if (rightShoe) {
-
-            rightShoe.material.color.setHex(
-
-                shoeColors[
-                    appearance.shoes
-                ] ||
-                shoeColors.white
-
-            );
-
-        }
-
-
-        /*
-           HEAD / HAT
-
-           Simple color change for now.
-        */
-
-        if (head) {
-
-            head.material.color.setHex(
-                0xf0b58b
-            );
-
-        }
-
-
-        player.userData.appearance = {
-            ...appearance
-        };
-
     }
 
 
     /* =====================================================
-       MOVEMENT
+       KIT APPLY
        ===================================================== */
 
-    const keys = {
+    function applyKit() {
 
-        ArrowUp: false,
-        ArrowDown: false,
-        ArrowLeft: false,
-        ArrowRight: false,
+        if (kitApplied) return;
 
-        w: false,
-        a: false,
-        s: false,
-        d: false,
+        const kit =
+            kits[selectedKit];
 
-        Shift: false
-
-    };
+        if (!kit) return;
 
 
-    let joystickX = 0;
+        Object.keys(
+            kit.items
+        ).forEach(function (item) {
 
-    let joystickY = 0;
+            if (
+                inventory[item] ===
+                undefined
+            ) {
+
+                inventory[item] = 0;
+            }
+
+            inventory[item] +=
+                kit.items[item];
+
+        });
+
+
+        kitApplied = true;
+
+        updateInventory();
+
+        showMessage(
+            kit.name +
+            " ready"
+        );
+    }
+
+
+    /* =====================================================
+       CREATE SCENE
+       ===================================================== */
+
+    function createScene() {
+
+        scene =
+            new THREE.Scene();
+
+
+        scene.background =
+            new THREE.Color(
+                0x07131b
+            );
+
+
+        scene.fog =
+            new THREE.Fog(
+                0x07131b,
+                35,
+                150
+            );
+
+
+        /* LIGHT */
+
+        const ambientLight =
+            new THREE.HemisphereLight(
+                0x9bdcff,
+                0x304020,
+                1.15
+            );
+
+        scene.add(
+            ambientLight
+        );
+
+
+        const directionalLight =
+            new THREE.DirectionalLight(
+                0xffffff,
+                1.2
+            );
+
+        directionalLight.position.set(
+            40,
+            80,
+            20
+        );
+
+        scene.add(
+            directionalLight
+        );
+
+
+        scene.add(
+            worldGroup
+        );
+    }
+
+
+    /* =====================================================
+       CAMERA
+       ===================================================== */
+
+    function createCamera() {
+
+        camera =
+            new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth /
+                window.innerHeight,
+                0.1,
+                300
+            );
+
+
+        camera.position.set(
+            0,
+            4,
+            5
+        );
+    }
+
+
+    /* =====================================================
+       RENDERER
+       ===================================================== */
+
+    function createRenderer() {
+
+        renderer =
+            new THREE.WebGLRenderer({
+
+                antialias: true
+
+            });
+
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+
+        renderer.setPixelRatio(
+            Math.min(
+                window.devicePixelRatio,
+                2
+            )
+        );
+
+
+        renderer.shadowMap.enabled =
+            true;
+
+
+        if (game) {
+
+            game.appendChild(
+                renderer.domElement
+            );
+        }
+    }
+
+
+    /* =====================================================
+       MOUSE LOOK
+       ===================================================== */
+
+    function setupMouseLook() {
+
+        if (!renderer) return;
+
+
+        renderer.domElement.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    document.pointerLockElement !==
+                    renderer.domElement
+                ) {
+
+                    renderer.domElement.requestPointerLock();
+
+                }
+            }
+        );
+
+
+        document.addEventListener(
+            "pointerlockchange",
+            function () {
+
+                mouseLocked =
+                    document.pointerLockElement ===
+                    renderer.domElement;
+
+            }
+        );
+
+
+        document.addEventListener(
+            "mousemove",
+            function (event) {
+
+                if (!mouseLocked) {
+                    return;
+                }
+
+
+                yaw -=
+                    event.movementX *
+                    0.0025;
+
+
+                pitch -=
+                    event.movementY *
+                    0.0025;
+
+
+                const maxPitch =
+                    Math.PI / 2 -
+                    0.08;
+
+
+                pitch =
+                    Math.max(
+                        -maxPitch,
+                        Math.min(
+                            maxPitch,
+                            pitch
+                        )
+                    );
+            }
+        );
+
+
+        renderer.domElement.addEventListener(
+            "mousedown",
+            function (event) {
+
+                if (!gameStarted) {
+                    return;
+                }
+
+
+                if (
+                    event.button === 0
+                ) {
+
+                    mineBlock();
+
+                }
+
+                if (
+                    event.button === 2
+                ) {
+
+                    placeBlock();
+
+                }
+            }
+        );
+
+
+        renderer.domElement.addEventListener(
+            "contextmenu",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+    }
 
 
     /* =====================================================
@@ -1897,33 +1808,23 @@ function startGame() {
 
     function setupControls() {
 
-        /*
-           KEYBOARD
-        */
-
         document.addEventListener(
             "keydown",
             function (event) {
 
-                if (
-                    keys.hasOwnProperty(
-                        event.key
-                    )
-                ) {
-
-                    keys[event.key] = true;
-
-                }
+                keys[
+                    event.key.toLowerCase()
+                ] = true;
 
 
                 if (
-                    event.key === " "
+                    event.code ===
+                    "Space"
                 ) {
 
-                    event.preventDefault();
+                    keys.space = true;
 
                     jump();
-
                 }
 
 
@@ -1933,7 +1834,6 @@ function startGame() {
                 ) {
 
                     toggleInventory();
-
                 }
 
 
@@ -1943,7 +1843,6 @@ function startGame() {
                 ) {
 
                     toggleCrafting();
-
                 }
 
 
@@ -1952,14 +1851,20 @@ function startGame() {
                     event.key <= "9"
                 ) {
 
-                    selectHotbar(
-                        Number(
-                            event.key
-                        )
-                    );
+                    selectedHotbarSlot =
+                        Number(event.key) - 1;
 
+                    updateHotbar();
                 }
 
+
+                if (
+                    event.key ===
+                    "Shift"
+                ) {
+
+                    keys.shift = true;
+                }
             }
         );
 
@@ -1968,137 +1873,29 @@ function startGame() {
             "keyup",
             function (event) {
 
-                if (
-                    keys.hasOwnProperty(
-                        event.key
-                    )
-                ) {
-
-                    keys[event.key] = false;
-
-                }
-
-            }
-        );
-
-
-        /*
-           MOUSE LOOK
-        */
-
-        document.addEventListener(
-            "mousemove",
-            function (event) {
-
-                if (!gameStarted) return;
+                keys[
+                    event.key.toLowerCase()
+                ] = false;
 
 
                 if (
-                    renderer &&
-                    document.pointerLockElement ===
-                    renderer.domElement
+                    event.code ===
+                    "Space"
                 ) {
 
-                    yaw -=
-                        event.movementX *
-                        0.002;
-
-
-                    pitch -=
-                        event.movementY *
-                        0.002;
-
-
-                    pitch =
-                        Math.max(
-                            -1.45,
-                            Math.min(
-                                1.45,
-                                pitch
-                            )
-                        );
-
+                    keys.space = false;
                 }
 
+
+                if (
+                    event.key ===
+                    "Shift"
+                ) {
+
+                    keys.shift = false;
+                }
             }
         );
-
-
-        /*
-           CLICK TO LOCK MOUSE
-        */
-
-        if (renderer) {
-
-            renderer.domElement.addEventListener(
-                "click",
-                function () {
-
-                    if (!gameStarted) {
-                        return;
-                    }
-
-
-                    if (
-                        renderer.domElement.requestPointerLock
-                    ) {
-
-                        renderer.domElement.requestPointerLock();
-
-                    }
-
-                }
-            );
-
-
-            /*
-               LEFT CLICK = MINE
-            */
-
-            renderer.domElement.addEventListener(
-                "mousedown",
-                function (event) {
-
-                    if (!gameStarted) {
-                        return;
-                    }
-
-
-                    if (
-                        event.button === 0
-                    ) {
-
-                        mineBlock();
-
-                    }
-
-                }
-            );
-
-
-            /*
-               RIGHT CLICK = PLACE
-            */
-
-            renderer.domElement.addEventListener(
-                "contextmenu",
-                function (event) {
-
-                    event.preventDefault();
-
-
-                    if (!gameStarted) {
-                        return;
-                    }
-
-
-                    placeBlock();
-
-                }
-            );
-
-        }
-
     }
 
 
@@ -2110,198 +1907,167 @@ function startGame() {
 
         if (!gameStarted) return;
 
+        if (!onGround) return;
+
         if (!canJump) return;
 
 
-        velocityY = 7;
+        verticalVelocity =
+            7.5;
 
-        canJump = false;
+        onGround =
+            false;
 
+        canJump =
+            false;
+
+
+        setTimeout(
+            function () {
+
+                canJump =
+                    true;
+
+            },
+            180
+        );
     }
 
 
     /* =====================================================
-       PLAYER UPDATE
+       PLAYER MOVEMENT
        ===================================================== */
 
     function updatePlayer(delta) {
 
-        if (!player || !camera) {
-            return;
-        }
+        if (!player) return;
 
 
-        if (!gameStarted) {
-            return;
-        }
-
-
-        const speed =
-            keys.Shift
-                ? 8
-                : 4.5;
+        const moveSpeed =
+            keys.shift
+                ? 7
+                : 4.2;
 
 
         let forward = 0;
 
-        let side = 0;
+        let right = 0;
 
 
         if (
-            keys.ArrowUp ||
-            keys.w
+            keys.w ||
+            keys.arrowup
         ) {
 
             forward += 1;
-
         }
 
 
         if (
-            keys.ArrowDown ||
-            keys.s
+            keys.s ||
+            keys.arrowdown
         ) {
 
             forward -= 1;
-
         }
 
 
         if (
-            keys.ArrowRight ||
-            keys.d
+            keys.d ||
+            keys.arrowright
         ) {
 
-            side += 1;
-
+            right += 1;
         }
 
 
         if (
-            keys.ArrowLeft ||
-            keys.a
+            keys.a ||
+            keys.arrowleft
         ) {
 
-            side -= 1;
-
+            right -= 1;
         }
 
 
-        /*
-           JOYSTICK
-        */
+        if (
+            forward !== 0 ||
+            right !== 0
+        ) {
 
-        forward +=
-            -joystickY;
+            const length =
+                Math.sqrt(
+                    forward * forward +
+                    right * right
+                );
 
-
-        side +=
-            joystickX;
-
-
-        const length =
-            Math.sqrt(
-                forward * forward +
-                side * side
-            );
-
-
-        if (length > 1) {
 
             forward /=
                 length;
 
-            side /=
+            right /=
                 length;
 
+
+            const sin =
+                Math.sin(yaw);
+
+            const cos =
+                Math.cos(yaw);
+
+
+            player.position.x +=
+                (
+                    right * cos +
+                    forward * sin
+                ) *
+                moveSpeed *
+                delta;
+
+
+            player.position.z +=
+                (
+                    right * sin -
+                    forward * cos
+                ) *
+                moveSpeed *
+                delta;
         }
 
 
-        /*
-           CAMERA DIRECTION
-        */
+        /* GRAVITY */
 
-        const direction =
-            new THREE.Vector3(
-
-                Math.sin(yaw),
-                0,
-                Math.cos(yaw)
-
-            );
-
-
-        const right =
-            new THREE.Vector3(
-
-                Math.cos(yaw),
-                0,
-                -Math.sin(yaw)
-
-            );
-
-
-        player.position.x +=
-            (
-                direction.x *
-                forward +
-                right.x *
-                side
-            ) *
-            speed *
+        verticalVelocity -=
+            18 *
             delta;
-
-
-        player.position.z +=
-            (
-                direction.z *
-                forward +
-                right.z *
-                side
-            ) *
-            speed *
-            delta;
-
-
-        /*
-           GRAVITY
-        */
-
-        velocityY -=
-            18 * delta;
 
 
         player.position.y +=
-            velocityY * delta;
+            verticalVelocity *
+            delta;
 
 
-        /*
-           TERRAIN HEIGHT
-
-           Player follows terrain.
-        */
-
-        const terrainX =
+        const px =
             Math.round(
                 player.position.x
             );
 
-
-        const terrainZ =
+        const pz =
             Math.round(
                 player.position.z
             );
 
 
-        const terrainHeight =
+        const terrain =
             getTerrainHeight(
-                terrainX,
-                terrainZ
+                px,
+                pz
             );
 
 
         const groundY =
-            terrainHeight + 1.8;
+            terrain +
+            1.03;
 
 
         if (
@@ -2312,26 +2078,27 @@ function startGame() {
             player.position.y =
                 groundY;
 
+            verticalVelocity =
+                0;
 
-            velocityY = 0;
+            onGround =
+                true;
 
-            canJump = true;
+        } else {
 
+            onGround =
+                false;
         }
 
 
-        /*
-           CAMERA
-        */
+        /* CAMERA */
 
         camera.position.x =
             player.position.x;
 
-
         camera.position.y =
             player.position.y +
-            1.25;
-
+            1.2;
 
         camera.position.z =
             player.position.z;
@@ -2344,45 +2111,8 @@ function startGame() {
         camera.rotation.y =
             yaw;
 
-
         camera.rotation.x =
             pitch;
-
-    }
-
-
-    /* =====================================================
-       RAYCASTER
-       ===================================================== */
-
-    const raycaster =
-        new THREE.Raycaster();
-
-
-    function getCenterRay() {
-
-        if (!camera) {
-            return null;
-        }
-
-
-        raycaster.setFromCamera(
-
-            new THREE.Vector2(
-                0,
-                0
-            ),
-
-            camera
-
-        );
-
-
-        return raycaster.intersectObjects(
-            blocks,
-            false
-        );
-
     }
 
 
@@ -2392,21 +2122,24 @@ function startGame() {
 
     function mineBlock() {
 
+        if (!camera) return;
+
+
+        raycaster.setFromCamera(
+            new THREE.Vector2(0, 0),
+            camera
+        );
+
+
         const hits =
-            getCenterRay();
-
-
-        if (
-            !hits ||
-            hits.length === 0
-        ) {
-
-            showMessage(
-                "Koi block target nahi mila."
+            raycaster.intersectObjects(
+                worldGroup.children
             );
 
-            return;
 
+        if (!hits.length) {
+
+            return;
         }
 
 
@@ -2415,40 +2148,17 @@ function startGame() {
 
 
         if (
-            hit.distance > 6
+            hit.distance >
+            6
         ) {
-
-            showMessage(
-                "Block bahut door hai."
-            );
 
             return;
-
         }
 
 
-        const mesh =
-            hit.object;
-
-
-        const minedType =
-            mesh.userData.blockType;
-
-
-        removeBlock(mesh);
-
-
-        if (
-            blockTypes[minedType]
-        ) {
-
-            showMessage(
-                "+" +
-                blockTypes[minedType].name
-            );
-
-        }
-
+        removeBlock(
+            hit.object
+        );
     }
 
 
@@ -2458,46 +2168,51 @@ function startGame() {
 
     function placeBlock() {
 
-        const type =
-            hotbarItems[
-                selectedSlot
-            ];
+        if (!camera) return;
 
 
-        if (!type) return;
+        const item =
+            getSelectedBlock();
 
 
-        if (
-            !inventory[type] ||
-            inventory[type] <= 0
-        ) {
+        if (!item) {
 
             showMessage(
-                "Inventory mein " +
-                blockTypes[type].name +
-                " nahi hai."
+                "Select a block"
             );
 
             return;
-
         }
 
 
-        const hits =
-            getCenterRay();
-
-
         if (
-            !hits ||
-            hits.length === 0
+            !inventory[item] ||
+            inventory[item] <= 0
         ) {
 
             showMessage(
-                "Block ke paas aim karo."
+                "Not enough " +
+                item
             );
 
             return;
+        }
 
+
+        raycaster.setFromCamera(
+            new THREE.Vector2(0, 0),
+            camera
+        );
+
+
+        const hits =
+            raycaster.intersectObjects(
+                worldGroup.children
+            );
+
+
+        if (!hits.length) {
+            return;
         }
 
 
@@ -2506,15 +2221,11 @@ function startGame() {
 
 
         if (
-            hit.distance > 6
+            hit.distance >
+            6
         ) {
 
-            showMessage(
-                "Block bahut door hai."
-            );
-
             return;
-
         }
 
 
@@ -2522,33 +2233,37 @@ function startGame() {
             hit.face.normal.clone();
 
 
-        const point =
+        const position =
             hit.object.position.clone();
 
 
-        point.add(normal);
+        position.add(
+            normal
+        );
 
 
         const x =
             Math.round(
-                point.x
+                position.x
             );
-
 
         const y =
             Math.round(
-                point.y
+                position.y
             );
-
 
         const z =
             Math.round(
-                point.z
+                position.z
             );
 
 
         const key =
-            x + "|" + y + "|" + z;
+            getBlockKey(
+                x,
+                y,
+                z
+            );
 
 
         if (
@@ -2556,54 +2271,176 @@ function startGame() {
         ) {
 
             return;
+        }
 
+
+        /* DON'T PLACE INSIDE PLAYER */
+
+        const dx =
+            Math.abs(
+                x -
+                player.position.x
+            );
+
+        const dy =
+            Math.abs(
+                y -
+                player.position.y
+            );
+
+        const dz =
+            Math.abs(
+                z -
+                player.position.z
+            );
+
+
+        if (
+            dx < 1 &&
+            dy < 2 &&
+            dz < 1
+        ) {
+
+            showMessage(
+                "Too close"
+            );
+
+            return;
         }
 
 
         createBlock(
-            type,
+            item,
             x,
             y,
             z
         );
 
 
-        inventory[type]--;
-
+        inventory[item]--;
 
         updateInventory();
 
-        updateHotbar();
-
-
         showMessage(
-            "Block placed"
+            "Placed " +
+            item
         );
-
     }
+
+
+    /* =====================================================
+       HOTBAR ITEMS
+       ===================================================== */
+
+    const hotbarItems = [
+
+        "grass",
+
+        "dirt",
+
+        "stone",
+
+        "wood",
+
+        "leaves",
+
+        "coal",
+
+        "craftingTable",
+
+        "planks",
+
+        "sticks"
+    ];
+
+
+    function getSelectedBlock() {
+
+        return hotbarItems[
+            selectedHotbarSlot
+        ];
+    }
+
+
+    /* =====================================================
+       UPDATE HOTBAR
+       ===================================================== */
+
+    function updateHotbar() {
+
+        const slots =
+            document.querySelectorAll(
+                ".hotbar-slot"
+            );
+
+
+        slots.forEach(
+            function (slot, index) {
+
+                slot.classList.remove(
+                    "selected"
+                );
+
+
+                if (
+                    index ===
+                    selectedHotbarSlot
+                ) {
+
+                    slot.classList.add(
+                        "selected"
+                    );
+                }
+
+
+                const item =
+                    hotbarItems[index];
+
+
+                const amount =
+                    inventory[item] ||
+                    0;
+
+
+                const count =
+                    slot.querySelector(
+                        ".count"
+                    );
+
+
+                if (count) {
+
+                    count.textContent =
+                        amount;
+                }
+            }
+        );
+    }
+
+
+    document.querySelectorAll(
+        ".hotbar-slot"
+    ).forEach(
+        function (slot, index) {
+
+            slot.addEventListener(
+                "click",
+                function () {
+
+                    selectedHotbarSlot =
+                        index;
+
+                    updateHotbar();
+
+                }
+            );
+        }
+    );
 
 
     /* =====================================================
        INVENTORY
        ===================================================== */
-
-    const inventoryPanel =
-        document.getElementById(
-            "inventoryPanel"
-        );
-
-
-    const inventoryItems =
-        document.getElementById(
-            "inventoryItems"
-        );
-
-
-    const closeInventory =
-        document.getElementById(
-            "closeInventory"
-        );
-
 
     function updateInventory() {
 
@@ -2612,61 +2449,45 @@ function startGame() {
         }
 
 
-        inventoryItems.innerHTML =
-            "";
+        inventoryItems.innerHTML = "";
 
 
         Object.keys(
             inventory
         ).forEach(
-            function (type) {
+            function (item) {
 
                 const amount =
-                    inventory[type];
+                    inventory[item] || 0;
 
 
-                const data =
-                    blockTypes[type];
-
-
-                if (!data) return;
-
-
-                const item =
+                const div =
                     document.createElement(
                         "div"
                     );
 
 
-                item.className =
+                div.className =
                     "inventory-item";
 
 
-                item.innerHTML = `
-
-                    <div>
-
-                        <strong>
-                            ${data.emoji}
-                            ${data.name}
-                        </strong>
-
-                    </div>
-
-                    <span>
-                        ${amount}
-                    </span>
-
-                `;
+                div.innerHTML =
+                    "<span>" +
+                    item +
+                    "</span>" +
+                    "<strong>" +
+                    amount +
+                    "</strong>";
 
 
                 inventoryItems.appendChild(
-                    item
+                    div
                 );
-
             }
         );
 
+
+        updateHotbar();
     }
 
 
@@ -2683,25 +2504,23 @@ function startGame() {
             )
         ) {
 
-            closeCraftingPanel();
-
-
             inventoryPanel.classList.remove(
                 "hidden"
             );
 
+            if (craftingPanel) {
 
-            updateInventory();
+                craftingPanel.classList.add(
+                    "hidden"
+                );
+            }
 
-        }
-        else {
+        } else {
 
             inventoryPanel.classList.add(
                 "hidden"
             );
-
         }
-
     }
 
 
@@ -2711,17 +2530,21 @@ function startGame() {
             "click",
             function () {
 
-                if (inventoryPanel) {
-
-                    inventoryPanel.classList.add(
-                        "hidden"
-                    );
-
-                }
+                inventoryPanel.classList.add(
+                    "hidden"
+                );
 
             }
         );
+    }
 
+
+    if (inventoryBtn) {
+
+        inventoryBtn.addEventListener(
+            "click",
+            toggleInventory
+        );
     }
 
 
@@ -2729,114 +2552,185 @@ function startGame() {
        CRAFTING
        ===================================================== */
 
-    const craftingPanel =
-        document.getElementById(
-            "craftingPanel"
-        );
-
-
-    const closeCrafting =
-        document.getElementById(
-            "closeCrafting"
-        );
-
-
-    const craftButtons =
-        document.querySelectorAll(
-            ".craft-button"
-        );
-
-
     const recipes = {
 
         planks: {
 
-            need: {
-                wood: 1
-            },
+            name: "4 Planks",
 
-            give: {
-                planks: 4
-            }
+            output: 4,
 
+            ingredient:
+                "wood",
+
+            amount: 1
         },
-
 
         sticks: {
 
-            need: {
-                planks: 2
-            },
+            name: "4 Sticks",
 
-            give: {
-                sticks: 4
-            }
+            output: 4,
 
+            ingredient:
+                "planks",
+
+            amount: 2
         },
-
 
         craftingTable: {
 
-            need: {
-                planks: 4
-            },
+            name: "Crafting Table",
 
-            give: {
-                craftingTable: 1
-            }
+            output: 1,
 
+            ingredient:
+                "planks",
+
+            amount: 4
         },
-
 
         woodenPickaxe: {
 
-            need: {
+            name: "Wooden Pickaxe",
 
-                planks: 3,
-                sticks: 2
+            output: 1,
 
-            },
+            ingredient:
+                "planks",
 
-            give: {
-
-                woodenPickaxe: 1
-
-            }
-
+            amount: 3
         },
-
 
         stonePickaxe: {
 
-            need: {
+            name: "Stone Pickaxe",
 
-                stone: 3,
-                sticks: 2
+            output: 1,
 
-            },
+            ingredient:
+                "stone",
 
-            give: {
-
-                stonePickaxe: 1
-
-            }
-
+            amount: 3
         }
-
     };
 
 
-    function closeCraftingPanel() {
+    function setupCraftingUI() {
 
-        if (!craftingPanel) {
+        if (!craftingItems) {
             return;
         }
 
 
-        craftingPanel.classList.add(
-            "hidden"
-        );
+        craftingItems.innerHTML = "";
 
+
+        Object.keys(
+            recipes
+        ).forEach(
+            function (recipeKey) {
+
+                const recipe =
+                    recipes[
+                        recipeKey
+                    ];
+
+
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                button.className =
+                    "craft-button";
+
+
+                button.dataset.recipe =
+                    recipeKey;
+
+
+                button.textContent =
+                    recipe.name;
+
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        craft(
+                            recipeKey
+                        );
+
+                    }
+                );
+
+
+                craftingItems.appendChild(
+                    button
+                );
+            }
+        );
+    }
+
+
+    function craft(recipeKey) {
+
+        const recipe =
+            recipes[
+                recipeKey
+            ];
+
+
+        if (!recipe) return;
+
+
+        const ingredient =
+            recipe.ingredient;
+
+
+        if (
+            !inventory[ingredient] ||
+            inventory[ingredient] <
+            recipe.amount
+        ) {
+
+            showMessage(
+                "Need " +
+                recipe.amount +
+                " " +
+                ingredient
+            );
+
+            return;
+        }
+
+
+        inventory[ingredient] -=
+            recipe.amount;
+
+
+        if (
+            !inventory[recipeKey]
+        ) {
+
+            inventory[recipeKey] =
+                0;
+        }
+
+
+        inventory[recipeKey] +=
+            recipe.output;
+
+
+        updateInventory();
+
+
+        showMessage(
+            "Crafted " +
+            recipe.name
+        );
     }
 
 
@@ -2853,747 +2747,312 @@ function startGame() {
             )
         ) {
 
+            craftingPanel.classList.remove(
+                "hidden"
+            );
+
             if (inventoryPanel) {
 
                 inventoryPanel.classList.add(
                     "hidden"
                 );
-
             }
 
-
-            craftingPanel.classList.remove(
-                "hidden"
-            );
-
-        }
-        else {
+        } else {
 
             craftingPanel.classList.add(
                 "hidden"
             );
-
         }
-
     }
-
-
-    function craft(recipeName) {
-
-        const recipe =
-            recipes[
-                recipeName
-            ];
-
-
-        if (!recipe) {
-            return;
-        }
-
-
-        /*
-           CHECK RESOURCES
-        */
-
-        for (
-            const item in recipe.need
-        ) {
-
-            if (
-                (inventory[item] || 0) <
-                recipe.need[item]
-            ) {
-
-                showMessage(
-                    "Resources kam hain."
-                );
-
-                return;
-
-            }
-
-        }
-
-
-        /*
-           REMOVE
-        */
-
-        for (
-            const item in recipe.need
-        ) {
-
-            inventory[item] -=
-                recipe.need[item];
-
-        }
-
-
-        /*
-           GIVE
-        */
-
-        for (
-            const item in recipe.give
-        ) {
-
-            inventory[item] =
-                (inventory[item] || 0) +
-                recipe.give[item];
-
-        }
-
-
-        updateInventory();
-
-        updateHotbar();
-
-
-        const outputName =
-            Object.keys(
-                recipe.give
-            )[0];
-
-
-        showMessage(
-            "Crafted: " +
-            blockTypes[
-                outputName
-            ].name
-        );
-
-    }
-
-
-    craftButtons.forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    const recipe =
-                        button.getAttribute(
-                            "data-recipe"
-                        );
-
-
-                    craft(recipe);
-
-                }
-            );
-
-        }
-    );
 
 
     if (closeCrafting) {
 
         closeCrafting.addEventListener(
             "click",
-            closeCraftingPanel
-        );
+            function () {
 
-    }
-
-
-    /* =====================================================
-       HOTBAR
-       ===================================================== */
-
-    const hotbarSlots =
-        document.querySelectorAll(
-            ".hotbar-slot"
-        );
-
-
-    function selectHotbar(slot) {
-
-        if (
-            slot < 1 ||
-            slot > 9
-        ) {
-
-            return;
-
-        }
-
-
-        selectedSlot =
-            slot;
-
-
-        hotbarSlots.forEach(
-            function (element) {
-
-                const number =
-                    Number(
-                        element.getAttribute(
-                            "data-slot"
-                        )
-                    );
-
-
-                if (
-                    number ===
-                    selectedSlot
-                ) {
-
-                    element.classList.add(
-                        "selected"
-                    );
-
-                }
-                else {
-
-                    element.classList.remove(
-                        "selected"
-                    );
-
-                }
-
-            }
-        );
-
-
-        updateHotbar();
-
-    }
-
-
-    function updateHotbar() {
-
-        hotbarSlots.forEach(
-            function (slot) {
-
-                const number =
-                    Number(
-                        slot.getAttribute(
-                            "data-slot"
-                        )
-                    );
-
-
-                const type =
-                    hotbarItems[number];
-
-
-                if (!type) {
-                    return;
-                }
-
-
-                const data =
-                    blockTypes[type];
-
-
-                slot.innerHTML = `
-
-                    <span>
-                        ${number}
-                    </span>
-
-                    ${data.emoji}
-
-                    <small class="hotbar-count">
-                        ${inventory[type] || 0}
-                    </small>
-
-                `;
-
-
-                if (
-                    number ===
-                    selectedSlot
-                ) {
-
-                    slot.classList.add(
-                        "selected"
-                    );
-
-                }
-                else {
-
-                    slot.classList.remove(
-                        "selected"
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    hotbarSlots.forEach(
-        function (slot) {
-
-            slot.addEventListener(
-                "click",
-                function () {
-
-                    const number =
-                        Number(
-                            slot.getAttribute(
-                                "data-slot"
-                            )
-                        );
-
-
-                    selectHotbar(
-                        number
-                    );
-
-                }
-            );
-
-        }
-    );
-
-
-    /* =====================================================
-       MOBILE JOYSTICK
-       ===================================================== */
-
-    const joystick =
-        document.getElementById(
-            "joystick"
-        );
-
-
-    const joystickKnob =
-        document.getElementById(
-            "joystickKnob"
-        );
-
-
-    let joystickActive = false;
-
-
-    if (joystick) {
-
-        joystick.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                joystickActive =
-                    true;
-
-
-                if (
-                    joystick.setPointerCapture
-                ) {
-
-                    joystick.setPointerCapture(
-                        event.pointerId
-                    );
-
-                }
-
-
-                updateJoystick(
-                    event
+                craftingPanel.classList.add(
+                    "hidden"
                 );
 
             }
         );
-
-
-        joystick.addEventListener(
-            "pointermove",
-            function (event) {
-
-                if (
-                    !joystickActive
-                ) {
-
-                    return;
-
-                }
-
-
-                updateJoystick(
-                    event
-                );
-
-            }
-        );
-
-
-        joystick.addEventListener(
-            "pointerup",
-            resetJoystick
-        );
-
-
-        joystick.addEventListener(
-            "pointercancel",
-            resetJoystick
-        );
-
-    }
-
-
-    function updateJoystick(event) {
-
-        if (
-            !joystick ||
-            !joystickKnob
-        ) {
-
-            return;
-
-        }
-
-
-        const rect =
-            joystick.getBoundingClientRect();
-
-
-        const centerX =
-            rect.left +
-            rect.width / 2;
-
-
-        const centerY =
-            rect.top +
-            rect.height / 2;
-
-
-        let x =
-            event.clientX -
-            centerX;
-
-
-        let y =
-            event.clientY -
-            centerY;
-
-
-        const max =
-            rect.width / 2 -
-            joystickKnob.offsetWidth / 2;
-
-
-        const distance =
-            Math.sqrt(
-                x * x +
-                y * y
-            );
-
-
-        if (
-            distance > max
-        ) {
-
-            x =
-                x / distance *
-                max;
-
-
-            y =
-                y / distance *
-                max;
-
-        }
-
-
-        joystickKnob.style.transform =
-            `translate(${x}px, ${y}px)`;
-
-
-        joystickX =
-            x / max;
-
-
-        joystickY =
-            y / max;
-
-    }
-
-
-    function resetJoystick() {
-
-        joystickActive =
-            false;
-
-
-        joystickX = 0;
-
-        joystickY = 0;
-
-
-        if (joystickKnob) {
-
-            joystickKnob.style.transform =
-                "translate(0, 0)";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       MOBILE LOOK
-       ===================================================== */
-
-    const lookArea =
-        document.getElementById(
-            "lookArea"
-        );
-
-
-    let lastTouchX = 0;
-
-    let lastTouchY = 0;
-
-    let looking = false;
-
-
-    if (lookArea) {
-
-        lookArea.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                looking = true;
-
-
-                lastTouchX =
-                    event.clientX;
-
-
-                lastTouchY =
-                    event.clientY;
-
-
-                if (
-                    lookArea.setPointerCapture
-                ) {
-
-                    lookArea.setPointerCapture(
-                        event.pointerId
-                    );
-
-                }
-
-            }
-        );
-
-
-        lookArea.addEventListener(
-            "pointermove",
-            function (event) {
-
-                if (!looking) {
-                    return;
-                }
-
-
-                const dx =
-                    event.clientX -
-                    lastTouchX;
-
-
-                const dy =
-                    event.clientY -
-                    lastTouchY;
-
-
-                lastTouchX =
-                    event.clientX;
-
-
-                lastTouchY =
-                    event.clientY;
-
-
-                yaw -=
-                    dx * 0.008;
-
-
-                pitch -=
-                    dy * 0.008;
-
-
-                pitch =
-                    Math.max(
-                        -1.45,
-                        Math.min(
-                            1.45,
-                            pitch
-                        )
-                    );
-
-            }
-        );
-
-
-        lookArea.addEventListener(
-            "pointerup",
-            function () {
-
-                looking = false;
-
-            }
-        );
-
-
-        lookArea.addEventListener(
-            "pointercancel",
-            function () {
-
-                looking = false;
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       MOBILE BUTTONS
-       ===================================================== */
-
-    const jumpBtn =
-        document.getElementById(
-            "jumpBtn"
-        );
-
-
-    const mineBtn =
-        document.getElementById(
-            "mineBtn"
-        );
-
-
-    const placeBtn =
-        document.getElementById(
-            "placeBtn"
-        );
-
-
-    const inventoryBtn =
-        document.getElementById(
-            "inventoryBtn"
-        );
-
-
-    const craftingBtn =
-        document.getElementById(
-            "craftingBtn"
-        );
-
-
-    if (jumpBtn) {
-
-        jumpBtn.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                event.preventDefault();
-
-                jump();
-
-            }
-        );
-
-    }
-
-
-    if (mineBtn) {
-
-        mineBtn.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                event.preventDefault();
-
-                mineBlock();
-
-            }
-        );
-
-    }
-
-
-    if (placeBtn) {
-
-        placeBtn.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                event.preventDefault();
-
-                placeBlock();
-
-            }
-        );
-
-    }
-
-
-    if (inventoryBtn) {
-
-        inventoryBtn.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                event.preventDefault();
-
-                toggleInventory();
-
-            }
-        );
-
     }
 
 
     if (craftingBtn) {
 
         craftingBtn.addEventListener(
-            "pointerdown",
-            function (event) {
-
-                event.preventDefault();
-
-                toggleCrafting();
-
-            }
+            "click",
+            toggleCrafting
         );
-
     }
+
+
+    setupCraftingUI();
+
+
+    /* =====================================================
+       MOBILE CONTROLS
+       ===================================================== */
+
+    function setupMobileControls() {
+
+        if (!mobileControls) {
+            return;
+        }
+
+
+        const isTouch =
+            "ontouchstart" in window ||
+            navigator.maxTouchPoints > 0;
+
+
+        if (!isTouch) {
+
+            mobileControls.style.display =
+                "none";
+
+            return;
+        }
+
+
+        mobileControls.style.display =
+            "block";
+
+
+        if (jumpBtn) {
+
+            jumpBtn.addEventListener(
+                "touchstart",
+                function (event) {
+
+                    event.preventDefault();
+
+                    jump();
+
+                },
+                {
+                    passive: false
+                }
+            );
+        }
+
+
+        if (mineBtn) {
+
+            mineBtn.addEventListener(
+                "touchstart",
+                function (event) {
+
+                    event.preventDefault();
+
+                    mineBlock();
+
+                },
+                {
+                    passive: false
+                }
+            );
+        }
+
+
+        if (placeBtn) {
+
+            placeBtn.addEventListener(
+                "touchstart",
+                function (event) {
+
+                    event.preventDefault();
+
+                    placeBlock();
+
+                },
+                {
+                    passive: false
+                }
+            );
+        }
+
+
+        let joyX = 0;
+        let joyY = 0;
+
+
+        if (
+            joystick &&
+            joystickKnob
+        ) {
+
+            joystick.addEventListener(
+                "touchmove",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    const touch =
+                        event.touches[0];
+
+
+                    const rect =
+                        joystick.getBoundingClientRect();
+
+
+                    const centerX =
+                        rect.left +
+                        rect.width / 2;
+
+                    const centerY =
+                        rect.top +
+                        rect.height / 2;
+
+
+                    let dx =
+                        touch.clientX -
+                        centerX;
+
+                    let dy =
+                        touch.clientY -
+                        centerY;
+
+
+                    const max =
+                        rect.width /
+                        2 -
+                        20;
+
+
+                    const distance =
+                        Math.sqrt(
+                            dx * dx +
+                            dy * dy
+                        );
+
+
+                    if (
+                        distance >
+                        max
+                    ) {
+
+                        dx =
+                            dx /
+                            distance *
+                            max;
+
+                        dy =
+                            dy /
+                            distance *
+                            max;
+                    }
+
+
+                    joystickKnob.style.transform =
+                        "translate(" +
+                        dx +
+                        "px, " +
+                        dy +
+                        "px)";
+
+
+                    joyX =
+                        dx / max;
+
+                    joyY =
+                        dy / max;
+
+
+                    keys.d =
+                        joyX > 0.2;
+
+                    keys.a =
+                        joyX < -0.2;
+
+                    keys.w =
+                        joyY < -0.2;
+
+                    keys.s =
+                        joyY > 0.2;
+
+                },
+                {
+                    passive: false
+                }
+            );
+
+
+            joystick.addEventListener(
+                "touchend",
+                function () {
+
+                    joyX = 0;
+                    joyY = 0;
+
+
+                    keys.w = false;
+                    keys.a = false;
+                    keys.s = false;
+                    keys.d = false;
+
+
+                    joystickKnob.style.transform =
+                        "translate(0, 0)";
+                }
+            );
+        }
+
+
+        if (rotateScreen) {
+
+            rotateScreen.addEventListener(
+                "click",
+                function () {
+
+                    if (
+                        document.documentElement
+                            .requestFullscreen
+                    ) {
+
+                        document.documentElement
+                            .requestFullscreen()
+                            .catch(
+                                function () {}
+                            );
+                    }
+                }
+            );
+        }
+    }
+
+
+    setupMobileControls();
 
 
     /* =====================================================
        SURVIVAL
        ===================================================== */
 
-    let survivalTimer = 0;
-
-
-    function updateSurvival(delta) {
-
-        if (!gameStarted) {
-            return;
-        }
-
+    function updateSurvival(
+        delta
+    ) {
 
         survivalTimer +=
             delta;
 
 
         if (
-            survivalTimer < 10
+            survivalTimer <
+            5
         ) {
 
             return;
-
         }
 
 
-        survivalTimer = 0;
+        survivalTimer =
+            0;
 
 
         hungerValue =
@@ -3612,7 +3071,6 @@ function startGame() {
                     0,
                     healthValue - 1
                 );
-
         }
 
 
@@ -3624,68 +3082,42 @@ function startGame() {
         ) {
 
             showMessage(
-                "You need food and rest!"
+                "You need food and rest"
             );
 
+            healthValue =
+                100;
 
-            healthValue = 100;
-
-            hungerValue = 100;
-
-
-            if (player) {
-
-                const startHeight =
-                    getTerrainHeight(
-                        0,
-                        5
-                    );
-
-
-                player.position.set(
-                    0,
-                    startHeight + 1.8,
-                    5
-                );
-
-            }
-
+            hungerValue =
+                100;
         }
-
     }
 
 
     function updateSurvivalUI() {
 
-        const health =
-            document.getElementById(
-                "health"
-            );
-
-
-        const hunger =
-            document.getElementById(
-                "hunger"
-            );
-
-
         if (health) {
 
-            health.style.width =
-                healthValue +
-                "%";
-
+            health.textContent =
+                Math.max(
+                    0,
+                    Math.round(
+                        healthValue
+                    )
+                );
         }
 
 
         if (hunger) {
 
-            hunger.style.width =
-                hungerValue +
-                "%";
-
+            hunger.textContent =
+                Math.max(
+                    0,
+                    Math.round(
+                        hungerValue
+                    )
+                );
         }
-
     }
 
 
@@ -3695,23 +3127,14 @@ function startGame() {
 
     function showMessage(text) {
 
-        const message =
-            document.getElementById(
-                "message"
-            );
-
-
-        if (!message) {
-            return;
-        }
+        if (!message) return;
 
 
         message.textContent =
             text;
 
-
-        message.classList.add(
-            "show"
+        message.classList.remove(
+            "hidden"
         );
 
 
@@ -3724,489 +3147,21 @@ function startGame() {
             setTimeout(
                 function () {
 
-                    message.classList.remove(
-                        "show"
+                    message.classList.add(
+                        "hidden"
                     );
 
                 },
-                1300
+                1200
             );
-
     }
-
-
-    /* =====================================================
-       LOAD NEARBY CHUNKS
-       ===================================================== */
-
-    function loadNearbyChunks() {
-
-        if (!player) {
-            return;
-        }
-
-
-        const chunkX =
-            Math.floor(
-                player.position.x /
-                CHUNK_SIZE
-            );
-
-
-        const chunkZ =
-            Math.floor(
-                player.position.z /
-                CHUNK_SIZE
-            );
-
-
-        /*
-           2 = chunks around player.
-
-           5 x 5 area will be loaded.
-        */
-
-        const renderDistance = 2;
-
-
-        for (
-            let cx =
-                chunkX -
-                renderDistance;
-
-            cx <=
-                chunkX +
-                renderDistance;
-
-            cx++
-        ) {
-
-            for (
-                let cz =
-                    chunkZ -
-                    renderDistance;
-
-                cz <=
-                    chunkZ +
-                    renderDistance;
-
-                cz++
-            ) {
-
-                generateChunk(
-                    cx,
-                    cz
-                );
-
-            }
-
-        }
-
-    }
-
-
-    /* =====================================================
-       INITIALIZE GAME
-       ===================================================== */
-
-    function initializeGame() {
-
-        if (initialized) {
-            return;
-        }
-
-
-        initialized = true;
-
-
-        /*
-           SCENE
-        */
-
-        scene =
-            new THREE.Scene();
-
-
-        scene.background =
-            new THREE.Color(
-                0x79b7df
-            );
-
-
-        scene.fog =
-            new THREE.Fog(
-                0x79b7df,
-                20,
-                100
-            );
-
-
-        /*
-           CAMERA
-        */
-
-        camera =
-            new THREE.PerspectiveCamera(
-
-                75,
-
-                window.innerWidth /
-                window.innerHeight,
-
-                0.1,
-
-                200
-
-            );
-
-
-        camera.position.set(
-            0,
-            5,
-            6
-        );
-
-
-        /*
-           RENDERER
-        */
-
-        renderer =
-            new THREE.WebGLRenderer({
-
-                antialias: true
-
-            });
-
-
-        renderer.setPixelRatio(
-
-            Math.min(
-                window.devicePixelRatio,
-                2
-            )
-
-        );
-
-
-        renderer.setSize(
-
-            window.innerWidth,
-            window.innerHeight
-
-        );
-
-
-        renderer.shadowMap.enabled =
-            true;
-
-
-        renderer.shadowMap.type =
-            THREE.PCFSoftShadowMap;
-
-
-        if (game) {
-
-            game.insertBefore(
-
-                renderer.domElement,
-
-                game.firstChild
-
-            );
-
-        }
-
-
-        /*
-           CLOCK
-        */
-
-        clock =
-            new THREE.Clock();
-
-
-        /* =================================================
-           LIGHTS
-           ================================================= */
-
-        const ambient =
-            new THREE.HemisphereLight(
-
-                0xffffff,
-                0x35513d,
-                1.3
-
-            );
-
-
-        scene.add(
-            ambient
-        );
-
-
-        const sun =
-            new THREE.DirectionalLight(
-
-                0xffffff,
-                1.5
-
-            );
-
-
-        sun.position.set(
-            30,
-            50,
-            20
-        );
-
-
-        sun.castShadow =
-            true;
-
-
-        sun.shadow.mapSize.width =
-            1024;
-
-
-        sun.shadow.mapSize.height =
-            1024;
-
-
-        scene.add(
-            sun
-        );
-
-
-        /* =================================================
-           WORLD
-           ================================================= */
-
-        generateWorld();
-
-
-        /* =================================================
-           KIT
-           ================================================= */
-
-        applySelectedKit();
-
-
-        /* =================================================
-           PLAYER
-           ================================================= */
-
-        createPlayer();
-
-
-        /* =================================================
-           CONTROLS
-           ================================================= */
-
-        setupControls();
-
-
-        updateInventory();
-
-        updateHotbar();
-
-        updateSurvivalUI();
-
-
-        /* =================================================
-           RESIZE
-           ================================================= */
-
-        window.addEventListener(
-            "resize",
-            onResize
-        );
-
-
-        /*
-           START LOOP
-        */
-
-        animate();
-
-    }
-
-
-    /* =====================================================
-       START GAME FROM HOME
-       ===================================================== */
-
-    function startFromHome() {
-
-        if (gameStarted) {
-            return;
-        }
-
-
-        /*
-           NAME
-        */
-
-        if (playerNameInput) {
-
-            const enteredName =
-                playerNameInput.value.trim();
-
-
-            if (
-                enteredName.length > 0
-            ) {
-
-                playerName =
-                    enteredName.substring(
-                        0,
-                        16
-                    );
-
-            }
-            else {
-
-                playerName =
-                    "Player";
-
-            }
-
-        }
-
-
-        updatePlayerNameUI();
-
-
-        saveData();
-
-
-        /*
-           INITIALIZE
-        */
-
-        if (!initialized) {
-
-            initializeGame();
-
-        }
-
-
-        /*
-           GAME START
-        */
-
-        gameStarted =
-            true;
-
-
-        if (homeScreen) {
-
-            homeScreen.classList.add(
-                "hidden"
-            );
-
-        }
-
-
-        if (game) {
-
-            game.classList.remove(
-                "hidden"
-            );
-
-        }
-
-
-        if (player) {
-
-            player.visible =
-                true;
-
-        }
-
-
-        showMessage(
-            "Welcome " +
-            playerName +
-            "!"
-        );
-
-    }
-
-
-    if (startGameBtn) {
-
-        startGameBtn.addEventListener(
-            "click",
-            startFromHome
-        );
-
-    }
-
-
-    if (playerNameInput) {
-
-        playerNameInput.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    startFromHome();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       ESC
-       ===================================================== */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key !== "Escape"
-            ) {
-
-                return;
-
-            }
-
-
-            if (inventoryPanel) {
-
-                inventoryPanel.classList.add(
-                    "hidden"
-                );
-
-            }
-
-
-            if (craftingPanel) {
-
-                craftingPanel.classList.add(
-                    "hidden"
-                );
-
-            }
-
-        }
-    );
 
 
     /* =====================================================
        RESIZE
        ===================================================== */
 
-    function onResize() {
+    function resizeGame() {
 
         if (
             !camera ||
@@ -4214,7 +3169,6 @@ function startGame() {
         ) {
 
             return;
-
         }
 
 
@@ -4230,7 +3184,123 @@ function startGame() {
             window.innerWidth,
             window.innerHeight
         );
+    }
 
+
+    window.addEventListener(
+        "resize",
+        resizeGame
+    );
+
+
+    /* =====================================================
+       START GAME
+       ===================================================== */
+
+    function initializeGame() {
+
+        if (gameInitialized) {
+            return;
+        }
+
+
+        gameInitialized =
+            true;
+
+
+        createScene();
+
+        createCamera();
+
+        createRenderer();
+
+        generateWorld();
+
+        createPlayer();
+
+        setupControls();
+
+        setupMouseLook();
+
+        applyKit();
+
+        updateInventory();
+
+        updateHotbar();
+
+        updateSurvivalUI();
+
+        resizeGame();
+
+
+        if (homeScreen) {
+
+            homeScreen.classList.add(
+                "hidden"
+            );
+        }
+
+
+        if (game) {
+
+            game.classList.remove(
+                "hidden"
+            );
+        }
+
+
+        gameStarted =
+            true;
+
+
+        showMessage(
+            "Welcome " +
+            playerName
+        );
+    }
+
+
+    function startFromHome() {
+
+        updateHomeName();
+
+
+        if (
+            !gameInitialized
+        ) {
+
+            initializeGame();
+
+        } else {
+
+            gameStarted =
+                true;
+
+
+            if (homeScreen) {
+
+                homeScreen.classList.add(
+                    "hidden"
+                );
+            }
+
+
+            if (game) {
+
+                game.classList.remove(
+                    "hidden"
+                );
+            }
+        }
+    }
+
+
+    if (startGameBtn) {
+
+        startGameBtn.addEventListener(
+            "click",
+            startFromHome
+        );
     }
 
 
@@ -4245,11 +3315,6 @@ function startGame() {
         );
 
 
-        if (!clock) {
-            return;
-        }
-
-
         const delta =
             Math.min(
                 clock.getDelta(),
@@ -4257,60 +3322,37 @@ function startGame() {
             );
 
 
-        /*
-           PLAYER
-        */
+        if (
+            gameStarted &&
+            gameInitialized
+        ) {
 
-        updatePlayer(
-            delta
-        );
+            updatePlayer(
+                delta
+            );
 
-
-        /*
-           INFINITE WORLD
-
-           Player moves to a new
-           chunk → new land generated.
-        */
-
-        if (gameStarted) {
 
             loadNearbyChunks();
 
+
+            updateSurvival(
+                delta
+            );
         }
 
 
-        /*
-           SURVIVAL
-        */
-
-        updateSurvival(
-            delta
-        );
-
-
-        /*
-           RENDER
-        */
-
-        if (
-            renderer &&
-            scene &&
-            camera
-        ) {
+        if (renderer && scene && camera) {
 
             renderer.render(
                 scene,
                 camera
             );
-
         }
-
     }
 
 
     /* =====================================================
-       LOADING SCREEN → HOME
+       LOADING SCREEN
        ===================================================== */
 
     if (loadingScreen) {
@@ -4319,6 +3361,8 @@ function startGame() {
             "hidden"
         );
 
+        loadingScreen.style.display =
+            "flex";
     }
 
 
@@ -4327,7 +3371,6 @@ function startGame() {
         homeScreen.classList.add(
             "hidden"
         );
-
     }
 
 
@@ -4336,13 +3379,12 @@ function startGame() {
         game.classList.add(
             "hidden"
         );
-
     }
 
 
-    /*
-       ONLY ONE LOADING TIMER
-    */
+    /* =====================================================
+       LOADING -> HOME
+       ===================================================== */
 
     setTimeout(
         function () {
@@ -4353,6 +3395,8 @@ function startGame() {
                     "hidden"
                 );
 
+                loadingScreen.style.display =
+                    "none";
             }
 
 
@@ -4362,10 +3406,39 @@ function startGame() {
                     "hidden"
                 );
 
+                homeScreen.style.display =
+                    "flex";
             }
+
+
+            updateHomeName();
+
+            updateKitUI();
+
+            updateClothesUI();
+
+            console.log(
+                "Mind Craft loaded successfully."
+            );
 
         },
         1500
     );
 
+
+    /* =====================================================
+       INITIAL UI
+       ===================================================== */
+
+    updateHomeName();
+
+    updateKitUI();
+
+    updateClothesUI();
+
+    updateInventory();
+
+    updateSurvivalUI();
+
+    animate();
 }
