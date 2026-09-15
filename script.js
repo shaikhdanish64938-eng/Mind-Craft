@@ -1,7 +1,13 @@
 /* global THREE */
 
 /* =========================================================
-   MIND CRAFT - COMPLETE GAME SCRIPT
+   MIND CRAFT / BLOCK WORLD
+   COMPLETE SCRIPT - MATCHED WITH CURRENT index.html
+   ========================================================= */
+
+
+/* =========================================================
+   LOAD THREE.JS
    ========================================================= */
 
 const threeScript = document.createElement("script");
@@ -11,20 +17,24 @@ threeScript.src =
 
 threeScript.onload = startGame;
 
+threeScript.onerror = function () {
+    console.error("Three.js failed to load.");
+};
+
 document.head.appendChild(threeScript);
 
 
 /* =========================================================
-   MAIN START
+   MAIN GAME
    ========================================================= */
 
 function startGame() {
 
-    let gameStarted = false;
-    let gameInitialized = false;
+    console.log("Mind Craft JavaScript loaded.");
+
 
     /* =====================================================
-       HTML ELEMENTS
+       EXACT HTML ELEMENTS
        ===================================================== */
 
     const loadingScreen =
@@ -42,14 +52,17 @@ function startGame() {
     const homePlayerName =
         document.getElementById("homePlayerName");
 
+    const startGameBtn =
+        document.getElementById("startGameBtn");
+
+    const selectedKitName =
+        document.getElementById("selectedKitName");
+
     const profileName =
         document.getElementById("profileName");
 
     const playerNameHud =
         document.getElementById("playerNameHud");
-
-    const startGameBtn =
-        document.getElementById("startGameBtn");
 
     const homeToast =
         document.getElementById("homeToast");
@@ -71,6 +84,15 @@ function startGame() {
 
     const closeCrafting =
         document.getElementById("closeCrafting");
+
+    const health =
+        document.getElementById("health");
+
+    const hunger =
+        document.getElementById("hunger");
+
+    const message =
+        document.getElementById("message");
 
     const mobileControls =
         document.getElementById("mobileControls");
@@ -99,60 +121,260 @@ function startGame() {
     const rotateScreen =
         document.getElementById("rotateScreen");
 
-    const health =
-        document.getElementById("health");
 
-    const hunger =
-        document.getElementById("hunger");
+    /* =====================================================
+       CHECK IMPORTANT BUTTONS
+       ===================================================== */
 
-    const message =
-        document.getElementById("message");
+    console.log(
+        "PLAY BUTTON:",
+        startGameBtn
+    );
 
-    const pcHelp =
-        document.getElementById("pcHelp");
+    console.log(
+        "HOME SCREEN:",
+        homeScreen
+    );
+
+    console.log(
+        "GAME:",
+        game
+    );
 
 
     /* =====================================================
-       HOME DATA
+       PLAYER NAME
        ===================================================== */
 
     let playerName =
-        localStorage.getItem("mindCraftPlayerName") ||
-        "PLAYER";
+        localStorage.getItem(
+            "mindCraftPlayerName"
+        ) || "Player";
 
-    let selectedKit =
-        localStorage.getItem("mindCraftKit") ||
-        "starter";
 
-    let appearance = {
+    if (playerNameInput) {
 
-        hat:
-            localStorage.getItem("mindCraftHat") ||
-            "none",
+        playerNameInput.value =
+            playerName;
+    }
 
-        shirt:
-            localStorage.getItem("mindCraftShirt") ||
-            "blue",
 
-        pants:
-            localStorage.getItem("mindCraftPants") ||
-            "dark",
+    function updatePlayerName() {
 
-        shoes:
-            localStorage.getItem("mindCraftShoes") ||
-            "white"
-    };
+        if (!playerNameInput) {
+            return;
+        }
+
+
+        const value =
+            playerNameInput.value.trim();
+
+
+        if (value.length > 0) {
+
+            playerName =
+                value;
+        }
+
+
+        localStorage.setItem(
+            "mindCraftPlayerName",
+            playerName
+        );
+
+
+        if (homePlayerName) {
+
+            homePlayerName.textContent =
+                playerName;
+        }
+
+
+        if (profileName) {
+
+            profileName.textContent =
+                playerName;
+        }
+
+
+        if (playerNameHud) {
+
+            playerNameHud.textContent =
+                playerName;
+        }
+    }
+
+
+    if (playerNameInput) {
+
+        playerNameInput.addEventListener(
+            "input",
+            updatePlayerName
+        );
+    }
+
+
+    updatePlayerName();
 
 
     /* =====================================================
-       KITS
+       HOME TOAST
+       ===================================================== */
+
+    let toastTimer = null;
+
+
+    function showHomeToast(text) {
+
+        if (!homeToast) {
+            return;
+        }
+
+
+        homeToast.textContent =
+            text;
+
+
+        homeToast.classList.remove(
+            "hidden"
+        );
+
+
+        homeToast.style.display =
+            "block";
+
+
+        clearTimeout(
+            toastTimer
+        );
+
+
+        toastTimer =
+            setTimeout(
+                function () {
+
+                    homeToast.classList.add(
+                        "hidden"
+                    );
+
+                    homeToast.style.display =
+                        "none";
+
+                },
+                1600
+            );
+    }
+
+
+    /* =====================================================
+       HOME PANELS
+       ===================================================== */
+
+    const homePanels =
+        document.querySelectorAll(
+            ".home-subpanel"
+        );
+
+
+    function closeHomePanels() {
+
+        homePanels.forEach(
+            function (panel) {
+
+                panel.classList.add(
+                    "hidden"
+                );
+
+                panel.classList.remove(
+                    "active"
+                );
+            }
+        );
+    }
+
+
+    function openHomePanel(
+        panelId
+    ) {
+
+        closeHomePanels();
+
+
+        const panel =
+            document.getElementById(
+                panelId
+            );
+
+
+        if (!panel) {
+
+            console.error(
+                "Panel not found:",
+                panelId
+            );
+
+            return;
+        }
+
+
+        panel.classList.remove(
+            "hidden"
+        );
+
+        panel.classList.add(
+            "active"
+        );
+    }
+
+
+    document.querySelectorAll(
+        "[data-home-panel]"
+    ).forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const panelId =
+                        button.dataset.homePanel;
+
+
+                    openHomePanel(
+                        panelId
+                    );
+                }
+            );
+        }
+    );
+
+
+    document.querySelectorAll(
+        ".home-back"
+    ).forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    closeHomePanels();
+
+                }
+            );
+        }
+    );
+
+
+    /* =====================================================
+       KIT SYSTEM
        ===================================================== */
 
     const kits = {
 
         starter: {
 
-            name: "STARTER KIT",
+            name: "STARTER",
 
             items: {
 
@@ -163,9 +385,10 @@ function startGame() {
             }
         },
 
+
         builder: {
 
-            name: "BUILDER KIT",
+            name: "BUILDER",
 
             items: {
 
@@ -176,15 +399,16 @@ function startGame() {
             }
         },
 
+
         explorer: {
 
-            name: "EXPLORER KIT",
+            name: "EXPLORER",
 
             items: {
 
                 grass: 8,
                 dirt: 8,
-                stone: 12,
+                stone: 15,
                 wood: 12,
                 coal: 6
             }
@@ -192,254 +416,108 @@ function startGame() {
     };
 
 
-    /* =====================================================
-       UPDATE HOME
-       ===================================================== */
-
-    function updateHomeName() {
-
-        if (!playerNameInput) return;
-
-        const value =
-            playerNameInput.value.trim();
-
-        if (value.length > 0) {
-
-            playerName = value;
-
-        }
-
-        if (homePlayerName) {
-
-            homePlayerName.textContent =
-                playerName;
-        }
-
-        if (profileName) {
-
-            profileName.textContent =
-                playerName;
-        }
-
-        if (playerNameHud) {
-
-            playerNameHud.textContent =
-                playerName;
-        }
-
-        localStorage.setItem(
-            "mindCraftPlayerName",
-            playerName
-        );
-    }
-
-
-    if (playerNameInput) {
-
-        playerNameInput.value =
-            playerName;
-
-        playerNameInput.addEventListener(
-            "input",
-            updateHomeName
-        );
-    }
-
-
-    /* =====================================================
-       HOME TOAST
-       ===================================================== */
-
-    function showHomeToast(text) {
-
-        if (!homeToast) return;
-
-        homeToast.textContent = text;
-
-        homeToast.classList.remove("hidden");
-
-        clearTimeout(
-            showHomeToast.timer
-        );
-
-        showHomeToast.timer =
-            setTimeout(function () {
-
-                homeToast.classList.add("hidden");
-
-            }, 1800);
-    }
-
-
-    /* =====================================================
-       HOME PANELS
-       ===================================================== */
-
-    function closeHomePanels() {
-
-        const panels = document.querySelectorAll(
-            ".home-subpanel"
-        );
-
-        panels.forEach(function (panel) {
-
-            panel.classList.remove("active");
-
-        });
-    }
-
-
-    function openHomePanel(id) {
-
-        closeHomePanels();
-
-        const panel =
-            document.getElementById(id);
-
-        if (panel) {
-
-            panel.classList.add("active");
-
-        }
-    }
-
-
-    document.querySelectorAll(
-        "[data-home-panel]"
-    ).forEach(function (button) {
-
-        button.addEventListener(
-            "click",
-            function () {
-
-                openHomePanel(
-                    button.dataset.homePanel
-                );
-
-            }
-        );
-
-    });
-
-
-    document.querySelectorAll(
-        ".home-back, .close-home"
-    ).forEach(function (button) {
-
-        button.addEventListener(
-            "click",
-            closeHomePanels
-        );
-
-    });
-
-
-    /* =====================================================
-       KIT SELECTION
-       ===================================================== */
-
-    const selectedKitName =
-        document.getElementById("selectedKitName");
+    let selectedKit =
+        localStorage.getItem(
+            "mindCraftKit"
+        ) || "starter";
 
 
     function updateKitUI() {
 
         document.querySelectorAll(
             ".kit-option"
-        ).forEach(function (option) {
+        ).forEach(
+            function (option) {
 
-            option.classList.remove("selected");
+                option.classList.remove(
+                    "selected"
+                );
 
-            if (
-                option.dataset.kit ===
-                selectedKit
-            ) {
 
-                option.classList.add("selected");
+                if (
+                    option.dataset.kit ===
+                    selectedKit
+                ) {
 
+                    option.classList.add(
+                        "selected"
+                    );
+                }
             }
+        );
 
-        });
 
         if (selectedKitName) {
 
             selectedKitName.textContent =
                 kits[selectedKit]
                     ? kits[selectedKit].name
-                    : "STARTER KIT";
+                    : "STARTER";
         }
     }
 
 
     document.querySelectorAll(
         ".kit-option"
-    ).forEach(function (option) {
+    ).forEach(
+        function (option) {
 
-        option.addEventListener(
-            "click",
-            function () {
+            option.addEventListener(
+                "click",
+                function () {
 
-                const kit =
-                    option.dataset.kit;
+                    const kit =
+                        option.dataset.kit;
 
-                if (!kits[kit]) return;
 
-                selectedKit = kit;
+                    if (!kits[kit]) {
+                        return;
+                    }
 
-                localStorage.setItem(
-                    "mindCraftKit",
-                    selectedKit
-                );
 
-                updateKitUI();
+                    selectedKit =
+                        kit;
 
-                showHomeToast(
-                    kits[kit].name +
-                    " selected"
-                );
-            }
-        );
 
-    });
+                    localStorage.setItem(
+                        "mindCraftKit",
+                        selectedKit
+                    );
+
+
+                    updateKitUI();
+
+
+                    showHomeToast(
+                        kits[kit].name +
+                        " selected"
+                    );
+                }
+            );
+        }
+    );
 
 
     document.querySelectorAll(
         ".kit-equip"
-    ).forEach(function (button) {
+    ).forEach(
+        function (button) {
 
-        button.addEventListener(
-            "click",
-            function (event) {
+            button.addEventListener(
+                "click",
+                function () {
 
-                event.stopPropagation();
+                    updateKitUI();
 
-                const parent =
-                    button.closest(".kit-option");
 
-                if (!parent) return;
-
-                const kit =
-                    parent.dataset.kit;
-
-                if (!kits[kit]) return;
-
-                selectedKit = kit;
-
-                localStorage.setItem(
-                    "mindCraftKit",
-                    selectedKit
-                );
-
-                updateKitUI();
-
-                showHomeToast(
-                    kits[kit].name +
-                    " equipped"
-                );
-            }
-        );
-
-    });
+                    showHomeToast(
+                        kits[selectedKit].name +
+                        " equipped"
+                    );
+                }
+            );
+        }
+    );
 
 
     updateKitUI();
@@ -449,96 +527,36 @@ function startGame() {
        CLOTHES
        ===================================================== */
 
+    let appearance = {
+
+        head:
+            localStorage.getItem(
+                "mindCraftHead"
+            ) || "none",
+
+        shirt:
+            localStorage.getItem(
+                "mindCraftShirt"
+            ) || "green",
+
+        pants:
+            localStorage.getItem(
+                "mindCraftPants"
+            ) || "blue",
+
+        shoes:
+            localStorage.getItem(
+                "mindCraftShoes"
+            ) || "white"
+    };
+
+
     function updateClothesUI() {
 
         document.querySelectorAll(
             ".cloth-option"
-        ).forEach(function (option) {
-
-            option.classList.remove("selected");
-
-            const category =
-                option.dataset.category;
-
-            const value =
-                option.dataset.value;
-
-            if (
-                appearance[category] ===
-                value
-            ) {
-
-                option.classList.add(
-                    "selected"
-                );
-            }
-        });
-
-        updateClothesPreview();
-    }
-
-
-    function updateClothesPreview() {
-
-        const hat =
-            document.getElementById("previewHat");
-
-        const shirt =
-            document.getElementById("previewShirt");
-
-        const pants =
-            document.getElementById("previewPants");
-
-        const shoes =
-            document.getElementById("previewShoes");
-
-
-        if (hat) {
-
-            hat.textContent =
-                appearance.hat === "none"
-                    ? "🙂"
-                    : "🧢";
-        }
-
-
-        if (shirt) {
-
-            shirt.textContent =
-                appearance.shirt === "red"
-                    ? "👕"
-                    : appearance.shirt === "green"
-                    ? "🟢"
-                    : "🔵";
-        }
-
-
-        if (pants) {
-
-            pants.textContent =
-                appearance.pants === "light"
-                    ? "👖"
-                    : "🖤";
-        }
-
-
-        if (shoes) {
-
-            shoes.textContent =
-                appearance.shoes === "black"
-                    ? "👞"
-                    : "👟";
-        }
-    }
-
-
-    document.querySelectorAll(
-        ".cloth-option"
-    ).forEach(function (option) {
-
-        option.addEventListener(
-            "click",
-            function () {
+        ).forEach(
+            function (option) {
 
                 const category =
                     option.dataset.category;
@@ -546,35 +564,198 @@ function startGame() {
                 const value =
                     option.dataset.value;
 
-                if (!category || !value) {
-                    return;
-                }
 
-                appearance[category] =
-                    value;
+                option.classList.remove(
+                    "selected"
+                );
 
-                localStorage.setItem(
-                    "mindCraft" +
-                    category.charAt(0).toUpperCase() +
-                    category.slice(1),
+
+                if (
+                    appearance[category] ===
                     value
-                );
+                ) {
 
-                updateClothesUI();
-
-                showHomeToast(
-                    "Clothes updated"
-                );
-
-                if (player) {
-
-                    applyAppearanceToPlayer();
-
+                    option.classList.add(
+                        "selected"
+                    );
                 }
             }
         );
 
-    });
+
+        updateClothesPreview();
+    }
+
+
+    function updateClothesPreview() {
+
+        const previewHat =
+            document.getElementById(
+                "previewHat"
+            );
+
+        const previewShirt =
+            document.getElementById(
+                "previewShirt"
+            );
+
+        const previewPants =
+            document.getElementById(
+                "previewPants"
+            );
+
+        const previewShoes =
+            document.getElementById(
+                "previewShoes"
+            );
+
+
+        if (previewHat) {
+
+            if (
+                appearance.head ===
+                "cap"
+            ) {
+
+                previewHat.textContent =
+                    "🧢";
+
+            } else if (
+                appearance.head ===
+                "helmet"
+            ) {
+
+                previewHat.textContent =
+                    "⛑️";
+
+            } else {
+
+                previewHat.textContent =
+                    "🙂";
+            }
+        }
+
+
+        if (previewShirt) {
+
+            if (
+                appearance.shirt ===
+                "red"
+            ) {
+
+                previewShirt.textContent =
+                    "🔴";
+
+            } else if (
+                appearance.shirt ===
+                "blue"
+            ) {
+
+                previewShirt.textContent =
+                    "🔵";
+
+            } else {
+
+                previewShirt.textContent =
+                    "🟢";
+            }
+        }
+
+
+        if (previewPants) {
+
+            if (
+                appearance.pants ===
+                "black"
+            ) {
+
+                previewPants.textContent =
+                    "⚫";
+
+            } else if (
+                appearance.pants ===
+                "brown"
+            ) {
+
+                previewPants.textContent =
+                    "🟤";
+
+            } else {
+
+                previewPants.textContent =
+                    "🔵";
+            }
+        }
+
+
+        if (previewShoes) {
+
+            if (
+                appearance.shoes ===
+                "black"
+            ) {
+
+                previewShoes.textContent =
+                    "⚫";
+
+            } else {
+
+                previewShoes.textContent =
+                    "⚪";
+            }
+        }
+    }
+
+
+    document.querySelectorAll(
+        ".cloth-option"
+    ).forEach(
+        function (option) {
+
+            option.addEventListener(
+                "click",
+                function () {
+
+                    const category =
+                        option.dataset.category;
+
+                    const value =
+                        option.dataset.value;
+
+
+                    if (!category) {
+                        return;
+                    }
+
+
+                    appearance[category] =
+                        value;
+
+
+                    localStorage.setItem(
+                        "mindCraft" +
+                        category.charAt(0).toUpperCase() +
+                        category.slice(1),
+                        value
+                    );
+
+
+                    updateClothesUI();
+
+
+                    if (player) {
+
+                        applyAppearanceToPlayer();
+                    }
+
+
+                    showHomeToast(
+                        "Clothes updated"
+                    );
+                }
+            );
+        }
+    );
 
 
     updateClothesUI();
@@ -584,45 +765,43 @@ function startGame() {
        THREE.JS VARIABLES
        ===================================================== */
 
-    let scene;
-    let camera;
-    let renderer;
-    let player;
+    let scene = null;
 
-    let clock =
-        new THREE.Clock();
+    let camera = null;
+
+    let renderer = null;
+
+    let player = null;
+
+    let gameStarted = false;
+
+    let gameInitialized = false;
 
 
     /* =====================================================
-       WORLD VARIABLES
+       WORLD
        ===================================================== */
-
-    const CHUNK_SIZE = 16;
-
-    const RENDER_DISTANCE = 5;
-
-    const generatedChunks =
-        new Set();
-
-    const blockMap =
-        new Map();
 
     const worldGroup =
         new THREE.Group();
 
-    const raycaster =
-        new THREE.Raycaster();
 
-    const mouse =
-        new THREE.Vector2();
+    const blockMap =
+        new Map();
+
+
+    const generatedChunks =
+        new Set();
+
+
+    const CHUNK_SIZE = 16;
+
+    const RENDER_DISTANCE = 4;
 
 
     /* =====================================================
-       BLOCK SETTINGS
+       BLOCK COLORS
        ===================================================== */
-
-    const BLOCK_SIZE = 1;
-
 
     const blockColors = {
 
@@ -636,11 +815,15 @@ function startGame() {
 
         leaves: 0x2e7d32,
 
-        coal: 0x202020,
+        coal: 0x181818,
 
-        craftingTable: 0xa66a3f
+        craftingTable: 0x9b5a32
     };
 
+
+    /* =====================================================
+       INVENTORY
+       ===================================================== */
 
     const inventory = {
 
@@ -669,7 +852,36 @@ function startGame() {
 
 
     /* =====================================================
-       GAME STATE
+       HOTBAR
+       ===================================================== */
+
+    const hotbarItems = [
+
+        "grass",
+
+        "dirt",
+
+        "stone",
+
+        "wood",
+
+        "leaves",
+
+        "coal",
+
+        "craftingTable",
+
+        "planks",
+
+        "sticks"
+    ];
+
+
+    let selectedHotbarSlot = 0;
+
+
+    /* =====================================================
+       PLAYER STATE
        ===================================================== */
 
     let healthValue = 100;
@@ -680,63 +892,70 @@ function startGame() {
 
     let onGround = false;
 
-    let canJump = true;
-
     let yaw = 0;
 
     let pitch = 0;
 
     let mouseLocked = false;
 
-    let selectedHotbarSlot = 0;
+    let survivalTimer = 0;
+
+    let messageTimer = null;
 
     let lastChunkX = null;
 
     let lastChunkZ = null;
 
-    let survivalTimer = 0;
-
-    let messageTimer = 0;
-
-    let kitApplied = false;
-
-
-    /* =====================================================
-       KEY STATE
-       ===================================================== */
 
     const keys = {};
 
 
     /* =====================================================
-       APPEARANCE PLAYER PARTS
+       PLAYER BODY PARTS
        ===================================================== */
 
-    let playerHead;
-    let playerBody;
-    let playerLeftLeg;
-    let playerRightLeg;
-    let playerHat;
-    let playerLeftShoe;
-    let playerRightShoe;
+    let playerHead = null;
+
+    let playerBody = null;
+
+    let playerLeftLeg = null;
+
+    let playerRightLeg = null;
+
+    let playerHat = null;
+
+    let playerLeftShoe = null;
+
+    let playerRightShoe = null;
 
 
     /* =====================================================
-       TERRAIN HEIGHT
+       TERRAIN
        ===================================================== */
 
-    function getTerrainHeight(x, z) {
+    function getTerrainHeight(
+        x,
+        z
+    ) {
 
         let height =
             1 +
             Math.floor(
-                Math.sin(x * 0.15) * 1.5 +
-                Math.cos(z * 0.15) * 1.5
+                Math.sin(
+                    x * 0.15
+                ) * 1.5 +
+                Math.cos(
+                    z * 0.15
+                ) * 1.5
             );
+
 
         return Math.max(
             0,
-            Math.min(4, height)
+            Math.min(
+                4,
+                height
+            )
         );
     }
 
@@ -745,7 +964,11 @@ function startGame() {
        BLOCK KEY
        ===================================================== */
 
-    function getBlockKey(x, y, z) {
+    function getBlockKey(
+        x,
+        y,
+        z
+    ) {
 
         return (
             x +
@@ -769,9 +992,16 @@ function startGame() {
     ) {
 
         const key =
-            getBlockKey(x, y, z);
+            getBlockKey(
+                x,
+                y,
+                z
+            );
 
-        if (blockMap.has(key)) {
+
+        if (
+            blockMap.has(key)
+        ) {
 
             return blockMap.get(key);
         }
@@ -779,9 +1009,9 @@ function startGame() {
 
         const geometry =
             new THREE.BoxGeometry(
-                BLOCK_SIZE,
-                BLOCK_SIZE,
-                BLOCK_SIZE
+                1,
+                1,
+                1
             );
 
 
@@ -794,42 +1024,45 @@ function startGame() {
             });
 
 
-        const mesh =
+        const block =
             new THREE.Mesh(
                 geometry,
                 material
             );
 
 
-        mesh.position.set(
+        block.position.set(
             x,
             y,
             z
         );
 
 
-        mesh.userData.blockType =
+        block.userData.blockType =
             type;
 
-        mesh.userData.blockX =
+        block.userData.blockX =
             x;
 
-        mesh.userData.blockY =
+        block.userData.blockY =
             y;
 
-        mesh.userData.blockZ =
+        block.userData.blockZ =
             z;
 
 
-        worldGroup.add(mesh);
-
-        blockMap.set(
-            key,
-            mesh
+        worldGroup.add(
+            block
         );
 
 
-        return mesh;
+        blockMap.set(
+            key,
+            block
+        );
+
+
+        return block;
     }
 
 
@@ -837,22 +1070,26 @@ function startGame() {
        REMOVE BLOCK
        ===================================================== */
 
-    function removeBlock(mesh) {
+    function removeBlock(
+        block
+    ) {
 
-        if (!mesh) return;
+        if (!block) {
+            return;
+        }
 
-
-        const x =
-            mesh.userData.blockX;
-
-        const y =
-            mesh.userData.blockY;
-
-        const z =
-            mesh.userData.blockZ;
 
         const type =
-            mesh.userData.blockType;
+            block.userData.blockType;
+
+        const x =
+            block.userData.blockX;
+
+        const y =
+            block.userData.blockY;
+
+        const z =
+            block.userData.blockZ;
 
 
         const key =
@@ -863,39 +1100,42 @@ function startGame() {
             );
 
 
-        blockMap.delete(key);
+        blockMap.delete(
+            key
+        );
 
-        worldGroup.remove(mesh);
+
+        worldGroup.remove(
+            block
+        );
 
 
-        if (mesh.geometry) {
+        if (block.geometry) {
 
-            mesh.geometry.dispose();
-
+            block.geometry.dispose();
         }
 
-        if (mesh.material) {
 
-            mesh.material.dispose();
+        if (block.material) {
 
+            block.material.dispose();
         }
 
 
         if (
-            inventory[type] !==
+            inventory[type] ===
             undefined
         ) {
 
-            inventory[type]++;
-
-        } else {
-
-            inventory[type] = 1;
-
+            inventory[type] = 0;
         }
 
 
+        inventory[type]++;
+
+
         updateInventory();
+
 
         showMessage(
             "+" +
@@ -949,7 +1189,8 @@ function startGame() {
 
                     if (
                         Math.abs(lx) +
-                        Math.abs(lz) <= 3
+                        Math.abs(lz) <=
+                        3
                     ) {
 
                         createBlock(
@@ -1049,7 +1290,7 @@ function startGame() {
                     }
 
 
-                    const coalChance =
+                    const coalNoise =
                         (
                             Math.sin(
                                 x * 7.13 +
@@ -1062,7 +1303,7 @@ function startGame() {
                     if (
                         type === "stone" &&
                         y <= 1 &&
-                        coalChance < 0.09
+                        coalNoise < 0.09
                     ) {
 
                         type =
@@ -1079,7 +1320,7 @@ function startGame() {
                 }
 
 
-                const treeChance =
+                const treeNoise =
                     (
                         Math.sin(
                             x * 12.73 +
@@ -1089,7 +1330,7 @@ function startGame() {
 
 
                 if (
-                    treeChance < 0.045 &&
+                    treeNoise < 0.045 &&
                     Math.abs(x) > 3 &&
                     Math.abs(z) > 3 &&
                     height >= 2
@@ -1107,20 +1348,28 @@ function startGame() {
 
 
     /* =====================================================
-       GENERATE INITIAL WORLD
+       INITIAL WORLD
        ===================================================== */
 
     function generateWorld() {
 
         for (
-            let cx = -RENDER_DISTANCE;
-            cx <= RENDER_DISTANCE;
+            let cx =
+                -RENDER_DISTANCE;
+
+            cx <=
+                RENDER_DISTANCE;
+
             cx++
         ) {
 
             for (
-                let cz = -RENDER_DISTANCE;
-                cz <= RENDER_DISTANCE;
+                let cz =
+                    -RENDER_DISTANCE;
+
+                cz <=
+                    RENDER_DISTANCE;
+
                 cz++
             ) {
 
@@ -1139,16 +1388,19 @@ function startGame() {
 
     function loadNearbyChunks() {
 
-        if (!player) return;
+        if (!player) {
+            return;
+        }
 
 
-        const currentChunkX =
+        const chunkX =
             Math.floor(
                 player.position.x /
                 CHUNK_SIZE
             );
 
-        const currentChunkZ =
+
+        const chunkZ =
             Math.floor(
                 player.position.z /
                 CHUNK_SIZE
@@ -1156,10 +1408,8 @@ function startGame() {
 
 
         if (
-            currentChunkX ===
-            lastChunkX &&
-            currentChunkZ ===
-            lastChunkZ
+            chunkX === lastChunkX &&
+            chunkZ === lastChunkZ
         ) {
 
             return;
@@ -1167,32 +1417,28 @@ function startGame() {
 
 
         lastChunkX =
-            currentChunkX;
+            chunkX;
 
         lastChunkZ =
-            currentChunkZ;
+            chunkZ;
 
 
         for (
             let cx =
-                currentChunkX -
-                2;
+                chunkX - 2;
 
             cx <=
-                currentChunkX +
-                2;
+                chunkX + 2;
 
             cx++
         ) {
 
             for (
                 let cz =
-                    currentChunkZ -
-                    2;
+                    chunkZ - 2;
 
                 cz <=
-                    currentChunkZ +
-                    2;
+                    chunkZ + 2;
 
                 cz++
             ) {
@@ -1225,10 +1471,13 @@ function startGame() {
                 0.7
             );
 
+
         const headMaterial =
             new THREE.MeshLambertMaterial({
+
                 color: 0xf1c7a8
             });
+
 
         playerHead =
             new THREE.Mesh(
@@ -1236,8 +1485,10 @@ function startGame() {
                 headMaterial
             );
 
+
         playerHead.position.y =
             1.35;
+
 
         player.add(
             playerHead
@@ -1253,10 +1504,13 @@ function startGame() {
                 0.45
             );
 
+
         const bodyMaterial =
             new THREE.MeshLambertMaterial({
-                color: 0x2874d0
+
+                color: 0x2e7d32
             });
+
 
         playerBody =
             new THREE.Mesh(
@@ -1264,15 +1518,17 @@ function startGame() {
                 bodyMaterial
             );
 
+
         playerBody.position.y =
             0.55;
+
 
         player.add(
             playerBody
         );
 
 
-        /* LEFT LEG */
+        /* LEGS */
 
         const legGeometry =
             new THREE.BoxGeometry(
@@ -1281,17 +1537,15 @@ function startGame() {
                 0.4
             );
 
-        const legMaterial =
-            new THREE.MeshLambertMaterial({
-                color: 0x202020
-            });
-
 
         playerLeftLeg =
             new THREE.Mesh(
                 legGeometry,
-                legMaterial
+                new THREE.MeshLambertMaterial({
+                    color: 0x1565c0
+                })
             );
+
 
         playerLeftLeg.position.set(
             -0.2,
@@ -1299,18 +1553,20 @@ function startGame() {
             0
         );
 
+
         player.add(
             playerLeftLeg
         );
 
 
-        /* RIGHT LEG */
-
         playerRightLeg =
             new THREE.Mesh(
                 legGeometry,
-                legMaterial.clone()
+                new THREE.MeshLambertMaterial({
+                    color: 0x1565c0
+                })
             );
+
 
         playerRightLeg.position.set(
             0.2,
@@ -1318,57 +1574,9 @@ function startGame() {
             0
         );
 
+
         player.add(
             playerRightLeg
-        );
-
-
-        /* SHOES */
-
-        const shoeGeometry =
-            new THREE.BoxGeometry(
-                0.36,
-                0.18,
-                0.48
-            );
-
-        const shoeMaterial =
-            new THREE.MeshLambertMaterial({
-                color: 0xffffff
-            });
-
-
-        playerLeftShoe =
-            new THREE.Mesh(
-                shoeGeometry,
-                shoeMaterial
-            );
-
-        playerLeftShoe.position.set(
-            -0.2,
-            -0.72,
-            -0.04
-        );
-
-        player.add(
-            playerLeftShoe
-        );
-
-
-        playerRightShoe =
-            new THREE.Mesh(
-                shoeGeometry,
-                shoeMaterial.clone()
-            );
-
-        playerRightShoe.position.set(
-            0.2,
-            -0.72,
-            -0.04
-        );
-
-        player.add(
-            playerRightShoe
         );
 
 
@@ -1381,33 +1589,90 @@ function startGame() {
                 0.82
             );
 
-        const hatMaterial =
-            new THREE.MeshLambertMaterial({
-                color: 0x222222
-            });
 
         playerHat =
             new THREE.Mesh(
                 hatGeometry,
-                hatMaterial
+                new THREE.MeshLambertMaterial({
+                    color: 0x222222
+                })
             );
+
 
         playerHat.position.y =
             1.78;
+
 
         player.add(
             playerHat
         );
 
 
+        /* SHOES */
+
+        const shoeGeometry =
+            new THREE.BoxGeometry(
+                0.36,
+                0.18,
+                0.48
+            );
+
+
+        playerLeftShoe =
+            new THREE.Mesh(
+                shoeGeometry,
+                new THREE.MeshLambertMaterial({
+                    color: 0xffffff
+                })
+            );
+
+
+        playerLeftShoe.position.set(
+            -0.2,
+            -0.72,
+            -0.04
+        );
+
+
+        player.add(
+            playerLeftShoe
+        );
+
+
+        playerRightShoe =
+            new THREE.Mesh(
+                shoeGeometry,
+                new THREE.MeshLambertMaterial({
+                    color: 0xffffff
+                })
+            );
+
+
+        playerRightShoe.position.set(
+            0.2,
+            -0.72,
+            -0.04
+        );
+
+
+        player.add(
+            playerRightShoe
+        );
+
+
         player.position.set(
             0,
-            getTerrainHeight(0, 0) + 1.03,
+            getTerrainHeight(
+                0,
+                0
+            ) + 1.03,
             0
         );
 
 
-        scene.add(player);
+        scene.add(
+            player
+        );
 
 
         applyAppearanceToPlayer();
@@ -1415,42 +1680,44 @@ function startGame() {
 
 
     /* =====================================================
-       APPLY CLOTHES
+       APPLY PLAYER CLOTHES
        ===================================================== */
 
     function applyAppearanceToPlayer() {
 
-        if (!player) return;
+        if (!player) {
+            return;
+        }
 
 
         /* SHIRT */
 
         if (playerBody) {
 
-            let shirtColor =
-                0x2874d0;
+            let color =
+                0x2e7d32;
 
 
             if (
                 appearance.shirt ===
-                "red"
+                "blue"
             ) {
 
-                shirtColor =
-                    0xc62828;
+                color =
+                    0x1565c0;
 
             } else if (
                 appearance.shirt ===
-                "green"
+                "red"
             ) {
 
-                shirtColor =
-                    0x2e7d32;
+                color =
+                    0xc62828;
             }
 
 
             playerBody.material.color.setHex(
-                shirtColor
+                color
             );
         }
 
@@ -1462,26 +1729,34 @@ function startGame() {
             playerRightLeg
         ) {
 
-            let pantsColor =
-                0x202020;
+            let color =
+                0x1565c0;
 
 
             if (
                 appearance.pants ===
-                "light"
+                "black"
             ) {
 
-                pantsColor =
-                    0x9e9e9e;
+                color =
+                    0x151515;
+
+            } else if (
+                appearance.pants ===
+                "brown"
+            ) {
+
+                color =
+                    0x6d4c41;
             }
 
 
             playerLeftLeg.material.color.setHex(
-                pantsColor
+                color
             );
 
             playerRightLeg.material.color.setHex(
-                pantsColor
+                color
             );
         }
 
@@ -1493,7 +1768,7 @@ function startGame() {
             playerRightShoe
         ) {
 
-            const shoeColor =
+            const color =
                 appearance.shoes ===
                 "black"
                     ? 0x111111
@@ -1501,11 +1776,11 @@ function startGame() {
 
 
             playerLeftShoe.material.color.setHex(
-                shoeColor
+                color
             );
 
             playerRightShoe.material.color.setHex(
-                shoeColor
+                color
             );
         }
 
@@ -1515,47 +1790,70 @@ function startGame() {
         if (playerHat) {
 
             playerHat.visible =
-                appearance.hat !==
+                appearance.head !==
                 "none";
+
+
+            if (
+                appearance.head ===
+                "cap"
+            ) {
+
+                playerHat.material.color.setHex(
+                    0x1565c0
+                );
+
+            } else if (
+                appearance.head ===
+                "helmet"
+            ) {
+
+                playerHat.material.color.setHex(
+                    0x9e9e9e
+                );
+            }
         }
     }
 
 
     /* =====================================================
-       KIT APPLY
+       APPLY KIT
        ===================================================== */
 
-    function applyKit() {
-
-        if (kitApplied) return;
+    function applySelectedKit() {
 
         const kit =
             kits[selectedKit];
 
-        if (!kit) return;
+
+        if (!kit) {
+            return;
+        }
 
 
         Object.keys(
             kit.items
-        ).forEach(function (item) {
+        ).forEach(
+            function (item) {
 
-            if (
-                inventory[item] ===
-                undefined
-            ) {
+                if (
+                    inventory[item] ===
+                    undefined
+                ) {
 
-                inventory[item] = 0;
+                    inventory[item] =
+                        0;
+                }
+
+
+                inventory[item] +=
+                    kit.items[item];
             }
+        );
 
-            inventory[item] +=
-                kit.items[item];
-
-        });
-
-
-        kitApplied = true;
 
         updateInventory();
+
 
         showMessage(
             kit.name +
@@ -1565,7 +1863,7 @@ function startGame() {
 
 
     /* =====================================================
-       CREATE SCENE
+       SCENE
        ===================================================== */
 
     function createScene() {
@@ -1583,39 +1881,40 @@ function startGame() {
         scene.fog =
             new THREE.Fog(
                 0x07131b,
-                35,
+                30,
                 150
             );
 
 
-        /* LIGHT */
-
-        const ambientLight =
+        const ambient =
             new THREE.HemisphereLight(
-                0x9bdcff,
-                0x304020,
-                1.15
+                0xb8e7ff,
+                0x334422,
+                1.2
             );
 
+
         scene.add(
-            ambientLight
+            ambient
         );
 
 
-        const directionalLight =
+        const sun =
             new THREE.DirectionalLight(
                 0xffffff,
                 1.2
             );
 
-        directionalLight.position.set(
+
+        sun.position.set(
             40,
             80,
-            20
+            30
         );
 
+
         scene.add(
-            directionalLight
+            sun
         );
 
 
@@ -1659,7 +1958,6 @@ function startGame() {
             new THREE.WebGLRenderer({
 
                 antialias: true
-
             });
 
 
@@ -1677,10 +1975,6 @@ function startGame() {
         );
 
 
-        renderer.shadowMap.enabled =
-            true;
-
-
         if (game) {
 
             game.appendChild(
@@ -1696,7 +1990,9 @@ function startGame() {
 
     function setupMouseLook() {
 
-        if (!renderer) return;
+        if (!renderer) {
+            return;
+        }
 
 
         renderer.domElement.addEventListener(
@@ -1708,8 +2004,11 @@ function startGame() {
                     renderer.domElement
                 ) {
 
-                    renderer.domElement.requestPointerLock();
-
+                    renderer.domElement
+                        .requestPointerLock()
+                        .catch(
+                            function () {}
+                        );
                 }
             }
         );
@@ -1722,7 +2021,6 @@ function startGame() {
                 mouseLocked =
                     document.pointerLockElement ===
                     renderer.domElement;
-
             }
         );
 
@@ -1746,16 +2044,17 @@ function startGame() {
                     0.0025;
 
 
-                const maxPitch =
-                    Math.PI / 2 -
+                const limit =
+                    Math.PI /
+                    2 -
                     0.08;
 
 
                 pitch =
                     Math.max(
-                        -maxPitch,
+                        -limit,
                         Math.min(
-                            maxPitch,
+                            limit,
                             pitch
                         )
                     );
@@ -1773,19 +2072,20 @@ function startGame() {
 
 
                 if (
-                    event.button === 0
+                    event.button ===
+                    0
                 ) {
 
                     mineBlock();
-
                 }
 
+
                 if (
-                    event.button === 2
+                    event.button ===
+                    2
                 ) {
 
                     placeBlock();
-
                 }
             }
         );
@@ -1796,14 +2096,13 @@ function startGame() {
             function (event) {
 
                 event.preventDefault();
-
             }
         );
     }
 
 
     /* =====================================================
-       CONTROLS
+       KEYBOARD CONTROLS
        ===================================================== */
 
     function setupControls() {
@@ -1812,9 +2111,12 @@ function startGame() {
             "keydown",
             function (event) {
 
-                keys[
-                    event.key.toLowerCase()
-                ] = true;
+                const key =
+                    event.key.toLowerCase();
+
+
+                keys[key] =
+                    true;
 
 
                 if (
@@ -1822,15 +2124,14 @@ function startGame() {
                     "Space"
                 ) {
 
-                    keys.space = true;
+                    event.preventDefault();
 
                     jump();
                 }
 
 
                 if (
-                    event.key === "e" ||
-                    event.key === "E"
+                    key === "e"
                 ) {
 
                     toggleInventory();
@@ -1838,8 +2139,7 @@ function startGame() {
 
 
                 if (
-                    event.key === "c" ||
-                    event.key === "C"
+                    key === "c"
                 ) {
 
                     toggleCrafting();
@@ -1852,18 +2152,12 @@ function startGame() {
                 ) {
 
                     selectedHotbarSlot =
-                        Number(event.key) - 1;
+                        Number(
+                            event.key
+                        ) - 1;
+
 
                     updateHotbar();
-                }
-
-
-                if (
-                    event.key ===
-                    "Shift"
-                ) {
-
-                    keys.shift = true;
                 }
             }
         );
@@ -1875,25 +2169,8 @@ function startGame() {
 
                 keys[
                     event.key.toLowerCase()
-                ] = false;
-
-
-                if (
-                    event.code ===
-                    "Space"
-                ) {
-
-                    keys.space = false;
-                }
-
-
-                if (
-                    event.key ===
-                    "Shift"
-                ) {
-
-                    keys.shift = false;
-                }
+                ] =
+                    false;
             }
         );
     }
@@ -1905,32 +2182,22 @@ function startGame() {
 
     function jump() {
 
-        if (!gameStarted) return;
+        if (!gameStarted) {
+            return;
+        }
 
-        if (!onGround) return;
 
-        if (!canJump) return;
+        if (!onGround) {
+            return;
+        }
 
 
         verticalVelocity =
             7.5;
 
+
         onGround =
             false;
-
-        canJump =
-            false;
-
-
-        setTimeout(
-            function () {
-
-                canJump =
-                    true;
-
-            },
-            180
-        );
     }
 
 
@@ -1938,15 +2205,13 @@ function startGame() {
        PLAYER MOVEMENT
        ===================================================== */
 
-    function updatePlayer(delta) {
+    function updatePlayer(
+        delta
+    ) {
 
-        if (!player) return;
-
-
-        const moveSpeed =
-            keys.shift
-                ? 7
-                : 4.2;
+        if (!player) {
+            return;
+        }
 
 
         let forward = 0;
@@ -1959,7 +2224,7 @@ function startGame() {
             keys.arrowup
         ) {
 
-            forward += 1;
+            forward++;
         }
 
 
@@ -1968,7 +2233,7 @@ function startGame() {
             keys.arrowdown
         ) {
 
-            forward -= 1;
+            forward--;
         }
 
 
@@ -1977,7 +2242,7 @@ function startGame() {
             keys.arrowright
         ) {
 
-            right += 1;
+            right++;
         }
 
 
@@ -1986,7 +2251,7 @@ function startGame() {
             keys.arrowleft
         ) {
 
-            right -= 1;
+            right--;
         }
 
 
@@ -2009,6 +2274,12 @@ function startGame() {
                 length;
 
 
+            const speed =
+                keys.shift
+                    ? 7
+                    : 4.2;
+
+
             const sin =
                 Math.sin(yaw);
 
@@ -2021,7 +2292,7 @@ function startGame() {
                     right * cos +
                     forward * sin
                 ) *
-                moveSpeed *
+                speed *
                 delta;
 
 
@@ -2030,7 +2301,7 @@ function startGame() {
                     right * sin -
                     forward * cos
                 ) *
-                moveSpeed *
+                speed *
                 delta;
         }
 
@@ -2051,6 +2322,7 @@ function startGame() {
             Math.round(
                 player.position.x
             );
+
 
         const pz =
             Math.round(
@@ -2078,8 +2350,10 @@ function startGame() {
             player.position.y =
                 groundY;
 
+
             verticalVelocity =
                 0;
+
 
             onGround =
                 true;
@@ -2096,9 +2370,11 @@ function startGame() {
         camera.position.x =
             player.position.x;
 
+
         camera.position.y =
             player.position.y +
             1.2;
+
 
         camera.position.z =
             player.position.z;
@@ -2111,22 +2387,36 @@ function startGame() {
         camera.rotation.y =
             yaw;
 
+
         camera.rotation.x =
             pitch;
     }
 
 
     /* =====================================================
-       MINE BLOCK
+       RAYCASTER
+       ===================================================== */
+
+    const raycaster =
+        new THREE.Raycaster();
+
+
+    /* =====================================================
+       MINE
        ===================================================== */
 
     function mineBlock() {
 
-        if (!camera) return;
+        if (!camera) {
+            return;
+        }
 
 
         raycaster.setFromCamera(
-            new THREE.Vector2(0, 0),
+            new THREE.Vector2(
+                0,
+                0
+            ),
             camera
         );
 
@@ -2138,7 +2428,6 @@ function startGame() {
 
 
         if (!hits.length) {
-
             return;
         }
 
@@ -2163,36 +2452,33 @@ function startGame() {
 
 
     /* =====================================================
-       PLACE BLOCK
+       PLACE
        ===================================================== */
 
     function placeBlock() {
 
-        if (!camera) return;
+        if (!camera) {
+            return;
+        }
 
 
-        const item =
+        const type =
             getSelectedBlock();
 
 
-        if (!item) {
-
-            showMessage(
-                "Select a block"
-            );
-
+        if (!type) {
             return;
         }
 
 
         if (
-            !inventory[item] ||
-            inventory[item] <= 0
+            !inventory[type] ||
+            inventory[type] <= 0
         ) {
 
             showMessage(
-                "Not enough " +
-                item
+                "No " +
+                type
             );
 
             return;
@@ -2200,7 +2486,10 @@ function startGame() {
 
 
         raycaster.setFromCamera(
-            new THREE.Vector2(0, 0),
+            new THREE.Vector2(
+                0,
+                0
+            ),
             camera
         );
 
@@ -2274,31 +2563,21 @@ function startGame() {
         }
 
 
-        /* DON'T PLACE INSIDE PLAYER */
+        /* PLAYER COLLISION */
 
-        const dx =
+        if (
             Math.abs(
                 x -
                 player.position.x
-            );
-
-        const dy =
+            ) < 1 &&
             Math.abs(
                 y -
                 player.position.y
-            );
-
-        const dz =
+            ) < 2 &&
             Math.abs(
                 z -
                 player.position.z
-            );
-
-
-        if (
-            dx < 1 &&
-            dy < 2 &&
-            dz < 1
+            ) < 1
         ) {
 
             showMessage(
@@ -2310,49 +2589,29 @@ function startGame() {
 
 
         createBlock(
-            item,
+            type,
             x,
             y,
             z
         );
 
 
-        inventory[item]--;
+        inventory[type]--;
+
 
         updateInventory();
 
+
         showMessage(
             "Placed " +
-            item
+            type
         );
     }
 
 
     /* =====================================================
-       HOTBAR ITEMS
+       SELECTED BLOCK
        ===================================================== */
-
-    const hotbarItems = [
-
-        "grass",
-
-        "dirt",
-
-        "stone",
-
-        "wood",
-
-        "leaves",
-
-        "coal",
-
-        "craftingTable",
-
-        "planks",
-
-        "sticks"
-    ];
-
 
     function getSelectedBlock() {
 
@@ -2363,7 +2622,7 @@ function startGame() {
 
 
     /* =====================================================
-       UPDATE HOTBAR
+       HOTBAR UPDATE
        ===================================================== */
 
     function updateHotbar() {
@@ -2375,7 +2634,10 @@ function startGame() {
 
 
         slots.forEach(
-            function (slot, index) {
+            function (
+                slot,
+                index
+            ) {
 
                 slot.classList.remove(
                     "selected"
@@ -2397,22 +2659,40 @@ function startGame() {
                     hotbarItems[index];
 
 
-                const amount =
+                const count =
                     inventory[item] ||
                     0;
 
 
-                const count =
+                const oldCount =
                     slot.querySelector(
-                        ".count"
+                        ".hotbar-count"
                     );
 
 
-                if (count) {
+                if (oldCount) {
 
-                    count.textContent =
-                        amount;
+                    oldCount.remove();
                 }
+
+
+                const countElement =
+                    document.createElement(
+                        "b"
+                    );
+
+
+                countElement.className =
+                    "hotbar-count";
+
+
+                countElement.textContent =
+                    count;
+
+
+                slot.appendChild(
+                    countElement
+                );
             }
         );
     }
@@ -2421,7 +2701,10 @@ function startGame() {
     document.querySelectorAll(
         ".hotbar-slot"
     ).forEach(
-        function (slot, index) {
+        function (
+            slot,
+            index
+        ) {
 
             slot.addEventListener(
                 "click",
@@ -2431,7 +2714,6 @@ function startGame() {
                         index;
 
                     updateHotbar();
-
                 }
             );
         }
@@ -2449,7 +2731,8 @@ function startGame() {
         }
 
 
-        inventoryItems.innerHTML = "";
+        inventoryItems.innerHTML =
+            "";
 
 
         Object.keys(
@@ -2458,7 +2741,8 @@ function startGame() {
             function (item) {
 
                 const amount =
-                    inventory[item] || 0;
+                    inventory[item] ||
+                    0;
 
 
                 const div =
@@ -2508,6 +2792,7 @@ function startGame() {
                 "hidden"
             );
 
+
             if (craftingPanel) {
 
                 craftingPanel.classList.add(
@@ -2533,7 +2818,6 @@ function startGame() {
                 inventoryPanel.classList.add(
                     "hidden"
                 );
-
             }
         );
     }
@@ -2549,34 +2833,36 @@ function startGame() {
 
 
     /* =====================================================
-       CRAFTING
+       CRAFTING RECIPES
        ===================================================== */
 
     const recipes = {
 
         planks: {
 
-            name: "4 Planks",
+            name: "Planks",
 
             output: 4,
 
-            ingredient:
-                "wood",
+            ingredients: {
 
-            amount: 1
+                wood: 1
+            }
         },
+
 
         sticks: {
 
-            name: "4 Sticks",
+            name: "Sticks",
 
             output: 4,
 
-            ingredient:
-                "planks",
+            ingredients: {
 
-            amount: 2
+                planks: 2
+            }
         },
+
 
         craftingTable: {
 
@@ -2584,11 +2870,12 @@ function startGame() {
 
             output: 1,
 
-            ingredient:
-                "planks",
+            ingredients: {
 
-            amount: 4
+                planks: 4
+            }
         },
+
 
         woodenPickaxe: {
 
@@ -2596,11 +2883,14 @@ function startGame() {
 
             output: 1,
 
-            ingredient:
-                "planks",
+            ingredients: {
 
-            amount: 3
+                planks: 3,
+
+                sticks: 2
+            }
         },
+
 
         stonePickaxe: {
 
@@ -2608,119 +2898,117 @@ function startGame() {
 
             output: 1,
 
-            ingredient:
-                "stone",
+            ingredients: {
 
-            amount: 3
+                stone: 3,
+
+                sticks: 2
+            }
         }
     };
 
 
-    function setupCraftingUI() {
+    /* =====================================================
+       CRAFTING BUTTONS
+       ===================================================== */
 
-        if (!craftingItems) {
-            return;
-        }
+    document.querySelectorAll(
+        ".craft-button"
+    ).forEach(
+        function (button) {
 
+            button.addEventListener(
+                "click",
+                function () {
 
-        craftingItems.innerHTML = "";
-
-
-        Object.keys(
-            recipes
-        ).forEach(
-            function (recipeKey) {
-
-                const recipe =
-                    recipes[
-                        recipeKey
-                    ];
+                    const recipeName =
+                        button.dataset.recipe;
 
 
-                const button =
-                    document.createElement(
-                        "button"
+                    craft(
+                        recipeName
                     );
+                }
+            );
+        }
+    );
 
 
-                button.className =
-                    "craft-button";
-
-
-                button.dataset.recipe =
-                    recipeKey;
-
-
-                button.textContent =
-                    recipe.name;
-
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        craft(
-                            recipeKey
-                        );
-
-                    }
-                );
-
-
-                craftingItems.appendChild(
-                    button
-                );
-            }
-        );
-    }
-
-
-    function craft(recipeKey) {
+    function craft(
+        recipeName
+    ) {
 
         const recipe =
             recipes[
-                recipeKey
+                recipeName
             ];
 
 
-        if (!recipe) return;
-
-
-        const ingredient =
-            recipe.ingredient;
-
-
-        if (
-            !inventory[ingredient] ||
-            inventory[ingredient] <
-            recipe.amount
-        ) {
-
-            showMessage(
-                "Need " +
-                recipe.amount +
-                " " +
-                ingredient
-            );
-
+        if (!recipe) {
             return;
         }
 
 
-        inventory[ingredient] -=
-            recipe.amount;
+        /* CHECK INGREDIENTS */
+
+        const ingredients =
+            recipe.ingredients;
 
 
-        if (
-            !inventory[recipeKey]
+        for (
+            const item in ingredients
         ) {
 
-            inventory[recipeKey] =
+            const needed =
+                ingredients[item];
+
+
+            const available =
+                inventory[item] ||
+                0;
+
+
+            if (
+                available <
+                needed
+            ) {
+
+                showMessage(
+                    "Need " +
+                    needed +
+                    " " +
+                    item
+                );
+
+                return;
+            }
+        }
+
+
+        /* REMOVE INGREDIENTS */
+
+        for (
+            const item in ingredients
+        ) {
+
+            inventory[item] -=
+                ingredients[item];
+        }
+
+
+        /* ADD OUTPUT */
+
+        if (
+            inventory[recipeName] ===
+            undefined
+        ) {
+
+            inventory[recipeName] =
                 0;
         }
 
 
-        inventory[recipeKey] +=
+        inventory[recipeName] +=
             recipe.output;
 
 
@@ -2733,6 +3021,10 @@ function startGame() {
         );
     }
 
+
+    /* =====================================================
+       CRAFTING PANEL
+       ===================================================== */
 
     function toggleCrafting() {
 
@@ -2750,6 +3042,7 @@ function startGame() {
             craftingPanel.classList.remove(
                 "hidden"
             );
+
 
             if (inventoryPanel) {
 
@@ -2776,7 +3069,6 @@ function startGame() {
                 craftingPanel.classList.add(
                     "hidden"
                 );
-
             }
         );
     }
@@ -2791,9 +3083,6 @@ function startGame() {
     }
 
 
-    setupCraftingUI();
-
-
     /* =====================================================
        MOBILE CONTROLS
        ===================================================== */
@@ -2805,12 +3094,12 @@ function startGame() {
         }
 
 
-        const isTouch =
+        const isTouchDevice =
             "ontouchstart" in window ||
             navigator.maxTouchPoints > 0;
 
 
-        if (!isTouch) {
+        if (!isTouchDevice) {
 
             mobileControls.style.display =
                 "none";
@@ -2823,6 +3112,8 @@ function startGame() {
             "block";
 
 
+        /* JUMP */
+
         if (jumpBtn) {
 
             jumpBtn.addEventListener(
@@ -2832,7 +3123,6 @@ function startGame() {
                     event.preventDefault();
 
                     jump();
-
                 },
                 {
                     passive: false
@@ -2840,6 +3130,8 @@ function startGame() {
             );
         }
 
+
+        /* MINE */
 
         if (mineBtn) {
 
@@ -2850,7 +3142,6 @@ function startGame() {
                     event.preventDefault();
 
                     mineBlock();
-
                 },
                 {
                     passive: false
@@ -2858,6 +3149,8 @@ function startGame() {
             );
         }
 
+
+        /* PLACE */
 
         if (placeBtn) {
 
@@ -2868,7 +3161,6 @@ function startGame() {
                     event.preventDefault();
 
                     placeBlock();
-
                 },
                 {
                     passive: false
@@ -2877,9 +3169,7 @@ function startGame() {
         }
 
 
-        let joyX = 0;
-        let joyY = 0;
-
+        /* JOYSTICK */
 
         if (
             joystick &&
@@ -2903,16 +3193,20 @@ function startGame() {
 
                     const centerX =
                         rect.left +
-                        rect.width / 2;
+                        rect.width /
+                        2;
+
 
                     const centerY =
                         rect.top +
-                        rect.height / 2;
+                        rect.height /
+                        2;
 
 
                     let dx =
                         touch.clientX -
                         centerX;
+
 
                     let dy =
                         touch.clientY -
@@ -2942,6 +3236,7 @@ function startGame() {
                             distance *
                             max;
 
+
                         dy =
                             dy /
                             distance *
@@ -2952,29 +3247,22 @@ function startGame() {
                     joystickKnob.style.transform =
                         "translate(" +
                         dx +
-                        "px, " +
+                        "px," +
                         dy +
                         "px)";
 
 
-                    joyX =
-                        dx / max;
-
-                    joyY =
-                        dy / max;
-
+                    keys.a =
+                        dx < -10;
 
                     keys.d =
-                        joyX > 0.2;
-
-                    keys.a =
-                        joyX < -0.2;
+                        dx > 10;
 
                     keys.w =
-                        joyY < -0.2;
+                        dy < -10;
 
                     keys.s =
-                        joyY > 0.2;
+                        dy > 10;
 
                 },
                 {
@@ -2987,40 +3275,21 @@ function startGame() {
                 "touchend",
                 function () {
 
-                    joyX = 0;
-                    joyY = 0;
+                    keys.a =
+                        false;
 
+                    keys.d =
+                        false;
 
-                    keys.w = false;
-                    keys.a = false;
-                    keys.s = false;
-                    keys.d = false;
+                    keys.w =
+                        false;
+
+                    keys.s =
+                        false;
 
 
                     joystickKnob.style.transform =
-                        "translate(0, 0)";
-                }
-            );
-        }
-
-
-        if (rotateScreen) {
-
-            rotateScreen.addEventListener(
-                "click",
-                function () {
-
-                    if (
-                        document.documentElement
-                            .requestFullscreen
-                    ) {
-
-                        document.documentElement
-                            .requestFullscreen()
-                            .catch(
-                                function () {}
-                            );
-                    }
+                        "translate(0,0)";
                 }
             );
         }
@@ -3028,6 +3297,116 @@ function startGame() {
 
 
     setupMobileControls();
+
+
+    /* =====================================================
+       MOBILE LOOK
+       ===================================================== */
+
+    const lookArea =
+        document.getElementById(
+            "lookArea"
+        );
+
+
+    if (lookArea) {
+
+        let lastTouchX = 0;
+
+        let lastTouchY = 0;
+
+
+        lookArea.addEventListener(
+            "touchstart",
+            function (event) {
+
+                if (
+                    !event.touches.length
+                ) {
+                    return;
+                }
+
+
+                lastTouchX =
+                    event.touches[0].clientX;
+
+
+                lastTouchY =
+                    event.touches[0].clientY;
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        lookArea.addEventListener(
+            "touchmove",
+            function (event) {
+
+                event.preventDefault();
+
+
+                if (
+                    !event.touches.length
+                ) {
+                    return;
+                }
+
+
+                const touch =
+                    event.touches[0];
+
+
+                const dx =
+                    touch.clientX -
+                    lastTouchX;
+
+
+                const dy =
+                    touch.clientY -
+                    lastTouchY;
+
+
+                yaw -=
+                    dx *
+                    0.008;
+
+
+                pitch -=
+                    dy *
+                    0.008;
+
+
+                const limit =
+                    Math.PI /
+                    2 -
+                    0.08;
+
+
+                pitch =
+                    Math.max(
+                        -limit,
+                        Math.min(
+                            limit,
+                            pitch
+                        )
+                    );
+
+
+                lastTouchX =
+                    touch.clientX;
+
+
+                lastTouchY =
+                    touch.clientY;
+
+            },
+            {
+                passive: false
+            }
+        );
+    }
 
 
     /* =====================================================
@@ -3075,22 +3454,6 @@ function startGame() {
 
 
         updateSurvivalUI();
-
-
-        if (
-            healthValue <= 0
-        ) {
-
-            showMessage(
-                "You need food and rest"
-            );
-
-            healthValue =
-                100;
-
-            hungerValue =
-                100;
-        }
     }
 
 
@@ -3098,24 +3461,26 @@ function startGame() {
 
         if (health) {
 
+            health.style.width =
+                healthValue +
+                "%";
+
             health.textContent =
-                Math.max(
-                    0,
-                    Math.round(
-                        healthValue
-                    )
+                Math.round(
+                    healthValue
                 );
         }
 
 
         if (hunger) {
 
+            hunger.style.width =
+                hungerValue +
+                "%";
+
             hunger.textContent =
-                Math.max(
-                    0,
-                    Math.round(
-                        hungerValue
-                    )
+                Math.round(
+                    hungerValue
                 );
         }
     }
@@ -3125,13 +3490,18 @@ function startGame() {
        MESSAGE
        ===================================================== */
 
-    function showMessage(text) {
+    function showMessage(
+        text
+    ) {
 
-        if (!message) return;
+        if (!message) {
+            return;
+        }
 
 
         message.textContent =
             text;
+
 
         message.classList.remove(
             "hidden"
@@ -3154,6 +3524,145 @@ function startGame() {
                 },
                 1200
             );
+    }
+
+
+    /* =====================================================
+       START GAME FUNCTION
+       ===================================================== */
+
+    function startPlaying() {
+
+        console.log(
+            "PLAY BUTTON CLICKED"
+        );
+
+
+        updatePlayerName();
+
+
+        if (
+            gameInitialized
+        ) {
+
+            if (homeScreen) {
+
+                homeScreen.classList.add(
+                    "hidden"
+                );
+            }
+
+
+            if (game) {
+
+                game.classList.remove(
+                    "hidden"
+                );
+
+                game.style.display =
+                    "block";
+            }
+
+
+            gameStarted =
+                true;
+
+
+            return;
+        }
+
+
+        /* CREATE GAME */
+
+        createScene();
+
+        createCamera();
+
+        createRenderer();
+
+        generateWorld();
+
+        createPlayer();
+
+        setupControls();
+
+        setupMouseLook();
+
+        applySelectedKit();
+
+        updateInventory();
+
+        updateHotbar();
+
+        updateSurvivalUI();
+
+
+        gameInitialized =
+            true;
+
+        gameStarted =
+            true;
+
+
+        /* HIDE HOME */
+
+        if (homeScreen) {
+
+            homeScreen.classList.add(
+                "hidden"
+            );
+
+            homeScreen.style.display =
+                "none";
+        }
+
+
+        /* SHOW GAME */
+
+        if (game) {
+
+            game.classList.remove(
+                "hidden"
+            );
+
+            game.style.display =
+                "block";
+        }
+
+
+        showMessage(
+            "Welcome " +
+            playerName
+        );
+
+
+        console.log(
+            "GAME STARTED SUCCESSFULLY"
+        );
+    }
+
+
+    /* =====================================================
+       PLAY BUTTON
+       ===================================================== */
+
+    if (startGameBtn) {
+
+        startGameBtn.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                startPlaying();
+            }
+        );
+
+    } else {
+
+        console.error(
+            "ERROR: startGameBtn NOT FOUND"
+        );
     }
 
 
@@ -3194,112 +3703,43 @@ function startGame() {
 
 
     /* =====================================================
-       START GAME
+       ROTATE SCREEN
        ===================================================== */
 
-    function initializeGame() {
+    if (rotateScreen) {
 
-        if (gameInitialized) {
-            return;
-        }
-
-
-        gameInitialized =
-            true;
-
-
-        createScene();
-
-        createCamera();
-
-        createRenderer();
-
-        generateWorld();
-
-        createPlayer();
-
-        setupControls();
-
-        setupMouseLook();
-
-        applyKit();
-
-        updateInventory();
-
-        updateHotbar();
-
-        updateSurvivalUI();
-
-        resizeGame();
-
-
-        if (homeScreen) {
-
-            homeScreen.classList.add(
-                "hidden"
-            );
-        }
-
-
-        if (game) {
-
-            game.classList.remove(
-                "hidden"
-            );
-        }
-
-
-        gameStarted =
-            true;
-
-
-        showMessage(
-            "Welcome " +
-            playerName
-        );
-    }
-
-
-    function startFromHome() {
-
-        updateHomeName();
-
-
-        if (
-            !gameInitialized
-        ) {
-
-            initializeGame();
-
-        } else {
-
-            gameStarted =
-                true;
-
-
-            if (homeScreen) {
-
-                homeScreen.classList.add(
-                    "hidden"
-                );
-            }
-
-
-            if (game) {
-
-                game.classList.remove(
-                    "hidden"
-                );
-            }
-        }
-    }
-
-
-    if (startGameBtn) {
-
-        startGameBtn.addEventListener(
+        rotateScreen.addEventListener(
             "click",
-            startFromHome
+            function () {
+
+                if (
+                    document.documentElement
+                        .requestFullscreen
+                ) {
+
+                    document.documentElement
+                        .requestFullscreen()
+                        .catch(
+                            function () {}
+                        );
+                }
+
+
+                if (
+                    screen.orientation &&
+                    screen.orientation
+                        .lock
+                ) {
+
+                    screen.orientation
+                        .lock(
+                            "landscape"
+                        )
+                        .catch(
+                            function () {}
+                        );
+                }
+            }
         );
     }
 
@@ -3307,6 +3747,10 @@ function startGame() {
     /* =====================================================
        GAME LOOP
        ===================================================== */
+
+    const clock =
+        new THREE.Clock();
+
 
     function animate() {
 
@@ -3341,7 +3785,11 @@ function startGame() {
         }
 
 
-        if (renderer && scene && camera) {
+        if (
+            renderer &&
+            scene &&
+            camera
+        ) {
 
             renderer.render(
                 scene,
@@ -3352,7 +3800,7 @@ function startGame() {
 
 
     /* =====================================================
-       LOADING SCREEN
+       INITIAL UI
        ===================================================== */
 
     if (loadingScreen) {
@@ -3371,6 +3819,9 @@ function startGame() {
         homeScreen.classList.add(
             "hidden"
         );
+
+        homeScreen.style.display =
+            "none";
     }
 
 
@@ -3379,11 +3830,14 @@ function startGame() {
         game.classList.add(
             "hidden"
         );
+
+        game.style.display =
+            "none";
     }
 
 
     /* =====================================================
-       LOADING -> HOME
+       LOADING SCREEN -> HOME
        ===================================================== */
 
     setTimeout(
@@ -3411,14 +3865,15 @@ function startGame() {
             }
 
 
-            updateHomeName();
+            updatePlayerName();
 
             updateKitUI();
 
             updateClothesUI();
 
+
             console.log(
-                "Mind Craft loaded successfully."
+                "Loading complete -> Home Screen shown."
             );
 
         },
@@ -3427,18 +3882,24 @@ function startGame() {
 
 
     /* =====================================================
-       INITIAL UI
+       FIRST UI UPDATE
        ===================================================== */
-
-    updateHomeName();
-
-    updateKitUI();
-
-    updateClothesUI();
 
     updateInventory();
 
+    updateHotbar();
+
     updateSurvivalUI();
 
+
+    /* =====================================================
+       START ANIMATION
+       ===================================================== */
+
     animate();
+
+
+    console.log(
+        "Mind Craft initialization complete."
+    );
 }
